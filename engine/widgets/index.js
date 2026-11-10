@@ -8,4 +8,5 @@ export const loaders = {
   matrix: () => import('./matrix.js'),
   venn: () => import('./venn.js'),
   numline: () => import('./numline.js'),
+  complex: () => import('./complex.js'),
 };
