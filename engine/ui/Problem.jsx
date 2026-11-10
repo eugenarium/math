@@ -43,7 +43,7 @@ function ErrorCard({ e }) {
  * Одна задача. По окончании вызывает onDone({ok, diags}):
  * ok — верно с первой попытки и без подсказок.
  */
-export function Problem({ inst, refs, onDone }) {
+export function Problem({ inst, refs, onDone, exam = false }) {
   if (import.meta.env.DEV) window.__inst = inst; // для e2e-проверок
   const [shape, scalar, vector] = useMemo(() => {
     if (inst.k !== 'num') return [[1, 1], true, false];
@@ -63,7 +63,7 @@ export function Problem({ inst, refs, onDone }) {
   const [done, setDone] = useState(null); // 'ok' | 'fail'
   const [diags, setDiags] = useState([]);
   const [wstate, setWstate] = useState(null);
-  const maxAttempts = inst.k === 'graph' ? 4 : 2;
+  const maxAttempts = exam ? 1 : inst.k === 'graph' ? 4 : 2;
 
   const locked = done !== null;
 
@@ -221,7 +221,7 @@ export function Problem({ inst, refs, onDone }) {
       {done && inst.k === 'spot' && inst.diagId && refs.errors[inst.diagId] && <ErrorCard e={refs.errors[inst.diagId]} />}
 
       <div class="bar">
-        {!locked && inst.h.length > hints && (
+        {!exam && !locked && inst.h.length > hints && (
           <button type="button" class="btn ghost" onClick={hint}>
             Подсказка
           </button>

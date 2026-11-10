@@ -5,6 +5,7 @@ import { Widget } from './Widget.jsx';
 import { loaders } from '../widgets/index.js';
 import { instantiate } from '../core/gen.js';
 import { isMastered, isStuck, pickNext, playableIds, MAX_TASKS } from '../core/mastery.js';
+import { pickExam, onMastered, dayNumber } from '../core/srs.js';
 import { recordProblem, recordMisconception, setLessonStatus, LESSON_STARTED, LESSON_DONE, LESSON_RETURN } from '../core/store.js';
 
 function Glossary({ g, refs }) {
@@ -113,6 +114,9 @@ export function Lesson({ id, data, state, update, onExit }) {
   const [taskKey, setTaskKey] = useState(0);
   const [diagSeen, setDiagSeen] = useState({});
   const [stuck, setStuck] = useState(false);
+  const [examI, setExamI] = useState(0);
+  const exam = useMemo(() => pickExam(lesson.pr, salt), [id]);
+  const examInst = useMemo(() => (phase === 'exam' ? instantiate(lesson.pr[exam[examI].pid], exam[examI].seed, { lesson }) : null), [phase, examI]);
 
   useEffect(() => {
     update((s) => {
@@ -140,7 +144,7 @@ export function Lesson({ id, data, state, update, onExit }) {
     return (pre.length + 3.5) / (pre.length + 4);
   })();
 
-  const label = phase === 'pre' ? PHASES.find((p) => p[0] === pre[i][0])[1] : PHASES.find((p) => p[0] === phase)[1];
+  const label = phase === 'exam' || phase === 'examfail' ? 'Экзамен экстерном' : phase === 'pre' ? PHASES.find((p) => p[0] === pre[i][0])[1] : PHASES.find((p) => p[0] === phase)[1];
 
   const onProblemDone = ({ ok, diags }) => {
     const h = [...hist, { pid: nextTask.pid, ok }];
@@ -166,8 +170,18 @@ export function Lesson({ id, data, state, update, onExit }) {
   };
 
   const finish = () => {
-    update((s) => setLessonStatus(s, id, stuck ? LESSON_RETURN : LESSON_DONE));
+    update((s) => {
+      if (stuck) setLessonStatus(s, id, LESSON_RETURN);
+      else if (s.L[id]?.[0] !== LESSON_DONE) s.L[id] = onMastered(dayNumber()); // первое прохождение: повторение через 1 день
+    });
     onExit();
+  };
+
+  const onExamDone = ({ ok }) => {
+    if (!ok) return setPhase('examfail');
+    if (examI + 1 < exam.length) return setExamI(examI + 1);
+    update((s) => void (s.L[id] = onMastered(dayNumber(), true))); // экстерном: повторение через 7 дней
+    setPhase('sum');
   };
 
   // ошибки, которые ученик допустил, идут первыми
@@ -200,6 +214,39 @@ export function Lesson({ id, data, state, update, onExit }) {
               )}
               <button type="button" class="btn primary" onClick={() => (i + 1 < pre.length ? setI(i + 1) : setPhase('pr'))}>
                 Далее
+              </button>
+            </div>
+            {i === 0 && lesson.pr && (
+              <button type="button" class="btn ghost wide know" onClick={() => setPhase('exam')}>
+                Я это знаю: сдать экстерном
+              </button>
+            )}
+          </>
+        )}
+
+        {phase === 'exam' && examInst && (
+          <>
+            <p class="muted counter">
+              Экзамен: задача {examI + 1} из {exam.length}. Одна попытка, без подсказок.
+            </p>
+            <Problem key={`exam-${examI}`} inst={examInst} refs={refs} exam onDone={onExamDone} />
+          </>
+        )}
+
+        {phase === 'examfail' && (
+          <>
+            <p class="feedback warn">Не вышло. Пройди урок целиком: после него экзамен не нужен.</p>
+            <div class="bar">
+              <button
+                type="button"
+                class="btn primary"
+                onClick={() => {
+                  setExamI(0);
+                  setI(0);
+                  setPhase('pre');
+                }}
+              >
+                К уроку
               </button>
             </div>
           </>
