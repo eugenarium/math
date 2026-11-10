@@ -63,7 +63,7 @@ export function Problem({ inst, refs, onDone, exam = false }) {
   const [done, setDone] = useState(null); // 'ok' | 'fail'
   const [diags, setDiags] = useState([]);
   const [wstate, setWstate] = useState(null);
-  const maxAttempts = exam ? 1 : inst.k === 'graph' ? 4 : 2;
+  const maxAttempts = exam ? 1 : inst.k === 'graph' || inst.k === 'sim' ? 4 : 2;
 
   const locked = done !== null;
 
@@ -73,6 +73,7 @@ export function Problem({ inst, refs, onDone, exam = false }) {
     if (inst.k === 'mc') return picked;
     if (inst.k === 'spot') return line;
     if (inst.k === 'graph') return wstate;
+    if (inst.k === 'sim') return { runs: wstate?.runs ?? 0, state: wstate, answer: fields[0] };
     return null;
   };
 
@@ -82,6 +83,7 @@ export function Problem({ inst, refs, onDone, exam = false }) {
     if (inst.k === 'mc') return picked.length > 0;
     if (inst.k === 'spot') return line > 0;
     if (inst.k === 'graph') return wstate !== null;
+    if (inst.k === 'sim') return wstate !== null && (inst.a === undefined || fields[0].trim() !== '');
     return false;
   };
 
@@ -106,7 +108,7 @@ export function Problem({ inst, refs, onDone, exam = false }) {
 
   const key = (k) => {
     if (locked) return;
-    if (inst.k === 'num') setFields(fields.map((f, i) => (i === active ? applyKey(f, k) : f)));
+    if (inst.k === 'num' || inst.k === 'sim') setFields(fields.map((f, i) => (i === active ? applyKey(f, k) : f)));
     else if (inst.k === 'expr') setExpr(applyKey(expr, k));
   };
 
@@ -128,13 +130,15 @@ export function Problem({ inst, refs, onDone, exam = false }) {
     <div class="problem">
       <Rich text={inst.q || (inst.k === 'spot' ? 'Найди ошибку. Коснись строки с ошибкой.' : '')} class="q" />
 
-      {inst.k === 'graph' && (
+      {(inst.k === 'graph' || inst.k === 'sim') && (
         <div class="card">
           <Widget params={inst.w} scope={inst.scope} onState={setWstate} />
         </div>
       )}
 
-      {inst.k === 'num' && (
+      {inst.k === 'sim' && <p class="muted">Опытов: {wstate?.runs ?? 0} из {inst.min}.</p>}
+
+      {(inst.k === 'num' || (inst.k === 'sim' && inst.a !== undefined)) && (
         <div class="answer">
           <div class="fields" style={{ gridTemplateColumns: `repeat(${shape[1]}, minmax(0, 7.5rem))` }}>
             {fields.map((f, i) => (

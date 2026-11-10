@@ -129,7 +129,7 @@ test('expr: эквивалентные выражения и константа 
 });
 
 test('mastery: критерий и уровни', () => {
-  const pr = { p1: { k: 'num' }, p2: { k: 'num', lv: 2 }, p3: { k: 'mc' }, p4: { k: 'sim', lv: 2 } };
+  const pr = { p1: { k: 'num' }, p2: { k: 'num', lv: 2 }, p3: { k: 'mc' }, p4: { k: 'proof', lv: 2 } };
   const h = (...a) => a.map(([pid, ok]) => ({ pid, ok }));
   assert.equal(isMastered(h(['p1', true], ['p3', true], ['p1', true], ['p2', true]), pr), false);
   assert.equal(isMastered(h(['p1', true], ['p3', true], ['p1', true], ['p3', true], ['p2', true]), pr), true);
@@ -340,4 +340,67 @@ test('render: pc и fr учитывают, внутри формулы подс�
   assert.equal(render('доля @{p:fr}.', s), 'доля 3/4.');
   assert.equal(render('$x=@{p:fr}$', s), '$x=\\frac{3}{4}$');
   assert.equal(render('$a$ и @{L:pc}, затем $@{p:fr}$', s), '$a$ и 95 %, затем $\\frac{3}{4}$');
+});
+
+// ───── ci и sim ─────
+import * as ciW from '../widgets/ci.js';
+
+test('ci: доля накрывших параметр близка к уровню (z, t, доля)', () => {
+  const rng = makeRng(2026);
+  const cases = [
+    [{ d: 'norm', p: { mu: 50, sigma: 8 }, n: 20, level: 0.9, kind: 'z' }, 0.9],
+    [{ d: 'norm', p: { mu: 50, sigma: 8 }, n: 10, level: 0.95, kind: 't' }, 0.95],
+    [{ d: 'norm', p: { mu: 0, sigma: 1 }, n: 30, level: 0.8, kind: 'z' }, 0.8],
+    [{ d: 'exp', p: { lam: 1 }, n: 50, level: 0.95, kind: 'z' }, 0.95],
+    [{ p: { p: 0.4 }, n: 200, level: 0.95, kind: 'prop' }, 0.95],
+  ];
+  for (const [params, level] of cases) {
+    const N = 4000;
+    const { cover, intervals } = ciW.simulate(params, {}, ciW.initial(params), rng, N);
+    const share = cover / N;
+    assert.ok(Math.abs(share - level) < 0.03, `${params.kind}/${params.d}: доля ${share}, ожидалось около ${level}`);
+    assert.ok(intervals.every((i) => i.lo <= i.center && i.center <= i.hi));
+  }
+});
+
+test('ci: слайдеры, константы из задачи и кнопки серий', () => {
+  const params = { d: 'norm', p: { mu: 170, sigma: 10 }, n: [5, 100, 25], level: [0.8, 0.99, 0.95] };
+  const c = ciW.controls(params);
+  assert.deepEqual(c.map((x) => x.name), ['n', 'level', 'run']);
+  assert.equal(c[2].type, 'actions');
+  const v = ciW.initial(params);
+  assert.deepEqual([v.n, v.level, v.runs, v.cover], [25, 0.95, 0, 0]);
+  // n и level из переменных задачи: слайдеров нет, значения берутся из scope
+  const fixed = { d: 'norm', p: { mu: 50, sigma: 8 }, n: 'n', level: 'L', kind: 'z' };
+  assert.deepEqual(ciW.controls(fixed).map((x) => x.name), ['run']);
+  const out = ciW.compute(fixed, { n: 20, L: 0.9 }, ciW.initial(fixed));
+  assert.deepEqual([out.n, out.level, out.runs], [20, 0.9, 0]);
+  // узкий интервал при большем n
+  const rng = makeRng(5);
+  const w = (n) => {
+    const iv = ciW.simulate({ ...params, n, level: 0.95 }, {}, {}, rng, 1).intervals[0];
+    return iv.hi - iv.lo;
+  };
+  assert.ok(w(100) < w(5));
+});
+
+test('sim: нужное число опытов, ответ с допуском, проверка в задаче st.ci#p6', () => {
+  const L = lessons.find((x) => x.id === 'st.ci');
+  const inst = instantiate(L.pr.p6, 3, { lesson: L });
+  assert.equal(inst.k, 'sim');
+  assert.equal(inst.min, 1000);
+  const ans = String(inst.a).replace('.', ',');
+  assert.match(checkAnswer(inst, { runs: 999, state: {}, answer: ans }).error, /1000/);
+  assert.equal(checkAnswer(inst, { runs: 1000, state: {}, answer: ans }).ok, true);
+  assert.equal(checkAnswer(inst, { runs: 1000, state: {}, answer: String(inst.a + 0.04) }).ok, true);
+  assert.equal(checkAnswer(inst, { runs: 1000, state: {}, answer: String(inst.a + 0.2) }).ok, false);
+  // честный результат симуляции (1000 интервалов) укладывается в допуск 0.05 почти всегда
+  const rng = makeRng(77);
+  let bad = 0;
+  for (let seed = 1; seed <= 30; seed++) {
+    const i = instantiate(L.pr.p6, seed, { lesson: L });
+    const S = ciW.simulate(i.w, i.scope, { ...ciW.initial(i.w), runs: 0, cover: 0 }, rng, 1000);
+    if (Math.abs(S.cover / 1000 - i.a) > i.tol) bad++;
+  }
+  assert.ok(bad <= 1, `честная симуляция вышла за допуск ${bad} раз из 30`);
 });
