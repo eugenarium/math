@@ -1,0 +1,42 @@
+# Карточки раздела pre (Подготовка). Источник: docs/COURSE_MAP.md.
+pre.func:
+  t: 'Функция: область определения, образ, композиция, обратная'
+  goal: 'Умею вычислять композицию, находить область определения корня и обратную функцию для линейной'
+  pre: [pre.sets]
+  g: [function, domain, composition, inverse-function]
+  k: [num, mc, expr, spot]
+  e: [pre.func.inv-recip, pre.func.comp-order]
+  n: 6
+  note: 'Только числовые функции одной переменной. Инъективность упомянуть одной фразой, без доказательств.'
+
+pre.graph:
+  t: 'Элементарные функции и преобразования графиков'
+  goal: 'Умею по формуле $y=f(x-a)+b$ определять сдвиг графика и подбирать параметры по картинке'
+  pre: [pre.func, pre.sets]
+  g: [graph-shift, graph-stretch]
+  w: [fplot]
+  k: [num, mc, graph, spot]
+  e: [pre.graph.shift-sign, pre.graph.scale-axis]
+  n: 6
+  note: 'Основной образец — парабола. Отражения и модуль не вводить.'
+
+pre.explog:
+  t: 'Степени, показательная функция, логарифмы'
+  goal: 'Умею применять свойства степеней и логарифмов и не раскладываю логарифм суммы'
+  pre: [pre.graph, pre.func, pre.sets]
+  g: [exponent-rules, logarithm]
+  w: [fplot]
+  k: [num, mc, expr, spot]
+  e: [pre.explog.ln-sum, pre.explog.log-power, pre.explog.log-prod]
+  n: 6
+  note: 'Логарифм вводится как показатель степени. Замену основания не вводить.'
+
+pre.sum:
+  t: 'Обозначения Σ и Π, работа с индексами'
+  goal: 'Умею считать число слагаемых и вычислять суммы вида $\sum(ai+b)$'
+  pre: [pre.func, pre.sets]
+  g: [sigma-notation, product-notation]
+  k: [num, expr, spot]
+  e: [pre.sum.count, pre.sum.const]
+  n: 5
+  note: 'Формулу суммы $1+\dots+n$ дать готовой, без вывода. Вложенные суммы не вводить.'
