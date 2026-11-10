@@ -104,7 +104,9 @@ test('все задачи уроков: числа вычисляются, ве�
           const texts = inst.options.map((o) => o.text);
           assert.equal(new Set(texts).size, texts.length, `${where}: одинаковые варианты`);
         } else if (inst.k === 'expr') {
-          assert.equal(checkAnswer(inst, inst.a).ok, true, where);
+          // ученик вводит выражение с числами, а не с именами переменных задачи
+          const typed = inst.a.replace(/\b[A-Za-z]\w*\b/g, (n) => (n in inst.scope ? '(' + inst.scope[n] + ')' : n));
+          assert.equal(checkAnswer(inst, typed).ok, true, where + ' ввод: ' + typed);
         } else if (inst.k === 'spot') {
           assert.equal(checkAnswer(inst, inst.badIndex).ok, true, where);
           assert.equal(checkAnswer(inst, inst.badIndex === 1 ? 2 : 1).ok, false, where);
@@ -127,7 +129,7 @@ test('expr: эквивалентные выражения и константа 
 });
 
 test('mastery: критерий и уровни', () => {
-  const pr = { p1: { k: 'num' }, p2: { k: 'num', lv: 2 }, p3: { k: 'mc' }, p4: { k: 'graph', lv: 2 } };
+  const pr = { p1: { k: 'num' }, p2: { k: 'num', lv: 2 }, p3: { k: 'mc' }, p4: { k: 'sim', lv: 2 } };
   const h = (...a) => a.map(([pid, ok]) => ({ pid, ok }));
   assert.equal(isMastered(h(['p1', true], ['p3', true], ['p1', true], ['p2', true]), pr), false);
   assert.equal(isMastered(h(['p1', true], ['p3', true], ['p1', true], ['p3', true], ['p2', true]), pr), true);
@@ -135,6 +137,44 @@ test('mastery: критерий и уровни', () => {
   assert.equal(isMastered(h(['p1', true], ['p3', true], ['p1', true], ['p3', true], ['p1', true]), pr), false);
   assert.equal(currentLevel(h(['p1', true], ['p1', true]), pr), 2);
   assert.equal(currentLevel(h(['p1', true], ['p1', true], ['p2', false], ['p2', false]), pr), 1);
+  // graph играбельна: шаблон p4 тоже нужно решить
+  const pg = { ...pr, p4: { k: 'graph', lv: 2 } };
+  const full = h(['p1', true], ['p3', true], ['p1', true], ['p3', true], ['p2', true]);
+  assert.equal(isMastered(full, pg), false);
+  assert.equal(isMastered([...full, { pid: 'p4', ok: true }], pg), true);
   const next = pickNext(h(['p1', true]), pr, 3);
   assert.ok(['p1', 'p2', 'p3'].includes(next.pid));
+});
+
+// ───── виджеты ─────
+import { loaders } from '../widgets/index.js';
+import { goalReachable } from '../widgets/kit.js';
+import { sumRule, exactIntegral, compute as riemannOut } from '../widgets/riemann.js';
+
+test('riemann: суммы на x^2 по отрезку [0, 2]', () => {
+  const f = (x) => x * x;
+  assert.ok(Math.abs(sumRule(f, 0, 2, 4, 'l') - 1.75) < 1e-12); // 0 + .25 + 1 + 2.25 = 3.5, ·0.5
+  assert.ok(Math.abs(sumRule(f, 0, 2, 4, 'r') - 3.75) < 1e-12);
+  assert.ok(Math.abs(sumRule(f, 0, 2, 4, 'm') - 2.625) < 1e-12);
+  assert.ok(Math.abs(sumRule(f, 0, 2, 4, 't') - 2.75) < 1e-12);
+  assert.ok(Math.abs(sumRule(f, 0, 2, 4, 's') - 8 / 3) < 1e-12);
+  assert.ok(Math.abs(exactIntegral(f, 0, 2) - 8 / 3) < 1e-9);
+  const out = riemannOut({ f: 'x^2', a: 0, b: 'b', n: [1, 60, 4] }, { b: 2 }, { n: 4, rule: 'l' });
+  assert.ok(Math.abs(out.S - 1.75) < 1e-12 && Math.abs(out.err - (8 / 3 - 1.75)) < 1e-6);
+});
+
+test('graph: цель достижима во всех наборах (виджеты с модулем)', async () => {
+  let checked = 0;
+  for (const L of lessons) {
+    for (const [pid, p] of Object.entries(L.pr)) {
+      if (p.k !== 'graph' || !loaders[p.w.w] || p.w.drag) continue;
+      const mod = await loaders[p.w.w]();
+      for (let seed = 1; seed <= 40; seed++) {
+        const inst = instantiate(p, seed, { lesson: L });
+        assert.ok(goalReachable(mod, p.w, inst.scope, inst.goal), `${L.id}#${pid} seed=${seed}: цель недостижима`);
+        checked++;
+      }
+    }
+  }
+  assert.ok(checked >= 80, 'ожидались задачи graph c1.riem и c1.der, проверено ' + checked);
 });

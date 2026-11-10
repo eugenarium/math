@@ -9,7 +9,7 @@ export function Keypad({ keys, onKey, cols = 4 }) {
           <span key={i} />
         ) : (
           <button key={i} type="button" class={'key' + (k === '⌫' || k === 'C' ? ' key-alt' : '')} onClick={() => onKey(k)}>
-            {k.replace('(', '').replace('*', '·')}
+            {(k.length > 1 ? k.replace('(', '') : k).replace('*', '·')}
           </button>
         ),
       )}
@@ -20,7 +20,15 @@ export function Keypad({ keys, onKey, cols = 4 }) {
 export const NUM_KEYS = NUM;
 
 export function exprKeys(vars) {
-  return [...vars, '^', '√(', 'π', '(', ')', '+', '−', '*', '/', 'sin(', 'cos(', 'tan(', 'ln(', 'exp(', '⌫'];
+  const v = vars.slice(0, 2);
+  return [
+    '7', '8', '9', '(', ')',
+    '4', '5', '6', '+', '\u2212',
+    '1', '2', '3', '*', '/',
+    '0', ',', '^', '√(', 'π',
+    ...v, ...Array(2 - v.length).fill(''), 'sin(', 'cos(', 'ln(',
+    'exp(', 'tan(', 'abs(', '⌫', 'C',
+  ];
 }
 
 /** Применяет клавишу к строке. */

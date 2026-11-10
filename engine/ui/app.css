@@ -115,3 +115,13 @@ p { margin: 0 0 12px; }
 .err-card.mine { background: var(--bad-bg); }
 .badge { margin-left: 8px; font-size: 0.75rem; font-weight: 600; color: var(--bad); }
 .widget-stub { border: 1px dashed var(--line); background: transparent; }
+
+/* виджеты */
+.widget-canvas { width: 100%; }
+.slider { display: block; margin-top: 12px; }
+.slider span { display: block; margin-bottom: 2px; font-size: 0.95rem; }
+.slider input[type='range'] { width: 100%; height: 36px; accent-color: var(--accent); }
+.choice { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.chip { min-height: 44px; padding: 0 16px; border-radius: 22px; border: 2px solid var(--line); background: var(--bg); cursor: pointer; }
+.chip.on { border-color: var(--accent); background: var(--accent); color: var(--accent-fg); font-weight: 600; }
+.cap { margin-top: 12px; font-weight: 500; }

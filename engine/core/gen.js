@@ -214,29 +214,9 @@ export function sampleWithConstraints(problem, rng, maxTries = 1000) {
 
 // ───────── экземпляр задачи ─────────
 
-export const PLAYABLE = new Set(['num', 'mc', 'expr', 'spot']);
+export const PLAYABLE = new Set(['num', 'mc', 'expr', 'spot', 'graph']);
 
 const renderAll = (arr, scope) => (arr ?? []).map((t) => (typeof t === 'string' ? render(t, scope) : t));
-
-/** Параметры виджета: числа и выражения → значения в области видимости задачи. */
-export function resolveWidget(w, scope) {
-  const out = {};
-  for (const [k, val] of Object.entries(w ?? {})) {
-    out[k] = k === 'w' || k === 'cap' || k === 'ask' || k === 'ans' ? val : resolveParam(val, scope);
-  }
-  return out;
-}
-function resolveParam(val, scope) {
-  if (typeof val === 'string') {
-    try {
-      return evalExpr(val, scope);
-    } catch {
-      return val; // строковый параметр: имя правила, формула функции и т.п.
-    }
-  }
-  if (Array.isArray(val)) return val.map((x) => resolveParam(x, scope));
-  return val;
-}
 
 /**
  * Создаёт экземпляр задачи.
@@ -301,7 +281,7 @@ export function instantiate(p, seed, ctx = {}) {
       for (const [name, [target, tol]] of Object.entries(p.goal ?? {})) goal[name] = [evalExpr(target, scope), tol];
       return {
         ...inst,
-        w: resolveWidget(p.w, scope),
+        w: p.w, // выражения-параметры вычисляет виджет в области видимости scope
         goal,
         a: p.a !== undefined ? evalExpr(p.a, scope) : undefined,
         tol: p.tol ?? 0.1,

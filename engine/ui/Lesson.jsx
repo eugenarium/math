@@ -1,6 +1,8 @@
 import { useState, useMemo, useEffect } from 'preact/hooks';
 import { Rich } from './Rich.jsx';
 import { Problem } from './Problem.jsx';
+import { Widget } from './Widget.jsx';
+import { loaders } from '../widgets/index.js';
 import { instantiate } from '../core/gen.js';
 import { isMastered, isStuck, pickNext, playableIds, MAX_TASKS } from '../core/mastery.js';
 import { recordProblem, recordMisconception, setLessonStatus, LESSON_STARTED, LESSON_DONE, LESSON_RETURN } from '../core/store.js';
@@ -61,12 +63,19 @@ function Prediction({ ask, ans }) {
   );
 }
 
-/** Виджеты появятся на следующих шагах плана; пока показываем задание. */
-function WidgetStub({ s }) {
+function WidgetScreen({ s }) {
+  if (!loaders[s.w])
+    return (
+      <div class="card widget-stub">
+        <p class="muted">Виджет «{s.w}» в разработке.</p>
+        {s.cap && <Rich text={s.cap} />}
+        {s.ask && <Prediction ask={s.ask} ans={s.ans} />}
+      </div>
+    );
   return (
-    <div class="card widget-stub">
-      <p class="muted">Виджет «{s.w}» в разработке.</p>
-      {s.cap && <Rich text={s.cap} />}
+    <div class="card">
+      <Widget params={s} />
+      {s.cap && <Rich text={s.cap} class="cap" />}
       {s.ask && <Prediction ask={s.ask} ans={s.ans} />}
     </div>
   );
@@ -76,7 +85,7 @@ function Screen({ s, lesson, refs }) {
   if (typeof s === 'string') return <Rich text={s} class="text" />;
   if (s.g) return <Glossary g={s.g} refs={refs} />;
   if (s.x) return <Example x={s.x} seed={s.seed} lesson={lesson} />;
-  if (s.w) return <WidgetStub s={s} />;
+  if (s.w) return <WidgetScreen s={s} />;
   if (s.ask) return <Prediction ask={s.ask} ans={s.ans} />;
   return null;
 }

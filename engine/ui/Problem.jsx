@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'preact/hooks';
 import { Rich } from './Rich.jsx';
+import { Widget } from './Widget.jsx';
 import { Keypad, NUM_KEYS, exprKeys, applyKey } from './Keypad.jsx';
 import { checkAnswer } from '../core/check.js';
 import { toTex } from '../core/mathx.js';
@@ -61,6 +62,8 @@ export function Problem({ inst, refs, onDone }) {
   const [msg, setMsg] = useState(null); // {kind, text?, diag?}
   const [done, setDone] = useState(null); // 'ok' | 'fail'
   const [diags, setDiags] = useState([]);
+  const [wstate, setWstate] = useState(null);
+  const maxAttempts = inst.k === 'graph' ? 4 : 2;
 
   const locked = done !== null;
 
@@ -69,6 +72,7 @@ export function Problem({ inst, refs, onDone }) {
     if (inst.k === 'expr') return expr;
     if (inst.k === 'mc') return picked;
     if (inst.k === 'spot') return line;
+    if (inst.k === 'graph') return wstate;
     return null;
   };
 
@@ -77,6 +81,7 @@ export function Problem({ inst, refs, onDone }) {
     if (inst.k === 'expr') return expr.trim() !== '';
     if (inst.k === 'mc') return picked.length > 0;
     if (inst.k === 'spot') return line > 0;
+    if (inst.k === 'graph') return wstate !== null;
     return false;
   };
 
@@ -91,12 +96,12 @@ export function Problem({ inst, refs, onDone }) {
     setDiags(nd);
     const n = attempts + 1;
     setAttempts(n);
-    if (n >= 2) {
+    if (n >= maxAttempts) {
       setMsg({ kind: 'bad', diag: res.diag });
       return setDone('fail');
     }
-    setMsg({ kind: 'bad', diag: res.diag, hint: res.diag ? null : inst.h[0] });
-    if (!res.diag && inst.h.length) setHints(Math.max(hints, 1));
+    setMsg({ kind: 'bad', diag: res.diag, hint: res.diag ? null : inst.h[Math.min(n, inst.h.length) - 1] });
+    if (!res.diag && inst.h.length) setHints(Math.max(hints, Math.min(n, inst.h.length)));
   };
 
   const key = (k) => {
@@ -122,6 +127,12 @@ export function Problem({ inst, refs, onDone }) {
   return (
     <div class="problem">
       <Rich text={inst.q || (inst.k === 'spot' ? 'Найди ошибку. Коснись строки с ошибкой.' : '')} class="q" />
+
+      {inst.k === 'graph' && (
+        <div class="card">
+          <Widget params={inst.w} scope={inst.scope} onState={setWstate} />
+        </div>
+      )}
 
       {inst.k === 'num' && (
         <div class="answer">
