@@ -224,7 +224,7 @@ export function sampleWithConstraints(problem, rng, maxTries = 1000) {
 
 // ───────── экземпляр задачи ─────────
 
-export const PLAYABLE = new Set(['num', 'mc', 'expr', 'spot', 'graph']);
+export const PLAYABLE = new Set(['num', 'mc', 'expr', 'spot', 'graph', 'sim']);
 
 const renderAll = (arr, scope) => (arr ?? []).map((t) => (typeof t === 'string' ? render(t, scope) : t));
 

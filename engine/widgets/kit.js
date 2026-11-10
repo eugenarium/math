@@ -46,7 +46,7 @@ const LIMIT = 600;
  */
 export function goalReachable(mod, params, scope, goal) {
   const controls = mod.controls(params, scope);
-  const axes = controls.map((c) => {
+  const axes = controls.filter((c) => c.type !== 'actions').map((c) => {
     if (c.type === 'choice') return c.options.map((o) => ({ [c.name]: o }));
     const n = Math.min(LIMIT, Math.max(1, Math.round((c.max - c.min) / c.step)));
     return Array.from({ length: n + 1 }, (_, i) => ({ [c.name]: Number((c.min + ((c.max - c.min) * i) / n).toFixed(6)) }));

@@ -52,7 +52,15 @@ export function Widget({ params, scope = {}, onState }) {
     <div class="widget">
       <div ref={host} class="widget-canvas" />
       {controls.map((c) =>
-        c.type === 'slider' ? (
+        c.type === 'actions' ? (
+          <div class="choice" key={c.name} role="group">
+            {c.actions.map((a) => (
+              <button key={a.label} type="button" class="chip" onClick={() => inst.current?.act?.(c.name, a)}>
+                {a.label}
+              </button>
+            ))}
+          </div>
+        ) : c.type === 'slider' ? (
           <label class="slider" key={c.name}>
             <span>
               {c.name} = <b>{fmtNum(Number(Number(vars[c.name]).toPrecision(5)))}</b>
