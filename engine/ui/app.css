@@ -126,3 +126,10 @@ p { margin: 0 0 12px; }
 .chip.on { border-color: var(--accent); background: var(--accent); color: var(--accent-fg); font-weight: 600; }
 .cap { margin-top: 12px; font-weight: 500; }
 .know { margin-top: 4px; }
+
+/* настройки */
+.file { display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.row { display: flex; gap: 10px; }
+.row > * { flex: 1; }
+.btn.danger { background: var(--bad); border-color: var(--bad); color: #fff; }
+.backup { display: block; width: 100%; text-align: left; border: 0; cursor: pointer; margin: 0 0 12px; }

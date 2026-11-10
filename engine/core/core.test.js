@@ -228,3 +228,42 @@ test('srs: шаблоны с ошибками выбираются чаще, э�
   assert.equal(ex.length, 4);
   assert.ok(ex.slice(0, 2).every((t) => ['p4', 'p5'].includes(t.pid)));
 });
+
+// ───── прогресс: экспорт, импорт, открытие уроков ─────
+import { exportJson, importJson, isUnlocked, setLessonStatus, recordProblem, recordMisconception, fresh, load as loadProgress, save as saveProgress } from './store.js';
+
+test('store: экспорт и импорт возвращают тот же прогресс', () => {
+  const s = fresh();
+  s.L['a.x'] = [1, 2, 700, 1];
+  recordProblem(s, 'a.x', 'p1', true);
+  recordProblem(s, 'a.x', 'p1', false);
+  recordMisconception(s, 'a.x.err');
+  assert.deepEqual(importJson(exportJson(s)), s);
+  assert.deepEqual(s.T['a.x#p1'], [1, 1]);
+  assert.equal(s.E['a.x.err'], 1);
+});
+
+test('store: неверный файл отклоняется, недостающие поля добавляются', () => {
+  assert.throws(() => importJson('{"v":2}'), /формат/);
+  assert.throws(() => importJson('не json'));
+  const s = importJson('{"v":1,"L":{"a.x":[1,0,5,0]}}');
+  assert.deepEqual(s.T, {});
+  assert.deepEqual(s.set, {});
+});
+
+test('store: предпосылки и статус урока', () => {
+  const s = fresh();
+  assert.equal(isUnlocked(s, []), true);
+  assert.equal(isUnlocked(s, ['a.x']), false);
+  setLessonStatus(s, 'a.x', 0);
+  assert.equal(isUnlocked(s, ['a.x']), false, 'начатый урок не открывает следующие');
+  s.L['a.x'] = [1, 0, 3, 0];
+  assert.equal(isUnlocked(s, ['a.x']), true);
+  setLessonStatus(s, 'a.x', 2);
+  assert.deepEqual(s.L['a.x'], [2, 0, 3, 0], 'статус меняется, интервал сохраняется');
+});
+
+test('store: без localStorage работает на пустом прогрессе', () => {
+  assert.deepEqual(loadProgress(), fresh());
+  assert.doesNotThrow(() => saveProgress(fresh()));
+});

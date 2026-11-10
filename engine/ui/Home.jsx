@@ -6,7 +6,7 @@ const plural = (n) => (n % 10 === 1 && n % 100 !== 11 ? 'урок' : [2, 3, 4].i
 
 const BADGE = { [LESSON_DONE]: '✓ пройден', [LESSON_STARTED]: '● начат', [LESSON_RETURN]: '↺ вернуться' };
 
-export function Home({ data, state, update, onOpen, onReview }) {
+export function Home({ data, state, update, onOpen, onReview, onSettings }) {
   const openAll = state.set.openAll !== false;
   const bySection = {};
   for (const l of data.index) (bySection[l.sec] ??= []).push(l);
@@ -15,6 +15,10 @@ export function Home({ data, state, update, onOpen, onReview }) {
   const cur = state.cur && data.lessons[state.cur.id] ? state.cur.id : null;
   const due = dueLessons(state.L, dayNumber()).filter((id) => data.lessons[id]);
   // рекомендация: первый по карте курса готовый урок, не пройденный, с открытыми предпосылками
+  const today = dayNumber();
+  const hasProgress = Object.keys(state.L).length > 0;
+  const lastExport = state.set.lastExport;
+  const backupDue = hasProgress && (lastExport === undefined ? Object.values(state.L).some((l) => l[0] === 1) : today - lastExport >= 30);
   const next = have.find((l) => state.L[l.id]?.[0] !== LESSON_DONE && l.id !== cur && (openAll || isUnlocked(state, l.pre)));
 
   return (
@@ -24,6 +28,11 @@ export function Home({ data, state, update, onOpen, onReview }) {
         Готово уроков: {have.length} из {data.index.length}. Пройдено: {done}.
       </p>
 
+      {backupDue && (
+        <button type="button" class="feedback warn backup" onClick={onSettings}>
+          {lastExport === undefined ? 'Сохрани копию прогресса: хранилище браузера могут очистить.' : 'Прошёл месяц с последней копии прогресса. Сохранить сейчас?'}
+        </button>
+      )}
       {due.length > 0 && (
         <button type="button" class="btn primary wide" onClick={onReview}>
           Повторить сегодня: {due.length} {plural(due.length)}
@@ -74,6 +83,9 @@ export function Home({ data, state, update, onOpen, onReview }) {
       })}
 
       <footer class="foot">
+        <button type="button" class="btn ghost wide" onClick={onSettings}>
+          Прогресс и копия
+        </button>
         <label class="toggle">
           <input type="checkbox" checked={openAll} onChange={(e) => update((s) => void (s.set.openAll = e.currentTarget.checked))} />
           Открыть все готовые уроки, не проходя предпосылки

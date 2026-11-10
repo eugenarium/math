@@ -4,6 +4,9 @@
 const KEY = 'mx';
 const FRESH = () => ({ v: 1, L: {}, T: {}, E: {}, cur: null, xp: 0, set: {} });
 
+/** Пустой прогресс. */
+export const fresh = FRESH;
+
 /** @returns {ReturnType<typeof FRESH>} */
 export function load() {
   try {
