@@ -1,0 +1,42 @@
+# Карточки раздела c1 (Анализ: одна переменная). Источник: docs/COURSE_MAP.md.
+c1.lim:
+  t: 'Предел функции, ε–δ, односторонние пределы'
+  goal: 'Умею находить предел функции с устранимой неопределённостью и отличаю предел от значения в точке'
+  pre: [c1.seq, lg.quant, pre.ineq, pre.graph, pre.func, pre.sets]
+  g: [limit-of-function, one-sided-limit]
+  w: [fplot]
+  k: [num, mc, graph, spot]
+  e: [c1.lim.value, c1.lim.onesided]
+  n: 6
+  note: 'Определение ε–δ дать готовым из глоссария; задач на доказательство нет. Бесконечные пределы не вводить.'
+
+c1.cont:
+  t: 'Непрерывность, разрывы, теорема о промежуточном значении'
+  goal: 'Умею проверять непрерывность в точке и применять теорему о промежуточном значении к непрерывной функции'
+  pre: [c1.lim, c1.seq, lg.quant, pre.ineq, pre.graph, pre.func, pre.sets]
+  g: [continuity, discontinuity-types, intermediate-value]
+  w: [fplot]
+  k: [num, mc, graph, spot]
+  e: [c1.cont.limit-only, c1.cont.ivt-nocont]
+  n: 6
+  note: 'Теорему об экстремуме упомянуть одной фразой, без задач. Равномерную непрерывность не вводить.'
+
+c1.rules:
+  t: 'Правила дифференцирования, таблица производных'
+  goal: 'Умею дифференцировать суммы, произведения и частные элементарных функций'
+  pre: [c1.der, c1.cont, c1.lim, c1.seq, lg.quant, pre.ineq, pre.graph, pre.func, pre.sets]
+  g: [differentiation-rules, derivative-table]
+  k: [num, mc, expr, spot]
+  e: [c1.rules.product, c1.rules.quotient-order]
+  n: 6
+  note: 'Сложную функцию не вводить: это следующий урок. Таблицу дать готовой.'
+
+c1.int:
+  t: 'Первообразная, таблица интегралов'
+  goal: 'Умею находить первообразную многочлена с начальным условием и не теряю константу'
+  pre: [c1.rules, c1.der, c1.cont, c1.lim, c1.seq, lg.quant, pre.ineq, pre.graph, pre.func, pre.sets]
+  g: [antiderivative, indefinite-integral]
+  k: [num, mc, expr, spot]
+  e: [c1.int.const, c1.int.product]
+  n: 6
+  note: 'Только степенные функции и многочлены. Замену переменной и интегрирование по частям не вводить.'
