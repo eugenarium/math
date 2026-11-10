@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from 'preact/hooks';
 import { Rich } from './Rich.jsx';
 import { Problem } from './Problem.jsx';
-import { Widget } from './Widget.jsx';
+import { Widget, SolStep } from './Widget.jsx';
 import { loaders } from '../widgets/index.js';
 import { instantiate } from '../core/gen.js';
 import { isMastered, isStuck, pickNext, playableIds, MAX_TASKS } from '../core/mastery.js';
@@ -33,7 +33,7 @@ function Example({ x, seed, lesson }) {
       <ol>
         {steps.slice(0, open).map((s, i) => (
           <li key={i}>
-            <Rich text={s} as="span" />
+            <SolStep s={s} scope={inst.scope} />
           </li>
         ))}
       </ol>

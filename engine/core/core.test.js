@@ -404,3 +404,70 @@ test('sim: нужное число опытов, ответ с допуском,
   }
   assert.ok(bad <= 1, `честная симуляция вышла за допуск ${bad} раз из 30`);
 });
+
+// ───── matrix: алгоритмы против math.js ─────
+import * as matW from '../widgets/matrix.js';
+import { run as matRun, gauss, det as matDet, inv as matInv, lu as matLu, gramSchmidt, charPoly, mulM, transpose } from '../widgets/matrixAlgo.js';
+import { math as mj } from './mathx.js';
+
+const close2 = (a, b, e = 1e-9) => Math.abs(a - b) <= e * Math.max(1, Math.abs(a), Math.abs(b));
+const closeM = (A, B) => A.length === B.length && A.every((r, i) => r.every((x, j) => close2(x, B[i][j])));
+
+test('matrix: det, inv, rref, lu, mul, T совпадают с math.js на случайных матрицах', () => {
+  const rng = makeRng(99);
+  for (let t = 0; t < 120; t++) {
+    const n = 2 + (t % 3);
+    const M = Array.from({ length: n }, () => Array.from({ length: n }, () => rng.int(-5, 5)));
+    const d = mj.det(M);
+    assert.ok(close2(matDet(M).result, d, 1e-6), `det ${JSON.stringify(M)}: ${matDet(M).result} против ${d}`);
+    const inv = matInv(M);
+    if (Math.abs(d) < 1e-9) assert.equal(inv.result, null);
+    else assert.ok(closeM(inv.result, mj.inv(M)), 'inv ' + JSON.stringify(M));
+    const rr = gauss(M, false, true);
+    assert.equal(rr.rank, mj.rank ? mj.rank(M) : rr.rank);
+    if (rr.rank === n) assert.ok(closeM(rr.result, mj.identity(n).valueOf()), 'rref полного ранга — единичная');
+    const lu = matLu(M);
+    if (lu.result) assert.ok(closeM(mj.multiply(lu.result.L, lu.result.U), M), 'LU: L·U = A ' + JSON.stringify(M));
+    const B = Array.from({ length: n }, () => Array.from({ length: 2 }, () => rng.int(-4, 4)));
+    assert.ok(closeM(mulM(M, B).result, mj.multiply(M, B)), 'mul');
+    assert.ok(closeM(transpose(M).result, mj.transpose(M)), 'T');
+  }
+});
+
+test('matrix: Грам–Шмидт ортогонален, характеристический многочлен верен', () => {
+  const r = gramSchmidt([[1, 1, 0], [1, 0, 1], [0, 1, 1]]).result;
+  for (let i = 0; i < 3; i++) for (let j = i + 1; j < 3; j++) assert.ok(close2(mj.dot(r[i], r[j]), 0));
+  assert.deepEqual(charPoly([[4, 1], [2, 3]]).result, [1, -7, 10]);
+  const rng = makeRng(7);
+  for (let t = 0; t < 40; t++) {
+    const A = Array.from({ length: 3 }, () => Array.from({ length: 3 }, () => rng.int(-4, 4)));
+    const [, c1, c2, c3] = charPoly(A).result;
+    // p(0) = det(−A) = −det A; p(λ) = det(λI − A)
+    assert.ok(close2(c3, -mj.det(A), 1e-6), 'свободный член');
+    assert.ok(close2(c1, -mj.trace(A)), 'след');
+    // значение в точке: p(2) = det(2I − A)
+    const p2 = 8 + c1 * 4 + c2 * 2 + c3;
+    assert.ok(close2(p2, mj.det(mj.subtract(mj.multiply(2, mj.identity(3).valueOf()), A)), 1e-6));
+  }
+});
+
+test('matrix: вырожденные случаи и дроби', () => {
+  assert.equal(matInv([[1, 2], [2, 4]]).result, null);
+  assert.match(matInv([[1, 2], [2, 4]]).steps.join(' '), /нет/);
+  assert.equal(matLu([[0, 1], [1, 0]]).result, null);
+  const withFrac = matRun('inv', [[2, 1], [1, 1]], undefined, true).steps.join(' ');
+  assert.ok(!/\\frac/.test(matRun('inv', [[1, 0], [0, 1]], undefined, true).steps.join(' ')), 'целые без дробей');
+  assert.match(matRun('inv', [[2, 0], [0, 4]], undefined, true).steps.join(' '), /\\frac\{1\}\{2\}/);
+  assert.ok(withFrac.length > 0);
+  assert.throws(() => matRun('char', [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]]), /2×2 и 3×3/);
+});
+
+test('matrix: виджет — шаги, done, матрица из переменной задачи', () => {
+  const params = { M: 'A', op: 'char' };
+  const scope = { A: [[4, 1], [2, 3]] };
+  const total = matW.stepsOf(params, scope).length;
+  assert.equal(total, 3);
+  assert.deepEqual(matW.compute(params, scope, { step: 1, done: 0 }), { step: 1, done: 0 });
+  assert.deepEqual(matW.compute(params, scope, { step: total }), { step: total, done: 1 });
+  assert.equal(matW.controls()[0].type, 'actions');
+});

@@ -1,6 +1,13 @@
 import { useState, useEffect, useRef } from 'preact/hooks';
 import { loaders } from '../widgets/index.js';
 import { fmtNum } from '../core/gen.js';
+import { Rich } from './Rich.jsx';
+
+/** Шаг решения: текст или виджет (например, {w: matrix, M: A, op: char} — шаги строит движок). */
+export function SolStep({ s, scope }) {
+  if (typeof s === 'string') return <Rich text={s} as="span" />;
+  return <Widget params={s} scope={scope} />;
+}
 
 /**
  * Хост виджета: загружает модуль, рисует слайдеры и переключатели, держит состояние.

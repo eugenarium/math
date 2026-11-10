@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'preact/hooks';
 import { Rich } from './Rich.jsx';
-import { Widget } from './Widget.jsx';
+import { Widget, SolStep } from './Widget.jsx';
 import { Keypad, NUM_KEYS, exprKeys, applyKey } from './Keypad.jsx';
 import { checkAnswer } from '../core/check.js';
 import { toTex } from '../core/mathx.js';
@@ -216,7 +216,7 @@ export function Problem({ inst, refs, onDone, exam = false }) {
           <ol>
             {inst.sol.map((s, i) => (
               <li key={i}>
-                <Rich text={s} as="span" />
+                <SolStep s={s} scope={inst.scope} />
               </li>
             ))}
           </ol>
