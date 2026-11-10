@@ -13,7 +13,7 @@ def val(schema,obj,name):
 cards=yaml.safe_load(open(R+'content/cards/samples.yml')); val({'$ref':'lesson.schema#/$defs/cards'},cards,'cards')
 G=yaml.safe_load(open(R+'content/ref/glossary.yml')); E=yaml.safe_load(open(R+'content/ref/errors.yml'))
 W=set(re.findall(r'^### (\w+)',open(R+'docs/WIDGETS.md').read(),re.M))
-for f in ['c1/c1.riem','la/la.eig','st/st.ci']:
+for f in ['c1/c1.riem','c1/c1.der','la/la.eig','st/st.ci']:
     raw=open(R+f'content/lessons/{f}.yml').read()
     assert not re.search(r'"[^"\n]*\\[^"\n]*"',raw)
     L=yaml.safe_load(raw); val({'$ref':'lesson.schema'},L,f); c=cards[L['id']]
