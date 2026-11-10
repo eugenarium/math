@@ -8,7 +8,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "check": "python3 tools/check/course.py && python3 tools/check/lessons.py"
+    "check": "node tools/build.mjs && npm test && python3 tools/check/course.py && python3 tools/check/lessons.py",
+    "test": "node --test engine/core/core.test.js"
   },
   "dependencies": {
     "jstat": "1.9.6",
