@@ -28,7 +28,7 @@ test('render: форматы шаблонов', () => {
   assert.equal(render('@{b:sc}', s), '+');
   assert.equal(render('@{a:n}', s), '(' + M + '3)');
   assert.equal(render('@{c:f2}', s), '2.50');
-  assert.equal(render('@{p:fr}', s), '\\frac{3}{4}');
+  assert.equal(render('$@{p:fr}$', s), '$\\frac{3}{4}$');
   assert.equal(render('@{u:m}', s), '\\begin{pmatrix} 1 \\\\ ' + M + '1 \\end{pmatrix}');
   assert.equal(render('@{a*b+1}', s), M + '2');
   assert.equal(render('$@a(x+h)^2$', s), '$' + M + '3(x+h)^2$');
@@ -266,4 +266,78 @@ test('store: предпосылки и статус урока', () => {
 test('store: без localStorage работает на пустом прогрессе', () => {
   assert.deepEqual(loadProgress(), fresh());
   assert.doesNotThrow(() => saveProgress(fresh()));
+});
+
+// ───── lin2 и dist ─────
+import * as lin2 from '../widgets/lin2.js';
+import * as distW from '../widgets/dist.js';
+
+test('lin2: собственный вектор, поворот, собственные прямые', () => {
+  const M = [[2, 1], [1, 2]];
+  const on = lin2.probeStats(M, [1, 1]);
+  assert.ok(on.ang < 1e-9 && Math.abs(on.lam - 3) < 1e-12);
+  const on2 = lin2.probeStats(M, [1, -1]);
+  assert.ok(on2.ang < 1e-9 && Math.abs(on2.lam - 1) < 1e-12);
+  assert.ok(lin2.probeStats(M, [1, 0]).ang > 20);
+  // поворот на 90°: Av ⟂ v, собственных направлений нет
+  assert.ok(Math.abs(lin2.probeStats([[0, -1], [1, 0]], [1, 0]).ang - 90) < 1e-9);
+  assert.equal(lin2.eigenLines([[0, -1], [1, 0]]).length, 0);
+  const e = lin2.eigenLines(M).map((x) => x.lam.toFixed(6)).sort();
+  assert.deepEqual(e, ['1.000000', '3.000000']);
+  const out = lin2.compute({ M: [['a', 0], [0, 2]], probe: [1, 0], sl: { a: [0, 4, 1] } }, {}, { a: 3, 'v.x': 1, 'v.y': 0 });
+  assert.equal(out.det, 6);
+  assert.equal(out.lam, 3);
+  assert.equal(out.m11, 3);
+});
+
+test('lin2: цель достижима только для настоящих собственных значений', () => {
+  const params = { M: [[2, 1], [1, 2]], probe: [1, 0] };
+  assert.ok(goalReachable(lin2, params, {}, { ang: [0, 4], lam: [3, 0.2] }));
+  assert.ok(goalReachable(lin2, params, {}, { ang: [0, 4], lam: [1, 0.2] }));
+  assert.equal(goalReachable(lin2, params, {}, { ang: [0, 4], lam: [2, 0.2] }), false);
+});
+
+test('dist: нормальное, дискретные, квантили', () => {
+  const n = distW.makeDist('norm', { mu: 0, sigma: 1 });
+  assert.ok(Math.abs(n.cdf(1.96) - 0.975) < 1e-3);
+  assert.ok(Math.abs(n.cdf(1.96) - n.cdf(-1.96) - 0.95) < 1e-3);
+  assert.ok(Math.abs(n.inv(0.975) - 1.96) < 1e-3);
+  const b = distW.makeDist('binom', { n: 10, p: 0.5 });
+  let s = 0;
+  for (let k = 0; k <= 10; k++) s += b.pdf(k);
+  assert.ok(Math.abs(s - 1) < 1e-9);
+  assert.equal(b.pdf(2.5), 0);
+  assert.ok(Math.abs(b.cdf(3) - 0.171875) < 1e-9);
+  assert.equal(b.inv(0.5), 5);
+  for (const [d, p] of [['t', { df: 7 }], ['chi2', { df: 4 }], ['f', { d1: 5, d2: 10 }], ['exp', { lam: 2 }], ['unif', { a: 1, b: 3 }], ['gamma', { a: 2, b: 1 }], ['beta', { a: 2, b: 3 }], ['pois', { lam: 4 }], ['geom', { p: 0.3 }], ['hyper', { N: 50, K: 20, n: 10 }]]) {
+    const x = distW.makeDist(d, p);
+    assert.ok(x.hi > x.lo, d);
+    const mid = (x.lo + x.hi) / 2;
+    const c = x.cdf(x.hi);
+    assert.ok(c > 0.97 && c <= 1 + 1e-9, `${d}: cdf на правой границе ${c}`);
+    assert.ok(x.cdf(x.lo) < 0.01 || x.discrete, `${d}: слева от окна больше 1 % массы`);
+    assert.ok(Number.isFinite(x.pdf(Math.round(mid))), d);
+  }
+});
+
+test('dist: вероятность области и достижимость цели', () => {
+  const params = { d: 'norm', p: { mu: 0, sigma: 1 }, area: [-1, 1] };
+  const out = distW.compute(params, {}, distW.initial(params, {}));
+  assert.ok(Math.abs(out.P - 0.6827) < 1e-3);
+  assert.ok(goalReachable(distW, params, {}, { a: [-1.96, 0.08], b: [1.96, 0.08] }));
+  assert.ok(goalReachable(distW, params, {}, { P: [0.9, 0.02] }));
+  assert.equal(goalReachable(distW, params, {}, { a: [-9, 0.08] }), false, 'вне окна');
+  // слайдер параметра попадает в out
+  const sp = { d: 'norm', p: { mu: [-2, 2, 0], sigma: 1 } };
+  assert.deepEqual(distW.controls(sp).map((c) => c.name), ['mu']);
+  assert.equal(distW.compute(sp, {}, distW.initial(sp, {})).mu, 0);
+});
+
+test('render: pc и fr учитывают, внутри формулы подстановка или нет', () => {
+  const s = { L: 0.95, p: 0.75 };
+  assert.equal(render('вероятность @{L:pc}.', s), 'вероятность 95 %.');
+  assert.equal(render('$P=@{L:pc}$', s), '$P=95\\,\\%$');
+  assert.equal(render('доля @{p:fr}.', s), 'доля 3/4.');
+  assert.equal(render('$x=@{p:fr}$', s), '$x=\\frac{3}{4}$');
+  assert.equal(render('$a$ и @{L:pc}, затем $@{p:fr}$', s), '$a$ и 95 %, затем $\\frac{3}{4}$');
 });

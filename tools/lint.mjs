@@ -245,6 +245,12 @@ function checkInstance(inst, seed, p, report, onCollide) {
       }
     }
   }
+  if (seed <= 20) {
+    for (const t of texts) {
+      const plain = String(t).replace(/\$[^$]+\$/g, '');
+      if (/\\/.test(plain)) report('E305', `TeX вне формулы при seed=${seed}: ${plain.slice(0, 60)}`);
+    }
+  }
   if (inst.k === 'num') {
     const input = (v) => (Array.isArray(v) ? v.map((r) => (Array.isArray(r) ? r.map(String) : String(r))) : String(v));
     if (!checkAnswer(inst, input(inst.a)).ok) report('E303', `верный ответ не принят при seed=${seed}`);

@@ -2,4 +2,6 @@
 export const loaders = {
   fplot: () => import('./fplot.js'),
   riemann: () => import('./riemann.js'),
+  lin2: () => import('./lin2.js'),
+  dist: () => import('./dist.js'),
 };

@@ -36,8 +36,15 @@ function fracTex(x) {
   return `${sign}\\frac{${Math.abs(n)}}{${d}}`;
 }
 
-/** @param {any} val @param {string} [fmt] */
-export function formatValue(val, fmt) {
+/** Дробь без TeX, для текста вне формулы: 3/4 */
+function fracText(x) {
+  const f = math.fraction(x);
+  const n = Number(f.s) * Number(f.n);
+  return Number(f.d) === 1 ? fmtNum(n) : `${n < 0 ? MINUS : ''}${Math.abs(n)}/${Number(f.d)}`;
+}
+
+/** @param {any} val @param {string} [fmt] @param {boolean} [math] внутри $…$ ли стоит подстановка */
+export function formatValue(val, fmt, math = true) {
   if (Array.isArray(val)) return matTex(val);
   if (typeof val === 'string') return fmt === 'tex' ? toTex(val) : val;
   if (typeof val === 'boolean') return val ? 'да' : 'нет';
@@ -51,9 +58,9 @@ export function formatValue(val, fmt) {
     case 'n':
       return val < 0 ? `(${fmtNum(val)})` : fmtNum(val);
     case 'fr':
-      return fracTex(val);
+      return math ? fracTex(val) : fracText(val);
     case 'pc':
-      return fmtNum(val * 100) + '\\,\\%';
+      return fmtNum(val * 100) + (math ? '\\,\\%' : '\u00a0%');
     case 'm':
       return fmtNum(val);
     default:
@@ -72,16 +79,19 @@ const FMT = /^([\s\S]*):(s|c|sc|n|f\d+|fr|pc|m|tex)$/;
 
 /** Подставляет @a и @{выражение:формат}. @param {string} text @param {Record<string, any>} scope */
 export function render(text, scope) {
-  return String(text).replace(TPL, (_all, braced, name) => {
-    if (name !== undefined) return formatValue(evalExpr(name, scope));
+  const src = String(text);
+  return src.replace(TPL, (_all, braced, name, offset) => {
+    // подстановка внутри формулы, если перед ней нечётное число символов $
+    const inMath = (src.slice(0, offset).match(/\$/g) ?? []).length % 2 === 1;
+    if (name !== undefined) return formatValue(evalExpr(name, scope), undefined, inMath);
     const m = FMT.exec(braced);
     const expr = m ? m[1] : braced;
     const fmt = m ? m[2] : undefined;
     if (fmt === 'tex') {
       const v = evalExpr(expr, scope);
-      return formatValue(typeof v === 'string' ? v : expr, 'tex');
+      return formatValue(typeof v === 'string' ? v : expr, 'tex', inMath);
     }
-    return formatValue(evalExpr(expr, scope), fmt);
+    return formatValue(evalExpr(expr, scope), fmt, inMath);
   });
 }
 
