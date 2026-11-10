@@ -226,8 +226,9 @@ const renderAll = (arr, scope) => (arr ?? []).map((t) => (typeof t === 'string' 
  */
 export function instantiate(p, seed, ctx = {}) {
   const rng = makeRng(seed * 2654435761 + 12345);
-  const { scope } = sampleWithConstraints(p, rng);
+  const { scope, tries } = sampleWithConstraints(p, rng);
   const inst = {
+    tries,
     k: p.k,
     lv: p.lv ?? 1,
     seed,
