@@ -6,4 +6,6 @@ export const loaders = {
   dist: () => import('./dist.js'),
   ci: () => import('./ci.js'),
   matrix: () => import('./matrix.js'),
+  venn: () => import('./venn.js'),
+  numline: () => import('./numline.js'),
 };

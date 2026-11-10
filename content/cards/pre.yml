@@ -40,3 +40,25 @@ pre.sum:
   e: [pre.sum.count, pre.sum.const]
   n: 5
   note: 'Формулу суммы $1+\dots+n$ дать готовой, без вывода. Вложенные суммы не вводить.'
+
+pre.sets:
+  t: 'Множества, операции, диаграммы Венна'
+  goal: 'Умею считать число элементов объединения и закрашивать области диаграммы Венна по выражению'
+  pre: []
+  g: [set, set-operations, inclusion-exclusion]
+  w: [venn]
+  k: [num, mc, graph, spot]
+  e: [pre.sets.union-count, pre.sets.de-morgan]
+  n: 6
+  note: 'Только конечные множества. Декартово произведение и мощность бесконечных множеств не вводить.'
+
+pre.ineq:
+  t: 'Неравенства, модуль, окрестности'
+  goal: 'Умею решать линейные неравенства и неравенства с модулем и записывать решение промежутком'
+  pre: [pre.func, pre.sets]
+  g: [inequality, absolute-value, neighborhood]
+  w: [numline]
+  k: [num, mc, graph, spot]
+  e: [pre.ineq.neg-flip, pre.ineq.abs-split]
+  n: 6
+  note: 'Линейные неравенства и модуль вида $|x-a|<r$. Квадратные и дробные неравенства не вводить.'

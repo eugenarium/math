@@ -2,6 +2,7 @@
 // Выражения уроков: math.js + функции из docs/ARCHITECTURE.md и schema/problem.schema.
 import { create, all } from 'mathjs';
 import jStat from 'jstat';
+import { vmask } from './setexpr.js';
 
 const math = create(all, { matrix: 'Array', number: 'number' });
 
@@ -48,6 +49,8 @@ function evalString(f, vars) {
 math.import(
   {
     ln: (x) => Math.log(x),
+    // маска областей диаграммы Венна: vmask("A & !B", 2)
+    vmask: (src, n) => vmask(String(src), n ?? 2),
     C: (n, k) => math.combinations(n, k),
     A: (n, k) => math.permutations(n, k),
     rank,
