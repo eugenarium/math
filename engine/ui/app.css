@@ -125,3 +125,4 @@ p { margin: 0 0 12px; }
 .chip { min-height: 44px; padding: 0 16px; border-radius: 22px; border: 2px solid var(--line); background: var(--bg); cursor: pointer; }
 .chip.on { border-color: var(--accent); background: var(--accent); color: var(--accent-fg); font-weight: 600; }
 .cap { margin-top: 12px; font-weight: 500; }
+.know { margin-top: 4px; }

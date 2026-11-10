@@ -6,10 +6,12 @@ import data from 'virtual:content';
 import { load, save } from '../core/store.js';
 import { Home } from './Home.jsx';
 import { Lesson } from './Lesson.jsx';
+import { Review } from './Review.jsx';
 
 function App() {
   const [state, setState] = useState(load);
   const [lessonId, setLessonId] = useState(null);
+  const [review, setReview] = useState(false);
 
   /** Изменяет прогресс и сразу сохраняет его целиком. */
   const update = (fn) =>
@@ -20,10 +22,11 @@ function App() {
       return next;
     });
 
+  if (review) return <Review data={data} state={state} update={update} onExit={() => setReview(false)} />;
   if (lessonId) {
     return <Lesson key={lessonId} id={lessonId} data={data} state={state} update={update} onExit={() => setLessonId(null)} />;
   }
-  return <Home data={data} state={state} update={update} onOpen={setLessonId} />;
+  return <Home data={data} state={state} update={update} onOpen={setLessonId} onReview={() => setReview(true)} />;
 }
 
 render(<App />, document.getElementById('app'));

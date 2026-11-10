@@ -178,3 +178,53 @@ test('graph: цель достижима во всех наборах (видж�
   }
   assert.ok(checked >= 80, 'ожидались задачи graph c1.riem и c1.der, проверено ' + checked);
 });
+
+// ───── повторения ─────
+import { INTERVALS, dayNumber, onMastered, grade, dueLessons, pickReview, buildSession, pickExam } from './srs.js';
+
+test('srs: номер дня и интервалы', () => {
+  assert.equal(dayNumber(new Date(2025, 0, 1)), 0);
+  assert.equal(dayNumber(new Date(2025, 0, 2, 23, 59)), 1);
+  assert.deepEqual(INTERVALS, [1, 3, 7, 16, 35, 80, 180]);
+  assert.deepEqual(onMastered(100), [1, 0, 101, 0]);
+  assert.deepEqual(onMastered(100, true), [1, 2, 107, 0]);
+});
+
+test('srs: оценка повторения 3/3, 2/3, 0–1 из 3', () => {
+  assert.deepEqual(grade([1, 2, 0, 1], 3, 3, 50), [1, 3, 66, 2]); // 7 → 16 дней
+  assert.deepEqual(grade([1, 2, 0, 1], 2, 3, 50), [1, 2, 57, 2]); // тот же
+  assert.deepEqual(grade([1, 2, 0, 1], 1, 3, 50), [1, 0, 51, 2]); // два шага назад
+  assert.deepEqual(grade([1, 6, 0, 1], 3, 3, 50), [1, 6, 230, 2]); // потолок
+  assert.deepEqual(grade([1, 1, 0, 0], 0, 3, 50), [1, 0, 51, 1]); // нижняя граница
+});
+
+test('srs: уроки к повторению и сессия дня', () => {
+  const L = { a: [1, 0, 10, 0], b: [1, 0, 12, 0], c: [1, 0, 20, 0], d: [0, 0, 5, 0], e: [2, 0, 1, 0] };
+  assert.deepEqual(dueLessons(L, 12), ['a', 'b']);
+  const lesson = (n) => ({ pr: Object.fromEntries(Array.from({ length: n }, (_, i) => [`p${i + 1}`, { k: i % 2 ? 'mc' : 'num', lv: i >= 2 ? 2 : 1 }])) });
+  const lessons = { a: lesson(5), b: lesson(4) };
+  const s = buildSession(L, lessons, {}, 12, 7);
+  assert.equal(s.length, 6);
+  assert.deepEqual(s, buildSession(L, lessons, {}, 12, 7), 'сессия детерминирована');
+  for (const id of ['a', 'b']) {
+    const mine = s.filter((x) => x.id === id);
+    assert.equal(new Set(mine.map((x) => x.pid)).size, 3, 'шаблоны разные');
+    assert.ok(mine.every((x) => (lessons[id].pr[x.pid].lv ?? 1) >= 2 || mine.filter((y) => lessons[id].pr[y.pid].lv >= 2).length >= 2));
+  }
+  // лимит: не больше 10 уроков
+  const many = Object.fromEntries(Array.from({ length: 15 }, (_, i) => [`l${i}`, [1, 0, 1, 0]]));
+  const ls = Object.fromEntries(Object.keys(many).map((k) => [k, lesson(4)]));
+  assert.equal(new Set(buildSession(many, ls, {}, 5, 1).map((x) => x.id)).size, 10);
+});
+
+test('srs: шаблоны с ошибками выбираются чаще, экзамен берёт верхний уровень', () => {
+  const pr = { p1: { k: 'num' }, p2: { k: 'num' }, p3: { k: 'num' }, p4: { k: 'num', lv: 2 } };
+  const T = { 'x#p2': [0, 5] };
+  for (let salt = 1; salt <= 20; salt++) {
+    const pids = pickReview(pr, T, 'x', 2, salt).map((t) => t.pid);
+    assert.ok(pids.includes('p4') && pids.includes('p2'), pids.join());
+  }
+  const ex = pickExam({ ...pr, p5: { k: 'num', lv: 2 } }, 3);
+  assert.equal(ex.length, 4);
+  assert.ok(ex.slice(0, 2).every((t) => ['p4', 'p5'].includes(t.pid)));
+});
