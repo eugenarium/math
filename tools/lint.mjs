@@ -205,7 +205,7 @@ function lintProblem(L, pid, p, ctx, add) {
     ok++;
     sample ??= inst;
     tries += inst.tries;
-    checkInstance(inst, seed, p, report, () => collide++);
+    checkInstance(inst, seed, p, report, () => collide++, ctx.modules);
   }
   if (ok && tries / ok > 5) add('E302', at('c'), `ограничения c отбрасывают ${Math.round((1 - ok / tries) * 100)} % наборов`);
   if (collide) {
@@ -231,7 +231,22 @@ function lintProblem(L, pid, p, ctx, add) {
   }
 }
 
-function checkInstance(inst, seed, p, report, onCollide) {
+/** E404: параметры виджета вычисляются при подстановке чисел задачи (проверяем виджеты в условии и в решении). */
+function checkWidgets(inst, seed, p, report, modules) {
+  const list = [...(inst.w ? [inst.w] : []), ...(p.sol ?? []).filter((s) => s && typeof s === 'object' && s.w)];
+  for (const w of list) {
+    const mod = modules[w.w];
+    if (!mod) continue;
+    try {
+      mod.compute(w, inst.scope, mod.initial(w, inst.scope));
+    } catch (e) {
+      report('E404', `параметры виджета ${w.w} не вычисляются при seed=${seed}: ${String(e.message).slice(0, 80)}`);
+    }
+  }
+}
+
+function checkInstance(inst, seed, p, report, onCollide, modules = {}) {
+  if (seed <= 20) checkWidgets(inst, seed, p, report, modules);
   // E305: формулы после подстановки
   const texts = [inst.q, ...inst.h, ...inst.sol.filter((s) => typeof s === 'string'), ...(inst.steps ?? []), ...(inst.options ?? []).map((o) => o.text)];
   if (seed <= 20) {

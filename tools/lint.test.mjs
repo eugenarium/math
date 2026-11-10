@@ -28,6 +28,7 @@ const cases = [
   ['E308', (L) => void (L.pr.p3.a = '2*zz*x')],
   ['E309', (L) => void delete L.pr.p2.sol],
   ['E310', (L) => void (L.pr.p4.goal = { zzz: [1, 1] })],
+  ['E404', (L) => void (L.pr.p2.sol[1] = { w: 'matrix', M: 'zz', op: 'char' })],
   ['E401', (L) => void (L.int[1] = { w: 'nosuch' })],
   ['E402', (L) => void (L.int[1].bogus = 1)],
   ['E403', (L) => void (L.int[1] = { w: 'riemann', f: 'x', a: 0, b: 1 })],
