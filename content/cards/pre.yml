@@ -62,3 +62,25 @@ pre.ineq:
   e: [pre.ineq.neg-flip, pre.ineq.abs-split]
   n: 6
   note: 'Линейные неравенства и модуль вида $|x-a|<r$. Квадратные и дробные неравенства не вводить.'
+
+pre.trig:
+  t: 'Тригонометрия на единичной окружности'
+  goal: 'Умею находить синус и косинус угла по единичной окружности и переводить градусы в радианы'
+  pre: [pre.graph, pre.func, pre.sets]
+  g: [unit-circle, radian]
+  w: [fplot]
+  k: [num, mc, graph, spot]
+  e: [pre.trig.deg-rad, pre.trig.sin-cos-swap]
+  n: 6
+  note: 'Углы, кратные 30° и 45°. Формулы приведения и сложения не вводить.'
+
+pre.cx:
+  t: 'Комплексные числа: алгебра, плоскость, формула Эйлера'
+  goal: 'Умею складывать и умножать комплексные числа, находить модуль и отмечать числа на плоскости'
+  pre: [pre.trig, pre.explog, pre.graph, pre.func, pre.sets]
+  g: [complex-number, modulus-argument, euler-formula]
+  w: [complex]
+  k: [num, graph, spot]
+  e: [pre.cx.i-square, pre.cx.abs-sum]
+  n: 6
+  note: 'Алгебра и плоскость; формулу Эйлера дать готовой. Корни из комплексных чисел не вводить.'

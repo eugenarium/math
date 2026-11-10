@@ -539,3 +539,43 @@ test('numline: перетаскиваемый промежуток и дости
   assert.equal(goalReachable(numW, params, {}, { a: [20, 0.25] }), false, 'вне окна');
   assert.equal(numW.compute({}, {}, {}).a, undefined);
 });
+
+// ───── complex и параметрический fplot ─────
+import * as cxW from '../widgets/complex.js';
+import * as fplotW from '../widgets/fplot.js';
+
+test('complex: модуль, аргумент, перетаскиваемые и закреплённые точки', () => {
+  const params = { z: { z: [3, 4], w: [0, 0] }, lock: ['z'], win: [-4, 4] };
+  const v = cxW.initial(params);
+  assert.deepEqual(v, { 'z.re': 3, 'z.im': 4, 'w.re': 0, 'w.im': 0 });
+  const out = cxW.compute(params, {}, v);
+  assert.equal(out['z.abs'], 5);
+  assert.ok(Math.abs(out['z.arg'] - Math.atan2(4, 3)) < 1e-12);
+  assert.equal(out['w.arg'], 0, 'аргумент нуля принят равным 0');
+  assert.ok(Math.abs(cxW.compute(params, {}, { ...v, 'w.re': -1, 'w.im': 0 })['w.arg'] - Math.PI) < 1e-12);
+  // закреплённая точка в перебор не попадает
+  assert.equal(cxW.dragAxes(params).length, 2);
+  assert.equal(cxW.dragAxes({ z: { z: [1, 1] }, win: [-4, 4] }).length, 2);
+  assert.equal(cxW.dragAxes({ z: { z: [1, 1], w: [0, 0] }, win: [-4, 4] }).length, 4);
+  // выражения в начальном положении берутся из задачи
+  assert.deepEqual(cxW.initial({ z: { z: ['a', 'b'] } }, { a: 2, b: -1 }), { 'z.re': 2, 'z.im': -1 });
+});
+
+test('complex: цель достижима для суммы и недостижима вне окна', () => {
+  const params = { z: { z: [2, 1], w: [0, 0] }, lock: ['z'], show: ['sum'], win: [-4, 4] };
+  // z + w = 3 + 3i  →  w = 1 + 2i
+  assert.ok(goalReachable(cxW, params, {}, { 'w.re': [1, 0.25], 'w.im': [2, 0.25] }));
+  assert.equal(goalReachable(cxW, params, {}, { 'w.re': [9, 0.25] }), false);
+  assert.ok(goalReachable(cxW, { z: { z: [0, 0] }, win: [-4, 4] }, {}, { 'z.abs': [5, 0.01] }), 'модуль 5: точка 3 + 4i в окне');
+});
+
+test('fplot: параметрическая кривая, подпись точки, равный масштаб', () => {
+  const params = { xy: ['cos(t)', 'sin(t)'], t: [0, 6.2832], x: [-1.5, 1.5], y: [-1.5, 1.5], eq: 1, sl: { th: [0, 6.2832, 1, 0.01] }, pts: [['cos(th)', 'sin(th)']], lab: 1 };
+  const v = fplotW.initial(params, {});
+  assert.deepEqual(v, { th: 1 });
+  assert.equal(fplotW.controls(params)[0].name, 'th');
+  // без f начальное состояние строится без ошибок
+  assert.doesNotThrow(() => fplotW.initial({ xy: ['t', 't'], drag: { P: [0, 0] } }, {}));
+  // цель по слайдеру достижима
+  assert.ok(goalReachable(fplotW, params, {}, { th: [Math.PI / 3, 0.05] }));
+});

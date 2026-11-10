@@ -113,7 +113,8 @@ export function drawGrid(v, th) {
     ctx.fillText(t, x, y);
   };
   for (let x = Math.ceil(v.xr[0] / sx) * sx; x <= v.xr[1] + 1e-9; x += sx) {
-    if (Math.abs(x) > 1e-9) lab(fmtNum(Number(x.toPrecision(6))), v.X(x), Math.min(ay + 13, v.h - 3), 'center');
+    // крайние подписи сдвигаем внутрь, чтобы они не обрезались краем холста
+    if (Math.abs(x) > 1e-9) lab(fmtNum(Number(x.toPrecision(6))), Math.min(v.w - 14, Math.max(14, v.X(x))), Math.min(ay + 13, v.h - 3), 'center');
   }
   for (let y = Math.ceil(v.yr[0] / sy) * sy; y <= v.yr[1] + 1e-9; y += sy) {
     if (Math.abs(y) > 1e-9) lab(fmtNum(Number(y.toPrecision(6))), Math.min(ax + 4, v.w - 24), v.Y(y) - 3, 'left');

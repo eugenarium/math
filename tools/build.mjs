@@ -7,6 +7,17 @@ import Ajv2020 from 'ajv/dist/2020.js';
 
 const yml = (p) => load(readFileSync(p, 'utf8'));
 
+/** Разбор YAML с кодом E101 вместо падения: «E101 файл:строка — причина». Возвращает null при ошибке. */
+function ymlSafe(path, label, errors) {
+  try {
+    return yml(path);
+  } catch (e) {
+    const line = e?.mark?.line !== undefined ? ':' + (e.mark.line + 1) : '';
+    errors.push(`E101 ${label}${line} — ${String(e?.reason ?? e?.message ?? e).split('\n')[0]}`);
+    return null;
+  }
+}
+
 /** Разбор docs/COURSE_MAP.md: разделы и уроки с предпосылками (↑ раскрыт). */
 export function parseCourseMap(text) {
   const sections = {};
@@ -60,7 +71,8 @@ export function loadContent(root = process.cwd()) {
   const cdir = join(root, 'content/cards');
   if (existsSync(cdir)) {
     for (const f of readdirSync(cdir).filter((x) => x.endsWith('.yml'))) {
-      const c = yml(join(cdir, f));
+      const c = ymlSafe(join(cdir, f), `content/cards/${f}`, errors);
+      if (!c) continue;
       if (!V.cards(c)) errors.push(`E102 content/cards/${f} — ${fmtErr(V.cards)}`);
       Object.assign(cards, c);
     }
@@ -72,7 +84,8 @@ export function loadContent(root = process.cwd()) {
     for (const sec of readdirSync(ldir)) {
       for (const f of readdirSync(join(ldir, sec)).filter((x) => x.endsWith('.yml'))) {
         const path = `content/lessons/${sec}/${f}`;
-        const L = yml(join(root, path));
+        const L = ymlSafe(join(root, path), path, errors);
+        if (!L) continue;
         if (L.id !== f.replace(/\.yml$/, '') || !cards[L.id]) errors.push(`E103 ${path} — id не совпадает с именем файла или нет карточки`);
         if (!V.lesson(L)) errors.push(`E102 ${path} — ${fmtErr(V.lesson)}`);
         lessons[L.id] = L;
@@ -81,8 +94,8 @@ export function loadContent(root = process.cwd()) {
   }
 
   const ref = {
-    glossary: yml(join(root, 'content/ref/glossary.yml')),
-    errors: yml(join(root, 'content/ref/errors.yml')),
+    glossary: ymlSafe(join(root, 'content/ref/glossary.yml'), 'content/ref/glossary.yml', errors) ?? {},
+    errors: ymlSafe(join(root, 'content/ref/errors.yml'), 'content/ref/errors.yml', errors) ?? {},
   };
 
   const index = map.lessons.map((l) => {

@@ -64,3 +64,20 @@ test('карта курса: E201, E202, E206', () => {
   for (const code of ['E201', 'E202', 'E206']) assert.ok(c.includes(code), code);
   assert.deepEqual(lintCourse(data.index).map((r) => `${r.code} ${r.id}`), []);
 });
+
+test('E101: ошибка разбора YAML даёт строку с кодом, а не падение', async () => {
+  const { mkdtempSync, cpSync, readFileSync, writeFileSync, rmSync } = await import('node:fs');
+  const { tmpdir } = await import('node:os');
+  const { join } = await import('node:path');
+  const dir = mkdtempSync(join(tmpdir(), 'mathbook-lint-'));
+  try {
+    for (const d of ['docs', 'schema', 'content']) cpSync(d, join(dir, d), { recursive: true });
+    const file = join(dir, 'content/lessons/pre/pre.sum.yml');
+    // значение со скобками в { … } без кавычек ломает разбор
+    writeFileSync(file, readFileSync(file, 'utf8').replace("e: {pre.sum.count: m-k}", 'e: {pre.sum.count: t[1]+t[2]}'));
+    const { errors } = await lintAll(dir);
+    assert.ok(errors.some((e) => /^E101 content\/lessons\/pre\/pre\.sum\.yml:\d+ — /.test(e)), errors.join('\n'));
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
