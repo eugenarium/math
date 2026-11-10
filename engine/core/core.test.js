@@ -471,3 +471,71 @@ test('matrix: виджет — шаги, done, матрица из переме�
   assert.deepEqual(matW.compute(params, scope, { step: total }), { step: total, done: 1 });
   assert.equal(matW.controls()[0].type, 'actions');
 });
+
+// ───── venn и numline ─────
+import { parseSetExpr, vmask } from './setexpr.js';
+import * as vennW from '../widgets/venn.js';
+import * as numW from '../widgets/numline.js';
+
+test('setexpr: маски областей для двух и трёх множеств', () => {
+  // область r: бит 0 — в A, бит 1 — в B, бит 2 — в C; маска — множество номеров областей
+  assert.equal(vmask('A & !B', 2), 1 << 1); // только в A: область 1
+  assert.equal(vmask('A | B', 2), (1 << 1) | (1 << 2) | (1 << 3));
+  assert.equal(vmask('!(A | B)', 2), 1 << 0);
+  assert.equal(vmask('A ^ B', 2), (1 << 1) | (1 << 2));
+  assert.equal(vmask('A \\ B', 2), vmask('A & !B', 2));
+  assert.equal(vmask('A & B & !C', 3), 1 << 3);
+  assert.equal(vmask('!A | !B', 2), vmask('!(A & B)', 2), 'закон де Моргана');
+  assert.equal(vmask('!(A | B)', 2), vmask('!A & !B', 2), 'закон де Моргана');
+  assert.equal(evalExpr('vmask("A & !B", 2)'), 2, 'функция доступна в выражениях задач');
+  assert.throws(() => parseSetExpr('A && B'), /ошибка|недопустим/);
+  assert.throws(() => vmask('A & D', 2), /неизвестное множество/);
+});
+
+test('venn: вероятности областей и P выделенного', () => {
+  const pr = { A: 0.5, B: 0.3, AB: 0.1 };
+  const r = vennW.regionProbs(pr, 2);
+  assert.ok(Math.abs(r[1] - 0.4) < 1e-12 && Math.abs(r[2] - 0.2) < 1e-12 && Math.abs(r[3] - 0.1) < 1e-12 && Math.abs(r[0] - 0.3) < 1e-12, 'вне обоих множеств: 1 − (0.5 + 0.3 − 0.1) = 0.3');
+  assert.ok(Math.abs(r.reduce((s, x) => s + x, 0) - 1) < 1e-12);
+  const params = { n: 2, expr: 'A | B', pr };
+  assert.ok(Math.abs(vennW.compute(params, {}, vennW.initial(params)).P - 0.7) < 1e-12);
+  const tap = { n: 2, tap: 1, pr };
+  assert.equal(vennW.initial(tap).sel, 0);
+  assert.ok(Math.abs(vennW.compute(tap, {}, { sel: (1 << 1) | (1 << 3) }).P - 0.5) < 1e-12);
+  // три множества: сумма областей равна 1
+  const pr3 = { A: 0.5, B: 0.4, C: 0.3, AB: 0.2, AC: 0.15, BC: 0.1, ABC: 0.05 };
+  const r3 = vennW.regionProbs(pr3, 3);
+  assert.equal(r3.length, 8);
+  assert.ok(Math.abs(r3.reduce((s, x) => s + x, 0) - 1) < 1e-12);
+  assert.ok(Math.abs(r3[7] - 0.05) < 1e-12 && Math.abs(r3[3] - 0.15) < 1e-12);
+  assert.throws(() => vennW.regionProbs({ A: 0.5, B: 0.3 }, 2), /AB/);
+});
+
+test('numline: промежутки и множество решений неравенства', () => {
+  assert.deepEqual(numW.parseInterval('(-2, 3]'), { lo: -2, hi: 3, loC: false, hiC: true });
+  const inf = numW.parseInterval('[5, inf)');
+  assert.deepEqual([inf.lo, inf.hi, inf.loC, inf.hiC], [5, Infinity, true, false]);
+  assert.deepEqual(numW.parseInterval('(a, 2*a]', { a: 3 }), { lo: 3, hi: 6, loC: false, hiC: true });
+  assert.throws(() => numW.parseInterval('2, 3'), /записан неверно/);
+  const near = (a, b) => Math.abs(a - b) < 1e-4;
+  let s = numW.solveIneq('-3*x < 12', {}, -6, 6);
+  assert.equal(s.length, 1);
+  assert.ok(near(s[0].lo, -4) && s[0].hi === Infinity && !s[0].loC, JSON.stringify(s));
+  s = numW.solveIneq('x^2 - 4 < 0', {}, -6, 6);
+  assert.ok(s.length === 1 && near(s[0].lo, -2) && near(s[0].hi, 2) && !s[0].loC && !s[0].hiC);
+  s = numW.solveIneq('abs(x-1) <= 2', {}, -6, 6);
+  assert.ok(s.length === 1 && near(s[0].lo, -1) && near(s[0].hi, 3) && s[0].loC && s[0].hiC);
+  s = numW.solveIneq('x^2 - 4 > 0', {}, -6, 6);
+  assert.equal(s.length, 2);
+  assert.ok(s[0].lo === -Infinity && near(s[0].hi, -2) && near(s[1].lo, 2) && s[1].hi === Infinity);
+  assert.deepEqual(numW.solveIneq('x > 100', {}, -6, 6), []);
+});
+
+test('numline: перетаскиваемый промежуток и достижимость цели', () => {
+  const params = { drag: 1, iv: ['[0, 1]'], win: [-8, 8] };
+  assert.deepEqual(numW.initial(params), { a: 0, b: 1, ca: 1, cb: 1 });
+  assert.deepEqual(numW.compute(params, {}, { a: -1, b: 3, ca: 0, cb: 1 }), { a: -1, b: 3, ca: 0, cb: 1 });
+  assert.ok(goalReachable(numW, params, {}, { a: [-1, 0.25], b: [3, 0.25], ca: [0, 0.5], cb: [0, 0.5] }));
+  assert.equal(goalReachable(numW, params, {}, { a: [20, 0.25] }), false, 'вне окна');
+  assert.equal(numW.compute({}, {}, {}).a, undefined);
+});
