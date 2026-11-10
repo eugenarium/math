@@ -85,8 +85,9 @@ function WidgetScreen({ s }) {
 function Screen({ s, lesson, refs }) {
   if (typeof s === 'string') return <Rich text={s} class="text" />;
   if (s.g) return <Glossary g={s.g} refs={refs} />;
-  if (s.x) return <Example x={s.x} seed={s.seed} lesson={lesson} />;
+  // виджет проверяем раньше примера: у виджета тоже бывает параметр x (окно по оси)
   if (s.w) return <WidgetScreen s={s} />;
+  if (s.x) return <Example x={s.x} seed={s.seed} lesson={lesson} />;
   if (s.ask) return <Prediction ask={s.ask} ans={s.ans} />;
   return null;
 }
