@@ -1,0 +1,35 @@
+# Карточки эталонных уроков. При массовой генерации переносятся в cards/c1.yml, cards/la.yml, cards/st.yml.
+c1.riem:
+  t: 'Определённый интеграл, суммы Римана'
+  goal: 'Умею составлять интегральную сумму и объяснять определённый интеграл как её предел'
+  pre: [c1.int, pre.sum, c1.cont]
+  g: [partition, riemann-sum, definite-integral]
+  w: [riemann]
+  k: [num, mc, graph, spot]
+  e: [c1.riem.no-dx, c1.riem.fencepost, c1.riem.left-under]
+  n: 6
+  note: 'Без формулы Ньютона–Лейбница: она в c1.ftc. Интеграл — только как предел сумм и площадь простых фигур.'
+
+la.eig:
+  t: 'Собственные значения и векторы'
+  goal: 'Умею находить собственные значения и векторы матрицы 2×2 и объяснять их геометрически'
+  pre: [la.det, la.rank]
+  g: [eigenvector, eigenvalue, char-poly]
+  w: [lin2, matrix]
+  k: [num, mc, graph, spot]
+  e: [la.eig.zero-vec, la.eig.real-always, la.eig.unique-vec]
+  min: 25
+  n: 8
+  note: 'Только матрицы 2×2 с различными вещественными собственными значениями. Кратные корни и диагонализация — в la.diag.'
+
+st.ci:
+  t: 'Доверительные интервалы: идея и z-интервал'
+  goal: 'Умею строить z-интервал для среднего и правильно толковать уровень доверия'
+  pre: [st.samp, pr.norm]
+  g: [conf-interval, conf-level, margin-error]
+  w: [ci, dist]
+  k: [num, mc, graph, sim, spot]
+  e: [st.ci.prob-theta, st.ci.linear-n, st.samp.sd-se]
+  min: 25
+  n: 7
+  note: 'σ известна. Интервал Стьюдента — в st.t. Главное — толкование уровня доверия через повторные выборки.'

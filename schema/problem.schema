@@ -1,0 +1,183 @@
+# schema/problem.schema — параметрическая задача. JSON Schema 2020-12 в YAML-записи.
+# Одна запись = бесконечная практика: числа случайны, ответ вычисляет движок. Ответы руками не пишутся.
+#
+# ── ПЕРЕМЕННЫЕ v (вычисляются сверху вниз) ─────────────────────────────────
+#   a: 2..9             целое из [2, 9]
+#   a: -5..5 !0         целое без нуля
+#   p: 0.1..0.9 /0.1    десятичное с шагом 0.1
+#   n: [2, 3, 5]        случайный выбор; элементы — числа или выражения ([sin(x), cos(x)])
+#   u: vec 3 -4..4      вектор;   M: mat 2x3 -5..5   матрица
+#   M: umat 3 -3..3     целочисленная с det = ±1 (обратная тоже целая);  S: smat 2 -4..4  симметричная
+#   d: data norm(50,10) 8 0     выборка: распределение, объём, знаков после запятой
+#   s: =a*b+1           производная величина — любое выражение
+#   k: 3                константа
+# c — ограничения: набор пересэмплируется, пока все выражения не станут истинными.
+#
+# ── ВЫРАЖЕНИЯ (a, c, e, goal, «=…», параметры виджетов) — синтаксис math.js ─
+#   + - * / ^  ( )  == != < <= > >=  and or not      pi e
+#   sqrt abs exp ln log(x,b) sin cos tan asin acos atan floor ceil round(x,n) min max mod gcd lcm
+#   n!  C(n,k)  A(n,k)                                 комбинаторика
+#   det inv transpose rank rref dot cross norm trace eigs   матрицы: [[1,2],[3,4]], M[1,2] (индексы с 1)
+#   D(f,x) производная · at(f,x,v) подстановка · integ(f,x,a,b) численный интеграл
+#   mean median var std sum cov corr                   по выборке (var, std — с n−1)
+#   normcdf(x,mu,sigma) norminv(p,mu,sigma) tcdf(x,df) tinv(p,df) chi2cdf chi2inv fcdf finv
+#   binompmf(k,n,p) binomcdf poispmf(k,lam) poiscdf expcdf(x,lam) unifcdf(x,a,b)
+#   ВНИМАНИЕ: в normcdf третий аргумент — σ, а не σ².
+#
+# ── ШАБЛОНЫ ТЕКСТА (q, h, sol, steps, варианты mc) ─────────────────────────
+#   @a          значение переменной          @{a*b+1}    значение выражения
+#   @{a:s}      со знаком: +3, −3            @{a:c}      коэффициент в начале: «», «−», «3»
+#   @{a:sc}     коэффициент со знаком: «+», «−», «+3»     @{a:n}  отрицательное в скобках: (−3)
+#   @{x:f2}     2 знака после запятой        @{p:fr}     обыкновенная дробь     @{p:pc}  проценты
+#   @{M:m}      матрица или вектор в TeX     @{f:tex}    выражение в TeX
+#   Формулы — в $…$ (KaTeX). Знак @ вне шаблона не используется.
+#
+# ── ТИПЫ k И АВТОПРОВЕРКА ──────────────────────────────────────────────────
+#   num    числовой ответ (число, вектор, матрица, дробь). Верно, если |x−a| ≤ tol·max(1,|a|).
+#   mc     выбор. Верный вариант — a, неверные — x и значения e. Движок перемешивает, показывает n штук.
+#          Если a — список, это множественный выбор.
+#   expr   ввод выражения. Проверка: численное совпадение с a в 8 случайных точках dom
+#          (const: 1 — с точностью до константы, для первообразных).
+#   graph  интерактивный график: довести состояние виджета w до цели goal.
+#   spot   «найди ошибку»: показаны шаги steps (или sol задачи from), один заменён вариантом из bad;
+#          нужно коснуться ошибочной строки.
+#   proof  пошаговое доказательство: mode ord — расставить шаги по порядку,
+#          mode why — выбрать обоснование каждого шага (шаг записан парой [утверждение, обоснование]).
+#   sim    мини-задача на симуляции: провести ≥ min опытов в виджете w, затем дать ответ a (с допуском tol)
+#          или достичь goal.
+#
+# ── ДИАГНОСТИКА e ──────────────────────────────────────────────────────────
+#   e: {id_заблуждения: неверный_ответ}. Если ответ ученика совпал с неверным, движок показывает
+#   разбор этого заблуждения из content/ref/errors.yml и учитывает его в личной статистике.
+#   Для num и expr значение — выражение, для mc — текст варианта.
+#
+# В параметрах виджета w внутри задачи переменные v доступны по имени, без @.
+
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: problem.schema
+type: object
+additionalProperties: false
+required: [k]
+
+properties:
+  k: {enum: [num, mc, expr, graph, spot, proof, sim]}
+  lv: {type: integer, minimum: 1, maximum: 3}        # сложность; по умолчанию 1
+  v:
+    type: object
+    propertyNames: {pattern: '^[A-Za-z][A-Za-z0-9]{0,5}$'}
+    additionalProperties: {$ref: '#/$defs/gen'}
+  c: {type: array, minItems: 1, items: {type: string}}
+  q: {type: string, minLength: 5, maxLength: 280}    # условие
+  h:                                                 # подсказки: от наводящей к почти решению
+    type: array
+    maxItems: 3
+    items: {$ref: 'lesson.schema#/$defs/line'}
+  sol:                                               # решение по шагам; из него же строится пример {x: pN}
+    type: array
+    minItems: 1
+    maxItems: 6
+    items:
+      oneOf:
+        - {$ref: 'lesson.schema#/$defs/line'}
+        - {$ref: 'lesson.schema#/$defs/widget'}      # например {w: matrix, M: M, op: gauss} — шаги строит виджет
+  e:
+    type: object
+    minProperties: 1
+    propertyNames: {$ref: 'lesson.schema#/$defs/eid'}
+    additionalProperties: {type: [string, number]}
+  fast: {const: 1}     # решается в уме за ≤15 с → годится для игры «Спринт»
+  est: {const: 1}      # ответ можно прикинуть на глаз → годится для игры «Глазомер»
+
+  # num, expr, mc, sim
+  a:
+    oneOf:
+      - {type: [string, number]}
+      - {type: array, minItems: 1, items: {type: string}}     # только mc: несколько верных
+  tol: {type: number, minimum: 0}                    # num: по умолчанию 0.01; 0 — точное совпадение. sim: по умолчанию 0.1
+  u: {type: string, maxLength: 12}                   # num: единица после поля ввода
+  # mc
+  x: {type: array, minItems: 1, items: {type: string}}
+  n: {type: integer, minimum: 2, maximum: 6}         # сколько вариантов показать; по умолчанию 4
+  # expr
+  vars: {type: array, minItems: 1, items: {type: string}}     # свободные переменные; по умолчанию [x]
+  dom:                                               # откуда брать точки проверки; по умолчанию [-3, 3]
+    type: array
+    minItems: 2
+    maxItems: 2
+    items: {type: number}
+  const: {const: 1}
+  # graph, sim
+  w: {$ref: 'lesson.schema#/$defs/widget'}
+  goal:                                              # {переменная_состояния: [цель, допуск]}; имена — из out виджета
+    type: object
+    minProperties: 1
+    additionalProperties:
+      type: array
+      minItems: 2
+      maxItems: 2
+      prefixItems:
+        - {type: [string, number]}
+        - {type: number, exclusiveMinimum: 0}
+  min: {type: integer, minimum: 1}                   # sim: минимум опытов до ответа; по умолчанию 100
+  # spot, proof
+  steps:
+    type: array
+    minItems: 3
+    maxItems: 8
+    items:
+      oneOf:
+        - {$ref: 'lesson.schema#/$defs/line'}
+        - type: array                                # proof/why: [утверждение, обоснование]
+          minItems: 2
+          maxItems: 2
+          items: {$ref: 'lesson.schema#/$defs/line'}
+  from: {$ref: 'lesson.schema#/$defs/pid'}           # spot: взять шаги из sol другой задачи урока
+  bad:
+    type: array
+    minItems: 1
+    items:
+      type: object
+      additionalProperties: false
+      required: [i, t]
+      properties:
+        i: {type: integer, minimum: 1}               # номер подменяемого шага (с 1)
+        t: {$ref: 'lesson.schema#/$defs/line'}       # ошибочный вариант шага
+        e: {$ref: 'lesson.schema#/$defs/eid'}        # какое это заблуждение
+  mode: {enum: [ord, why]}                           # proof; по умолчанию ord
+  grp:                                               # proof/ord: группы шагов, порядок внутри которых не важен
+    type: array
+    items: {type: array, minItems: 2, items: {type: integer, minimum: 1}}
+
+allOf:
+  - if: {properties: {k: {const: num}}}
+    then: {required: [q, a], properties: {a: {type: [string, number]}}}
+  - if: {properties: {k: {const: expr}}}
+    then: {required: [q, a], properties: {a: {type: string}}}
+  - if: {properties: {k: {const: mc}}}
+    then:
+      required: [q, a]
+      anyOf: [{required: [x]}, {required: [e]}]
+  - if: {properties: {k: {const: graph}}}
+    then: {required: [q, w, goal]}
+  - if: {properties: {k: {const: spot}}}
+    then:
+      required: [bad]
+      oneOf: [{required: [steps]}, {required: [from]}]
+  - if: {properties: {k: {const: proof}}}
+    then: {required: [q, steps]}
+  - if: {properties: {k: {const: sim}}}
+    then:
+      required: [q, w]
+      anyOf: [{required: [a]}, {required: [goal]}]
+
+$defs:
+  gen:
+    oneOf:
+      - {type: number}
+      - {type: array, minItems: 2}
+      - type: string
+        pattern: '^(=.+|-?[0-9.]+\.\.-?[0-9.]+( !0)?( /[0-9.]+)?|(vec|mat|umat|smat|data) .+)$'
+
+# Что схема не ловит — ловит линтер прогоном 200 случайных наборов (docs/ARCHITECTURE.md, коды E3xx):
+# неопределённые переменные, NaN и деление на ноль, совпадение неверного варианта с верным,
+# недостижимая цель goal, поле не от того типа, отсутствие sol у num/expr без fast, ошибки KaTeX.
