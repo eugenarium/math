@@ -110,3 +110,33 @@ c1.mvt:
   e: [c1.mvt.cond, c1.mvt.midpoint]
   n: 6
   note: 'Без доказательств. Теорему Коши не вводить.'
+
+c1.seq:
+  t: 'Последовательности и их предел'
+  goal: 'Умею находить предел последовательности и отличаю сходящуюся последовательность от просто ограниченной'
+  pre: [lg.quant, pre.ineq, pre.func]
+  g: [sequence-limit]
+  k: [num, mc, spot]
+  e: [c1.seq.never-reaches, c1.seq.bounded]
+  n: 6
+  note: 'Определение ε–N дать готовым из глоссария. Монотонные последовательности и число $e$ не вводить.'
+
+c1.small:
+  t: 'Бесконечно малые, o-малое, эквивалентности'
+  goal: 'Умею заменять эквивалентные функции в произведениях и частных и не подставляю их в суммы'
+  pre: [c1.limcalc, c1.lim, pre.explog, pre.trig]
+  g: [little-o, equivalent-functions]
+  k: [num, mc, spot]
+  e: [c1.small.sum]
+  n: 6
+  note: 'Таблица: $\sin u$, $\tan u$, $\ln(1+u)$, $e^u-1\sim u$ и $1-\cos u\sim\frac{u^2}{2}$ при $u\to0$. Ряд Тейлора не вводить: разложение $e^x$ дать готовым.'
+
+c1.impl:
+  t: 'Производная обратной, неявной, параметрической функции'
+  goal: 'Умею находить производную обратной функции, неявной функции и функции, заданной параметрически'
+  pre: [c1.chain, c1.rules]
+  g: [inverse-derivative, implicit-derivative, parametric-derivative]
+  k: [num, mc, spot]
+  e: [c1.impl.inverse-point, c1.impl.implicit-sign, c1.impl.param-inverted]
+  n: 6
+  note: 'Только первая производная. Вторую производную параметрической функции не вводить.'
