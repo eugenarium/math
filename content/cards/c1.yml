@@ -80,3 +80,33 @@ c1.opt:
   e: [c1.opt.endpoints]
   n: 6
   note: 'Только многочлены степени 2 и 3 на отрезке. Выпуклость и вторую производную не вводить.'
+
+c1.limcalc:
+  t: 'Техника пределов, замечательные пределы'
+  goal: 'Умею раскрывать неопределённости вида $\frac00$ и $\frac{\infty}{\infty}$ в пределах рациональных функций'
+  pre: [c1.lim, c1.seq, pre.trig, pre.explog, pre.func]
+  g: [indeterminate-form, notable-limit]
+  k: [num, mc, spot]
+  e: [c1.limcalc.zero-zero, c1.limcalc.inf-ratio]
+  n: 6
+  note: 'Только рациональные функции и $\sin(kx)/x$. Правило Лопиталя и эквивалентности не вводить.'
+
+c1.lhop:
+  t: 'Правило Лопиталя'
+  goal: 'Умею применять правило Лопиталя к неопределённости $\frac00$ и проверять, что неопределённость есть'
+  pre: [c1.limcalc, c1.rules, c1.chain]
+  g: [lhopital-rule]
+  k: [num, mc, spot]
+  e: [c1.lhop.not-indeterminate]
+  n: 6
+  note: 'Только $\frac00$, одно или два применения. $\frac{\infty}{\infty}$ упомянуть одной фразой.'
+
+c1.mvt:
+  t: 'Теоремы Ферма, Ролля, Лагранжа'
+  goal: 'Умею находить точку $c$ из теоремы Лагранжа и проверять условия теоремы Ролля'
+  pre: [c1.rules, c1.cont, c1.der]
+  g: [fermat-theorem, rolle-theorem, lagrange-theorem]
+  k: [num, mc, spot]
+  e: [c1.mvt.cond, c1.mvt.midpoint]
+  n: 6
+  note: 'Без доказательств. Теорему Коши не вводить.'
