@@ -2,7 +2,7 @@
 
 Интерактивный учебник вузовской математики и статистики для телефона. Статическое PWA: работает офлайн, прогресс хранится на устройстве, сервера нет. Уроки — короткие декларативные YAML-записи, которые массово пишут недорогие модели, а проверяет машина.
 
-**Охват по карте курса:** 208 уроков в 14 разделах; ядро — 128 уроков, около 45 часов; всё вместе — около 74 часов. **Готово:** 23 урока: 4 эталонных (`c1.riem`, `c1.der`, `la.eig`, `st.ci`), весь раздел «Подготовка» (8) и одиннадцать уроков анализа: `c1.lim`, `c1.cont`, `c1.rules`, `c1.int`, `c1.chain`, `c1.sub`, `c1.parts`, `c1.opt`, `c1.limcalc`, `c1.lhop`, `c1.mvt`.
+**Охват по карте курса:** 208 уроков в 14 разделах; ядро — 128 уроков, около 45 часов; всё вместе — около 74 часов. **Готово:** 29 уроков: 4 эталонных (`c1.riem`, `c1.der`, `la.eig`, `st.ci`), весь раздел «Подготовка» (8) и семнадцать уроков анализа: `c1.lim`, `c1.cont`, `c1.rules`, `c1.int`, `c1.chain`, `c1.sub`, `c1.parts`, `c1.opt`, `c1.limcalc`, `c1.lhop`, `c1.mvt`, `c1.seq`, `c1.small`, `c1.impl`, `c1.study`, `c1.ftc`, `c1.impr`.
 
 ## Документы
 
@@ -22,7 +22,7 @@
 schema/            lesson.schema, problem.schema (JSON Schema 2020-12 в YAML)
 content/ref/       notation, style, glossary, errors
 content/cards/     карточки уроков (samples.yml — эталоны, pre.yml — «Подготовка», c1.yml — анализ)
-content/lessons/   уроки: c1.riem, c1.der, la.eig, st.ci (эталоны), весь раздел pre и c1.lim, c1.cont, c1.rules, c1.int, c1.chain, c1.sub, c1.parts, c1.opt, c1.limcalc, c1.lhop, c1.mvt
+content/lessons/   уроки: c1.riem, c1.der, la.eig, st.ci (эталоны), весь раздел pre и c1.lim, c1.cont, c1.rules, c1.int, c1.chain, c1.sub, c1.parts, c1.opt, c1.limcalc, c1.lhop, c1.mvt, c1.seq, c1.small, c1.impl, c1.study, c1.ftc, c1.impr
 engine/core/       ядро: генераторы, шаблоны, проверка ответов, критерий усвоения, повторения (srs), прогресс
 engine/widgets/    виджеты: fplot, riemann, lin2, dist, ci, matrix, venn, numline, complex (остальные из docs/WIDGETS.md — по плану)
 engine/ui/         плеер урока (Preact): главная, экраны фаз, задачи, клавиатуры, хост виджетов, настройки
