@@ -140,3 +140,33 @@ c1.impl:
   e: [c1.impl.inverse-point, c1.impl.implicit-sign, c1.impl.param-inverted]
   n: 6
   note: 'Только первая производная. Вторую производную параметрической функции не вводить.'
+
+c1.study:
+  t: 'Монотонность, экстремумы, выпуклость'
+  goal: 'Умею находить экстремумы и точки перегиба многочлена по знакам первой и второй производной'
+  pre: [c1.opt, c1.chain, c1.mvt]
+  g: [monotonicity-test, convexity-test]
+  k: [num, mc, spot]
+  e: [c1.study.f0-extremum, c1.study.concavity-sign]
+  n: 6
+  note: 'Только многочлены. Асимптоты не вводить.'
+
+c1.ftc:
+  t: 'Формула Ньютона–Лейбница'
+  goal: 'Умею вычислять определённый интеграл по формуле Ньютона–Лейбница и отличаю его от площади'
+  pre: [c1.int, c1.riem, c1.mvt]
+  g: [newton-leibniz]
+  k: [num, mc, spot]
+  e: [c1.ftc.area-signed, c1.ftc.order]
+  n: 6
+  note: 'Только многочлены и $e^{ax}$. Производную интеграла с переменным верхним пределом дать одной задачей.'
+
+c1.impr:
+  t: 'Несобственные интегралы'
+  goal: 'Умею вычислять несобственные интегралы степенных и показательных функций и не применяю формулу через разрыв'
+  pre: [c1.ftc, c1.limcalc, c1.lim]
+  g: [improper-integral]
+  k: [num, mc, spot]
+  e: [c1.impr.decay, c1.impr.discontinuity]
+  n: 6
+  note: 'Только $\int_1^\infty x^{-p}$, $\int_0^\infty e^{-ax}$ и $\int_0^1 x^{-p}$. Признаки сравнения не вводить.'
