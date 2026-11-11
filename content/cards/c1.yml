@@ -40,3 +40,73 @@ c1.int:
   e: [c1.int.const, c1.int.product]
   n: 6
   note: 'Только степенные функции и многочлены. Замену переменной и интегрирование по частям не вводить.'
+
+c1.chain:
+  t: 'Производная сложной функции'
+  goal: 'Умею дифференцировать сложную функцию и не забываю производную внутренней функции'
+  pre: [c1.rules, c1.der, c1.cont, c1.lim, pre.func]
+  g: [chain-rule]
+  k: [num, mc, expr, spot]
+  e: [c1.chain.inner]
+  n: 6
+  note: 'Только степенные, показательные и синус/косинус от линейной или квадратичной внутренней функции. Неявные функции не вводить.'
+
+c1.sub:
+  t: 'Замена переменной в неопределённом интеграле'
+  goal: 'Умею применять замену $u=g(x)$ и пересчитывать $dx$'
+  pre: [c1.chain, c1.int, c1.rules, pre.func]
+  g: [substitution]
+  k: [num, mc, expr, spot]
+  e: [c1.sub.dx]
+  n: 6
+  note: 'Только неопределённые интегралы вида $\int f(ax+b)\,dx$ и $\int g(x)^n g''(x)\,dx$. Определённые интегралы не вводить.'
+
+c1.parts:
+  t: 'Интегрирование по частям'
+  goal: 'Умею применять формулу интегрирования по частям и выбирать $u$ так, чтобы интеграл упростился'
+  pre: [c1.int, c1.rules, c1.chain, pre.explog]
+  g: [integration-by-parts]
+  k: [num, mc, expr, spot]
+  e: [c1.parts.choice]
+  n: 6
+  note: 'Только $\int x e^{ax}\,dx$, $\int x\sin ax\,dx$, $\int \ln x\,dx$. Повторное интегрирование по частям не вводить.'
+
+c1.opt:
+  t: 'Задачи на наибольшее и наименьшее значение'
+  goal: 'Умею находить наибольшее значение многочлена на отрезке, сравнивая значения в критических точках и на концах'
+  pre: [c1.rules, c1.der, c1.cont]
+  g: [critical-point, extremum-on-interval]
+  k: [num, mc, expr, spot]
+  e: [c1.opt.endpoints]
+  n: 6
+  note: 'Только многочлены степени 2 и 3 на отрезке. Выпуклость и вторую производную не вводить.'
+
+c1.limcalc:
+  t: 'Техника пределов, замечательные пределы'
+  goal: 'Умею раскрывать неопределённости вида $\frac00$ и $\frac{\infty}{\infty}$ в пределах рациональных функций'
+  pre: [c1.lim, c1.seq, pre.trig, pre.explog, pre.func]
+  g: [indeterminate-form, notable-limit]
+  k: [num, mc, spot]
+  e: [c1.limcalc.zero-zero, c1.limcalc.inf-ratio]
+  n: 6
+  note: 'Только рациональные функции и $\sin(kx)/x$. Правило Лопиталя и эквивалентности не вводить.'
+
+c1.lhop:
+  t: 'Правило Лопиталя'
+  goal: 'Умею применять правило Лопиталя к неопределённости $\frac00$ и проверять, что неопределённость есть'
+  pre: [c1.limcalc, c1.rules, c1.chain]
+  g: [lhopital-rule]
+  k: [num, mc, spot]
+  e: [c1.lhop.not-indeterminate]
+  n: 6
+  note: 'Только $\frac00$, одно или два применения. $\frac{\infty}{\infty}$ упомянуть одной фразой.'
+
+c1.mvt:
+  t: 'Теоремы Ферма, Ролля, Лагранжа'
+  goal: 'Умею находить точку $c$ из теоремы Лагранжа и проверять условия теоремы Ролля'
+  pre: [c1.rules, c1.cont, c1.der]
+  g: [fermat-theorem, rolle-theorem, lagrange-theorem]
+  k: [num, mc, spot]
+  e: [c1.mvt.cond, c1.mvt.midpoint]
+  n: 6
+  note: 'Без доказательств. Теорему Коши не вводить.'
