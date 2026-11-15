@@ -232,40 +232,48 @@ export function Problem({ inst, refs, onDone, exam = false }) {
 
       {inst.k === 'proof' && inst.mode === 'why' && (
         <div class="proof">
-          <p class="muted">Выбери шаг, затем его обоснование.</p>
+          <p class="muted">Коснись шага: под ним откроются обоснования. Выбери подходящее.</p>
           <ol class="steps">
-            {inst.steps.map((s, i) => (
-              <li key={i}>
-                <button
-                  type="button"
-                  class={'step' + (activeStep === i ? ' picked' : '') + (locked && picks[i] === inst.key[i] ? ' right' : '')}
-                  onClick={() => setActiveStep(i)}
-                >
-                  <Rich text={s} as="span" />
-                  <span class="because">{picks[i] === null ? 'обоснование не выбрано' : null}</span>
-                  {picks[i] !== null && <Rich text={'Обоснование: ' + inst.pool[picks[i]]} as="span" class="because" />}
-                </button>
-              </li>
-            ))}
-          </ol>
-          {!locked && (
-            <ul class="steps proof-rest">
-              {inst.pool.map((t, j) => (
-                <li key={j}>
+            {inst.steps.map((s, i) => {
+              const open = !locked && activeStep === i;
+              return (
+                <li key={i}>
                   <button
                     type="button"
-                    class="step"
-                    onClick={() => {
-                      setPicks(picks.map((x, i) => (i === activeStep ? j : x)));
-                      if (activeStep < inst.steps.length - 1) setActiveStep(activeStep + 1);
-                    }}
+                    class={'step' + (open ? ' picked' : '') + (locked && picks[i] === inst.key[i] ? ' right' : '')}
+                    onClick={() => !locked && setActiveStep(i)}
+                    aria-expanded={open}
                   >
-                    <Rich text={t} as="span" />
+                    <Rich text={s} as="span" />
+                    {picks[i] === null ? (
+                      <span class="because">обоснование не выбрано</span>
+                    ) : (
+                      <Rich text={'Обоснование: ' + inst.pool[picks[i]]} as="span" class="because" />
+                    )}
                   </button>
+                  {open && (
+                    <ul class="steps proof-rest">
+                      {inst.pool.map((t, j) => (
+                        <li key={j}>
+                          <button
+                            type="button"
+                            class={'step' + (picks[i] === j ? ' picked' : '')}
+                            onClick={() => {
+                              setPicks(picks.map((x, k) => (k === i ? j : x)));
+                              const next = picks.findIndex((x, k) => k !== i && x === null && k > i);
+                              if (next >= 0) setActiveStep(next);
+                            }}
+                          >
+                            <Rich text={t} as="span" />
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </li>
-              ))}
-            </ul>
-          )}
+              );
+            })}
+          </ol>
         </div>
       )}
 
