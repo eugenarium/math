@@ -1,0 +1,78 @@
+id: la.dot
+int:
+  - 'Тележку тянут за ручку под углом. Полезная работа зависит от силы вдоль направления движения. Эту составляющую даёт скалярное произведение.'
+  - {ask: 'Чему равно $\mathbf{u}\cdot\mathbf{v}$ для $\mathbf{u}=(1, 0)$ и $\mathbf{v}=(0, 1)$? Что это говорит об угле?', ans: 'Нулю: $1\cdot0+0\cdot1=0$. Векторы перпендикулярны.'}
+  - 'Из скалярного произведения получаются длина и угол: чем больше произведение относительно длин, тем меньше угол.'
+def:
+  - {g: dot-product}
+  - {g: vector-projection}
+ex:
+  - {x: p3, seed: 2}
+pr:
+  p1:
+    k: num
+    fast: 1
+    v: {u: vec 2 -4..4, v: vec 2 -4..4}
+    q: 'Найди $\mathbf{u}\cdot\mathbf{v}$ для $\mathbf{u}=@{u:m}$, $\mathbf{v}=@{v:m}$.'
+    a: u[1]*v[1]+u[2]*v[2]
+    tol: 0
+    h: ['Перемножь координаты по парам и сложи.']
+  p2:
+    k: num
+    lv: 2
+    v: {u: vec 2 -4..4, v: vec 2 -4..4, d: '=u[1]*v[1]+u[2]*v[2]', lu: '=u[1]^2+u[2]^2', lw: '=v[1]^2+v[2]^2'}
+    c: ['lu > 1', 'lw > 1', 'd != 0']
+    q: 'Найди косинус угла между $\mathbf{u}=@{u:m}$ и $\mathbf{v}=@{v:m}$.'
+    a: d/sqrt(lu*lw)
+    tol: 0.005
+    e: {la.dot.no-norm: d}
+    h: ['Раздели скалярное произведение на произведение длин.']
+    sol:
+      - 'Скалярное произведение: $\mathbf{u}\cdot\mathbf{v}=@d$.'
+      - 'Длины: $|\mathbf{u}|=\sqrt{@lu}$, $|\mathbf{v}|=\sqrt{@lw}$.'
+      - 'Косинус: $\frac{@d}{\sqrt{@lu}\sqrt{@lw}}=@{d/sqrt(lu*lw):f3}$.'
+  p3:
+    k: num
+    lv: 2
+    v: {u: vec 2 -4..4, v: vec 2 -4..4, d: '=u[1]*v[1]+u[2]*v[2]', lw: '=v[1]^2+v[2]^2'}
+    c: ['lw > 1', 'd != 0']
+    q: 'Проекция $\mathbf{u}=@{u:m}$ на $\mathbf{v}=@{v:m}$ равна $t\mathbf{v}$. Найди $t$.'
+    a: d/lw
+    tol: 0.005
+    e: {la.dot.proj-dir: 'd/sqrt(lw)'}
+    h: ['$t=\frac{\mathbf{u}\cdot\mathbf{v}}{\mathbf{v}\cdot\mathbf{v}}$.']
+    sol:
+      - '$\mathbf{u}\cdot\mathbf{v}=@d$ и $\mathbf{v}\cdot\mathbf{v}=@lw$.'
+      - 'Коэффициент проекции: $t=\frac{\mathbf{u}\cdot\mathbf{v}}{\mathbf{v}\cdot\mathbf{v}}$.'
+      - 'Получаем $t=\frac{@d}{@lw}=@{d/lw:f3}$.'
+  p4:
+    k: mc
+    q: 'Что означает $\mathbf{u}\cdot\mathbf{v}=0$ для ненулевых векторов?'
+    a: 'Векторы перпендикулярны'
+    x: ['Векторы коллинеарны', 'Векторы равны']
+    h: ['Вспомни $\cos\theta$.']
+  p5:
+    k: mc
+    lv: 2
+    q: 'Какая формула даёт косинус угла между ненулевыми векторами?'
+    a: '$\frac{\mathbf{u}\cdot\mathbf{v}}{|\mathbf{u}||\mathbf{v}|}$'
+    e: {la.dot.no-norm: '$\mathbf{u}\cdot\mathbf{v}$'}
+    x: ['$\frac{\mathbf{u}\cdot\mathbf{v}}{|\mathbf{u}|+|\mathbf{v}|}$']
+    h: ['Косинус не больше $1$ по модулю.']
+  p6:
+    k: spot
+    lv: 2
+    q: 'Найди ошибку при вычислении угла между $\mathbf{u}=(1, 0)$ и $\mathbf{v}=(1, 1)$.'
+    steps:
+      - '$\mathbf{u}\cdot\mathbf{v}=1\cdot1+0\cdot1=1$'
+      - '$|\mathbf{u}|=1$ и $|\mathbf{v}|=\sqrt2$'
+      - '$\cos\theta=\frac{1}{1\cdot\sqrt2}$'
+      - 'Угол $\theta=45^\circ$'
+    bad:
+      - {i: 3, t: '$\cos\theta=1$', e: la.dot.no-norm}
+      - {i: 4, t: 'Угол $\theta=60^\circ$'}
+err: [la.dot.no-norm, la.dot.proj-dir]
+sum:
+  - 'Умею находить скалярное произведение и длину вектора.'
+  - 'Умею находить косинус угла: произведение делю на длины.'
+  - 'Умею находить проекцию: $t=\frac{\mathbf{u}\cdot\mathbf{v}}{\mathbf{v}\cdot\mathbf{v}}$.'
