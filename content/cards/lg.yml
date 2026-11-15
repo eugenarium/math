@@ -1,0 +1,50 @@
+# Карточки раздела lg (математическая логика). Источник: docs/COURSE_MAP.md.
+lg.prop:
+  t: 'Высказывания, связки, таблицы истинности'
+  goal: 'Умею вычислять значение составного высказывания и считать строки таблицы истинности'
+  pre: [pre.sets]
+  g: [proposition, connectives]
+  k: [num, mc, spot]
+  e: [lg.prop.or-exclusive, lg.prop.rows]
+  n: 6
+  note: 'Только $\neg$, $\wedge$, $\vee$. Импликацию не вводить: это следующий урок.'
+
+lg.impl:
+  t: 'Импликация: обратное, противоположное, контрапозиция'
+  goal: 'Умею вычислять значение импликации и отличаю контрапозицию от обратного утверждения'
+  pre: [lg.prop, pre.sets]
+  g: [implication, contrapositive]
+  k: [num, mc, spot]
+  e: [lg.impl.converse, lg.impl.false-premise]
+  n: 6
+  note: 'Эквиваленцию $\leftrightarrow$ упомянуть одной фразой, без задач.'
+
+lg.equiv:
+  t: 'Равносильности, законы де Моргана'
+  goal: 'Умею отрицать конъюнкцию, дизъюнкцию и импликацию по законам де Моргана'
+  pre: [lg.impl, lg.prop, pre.sets]
+  g: [equivalence, de-morgan]
+  k: [num, mc, spot]
+  e: [lg.equiv.demorgan-keep, lg.equiv.neg-impl]
+  n: 6
+  note: 'Только три переменные в задачах на подсчёт. Булевы функции и нормальные формы не вводить.'
+
+lg.quant:
+  t: 'Кванторы и отрицание кванторных высказываний'
+  goal: 'Умею отрицать высказывания с кванторами и различаю порядок $\forall\exists$ и $\exists\forall$'
+  pre: [lg.equiv, lg.impl, lg.prop, pre.sets]
+  g: [quantifiers, quantifier-negation]
+  k: [num, mc, spot]
+  e: [lg.quant.order, lg.quant.neg]
+  n: 6
+  note: 'Только один-два квантора и простые предикаты на числах. Логику предикатов не вводить.'
+
+lg.proof:
+  t: 'Методы доказательства: прямое, от противного, индукция'
+  goal: 'Умею провести доказательство по индукции и объяснить, зачем нужна база'
+  pre: [lg.quant, lg.equiv, lg.impl, lg.prop, pre.sum, pre.func, pre.sets]
+  g: [induction, proof-by-contradiction]
+  k: [num, mc, spot, proof]
+  e: [lg.proof.base, lg.proof.example]
+  n: 6
+  note: 'Метод от противного дать в интуиции, без задач. Сильную индукцию не вводить.'
