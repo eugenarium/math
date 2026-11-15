@@ -224,7 +224,7 @@ export function sampleWithConstraints(problem, rng, maxTries = 1000) {
 
 // ───────── экземпляр задачи ─────────
 
-export const PLAYABLE = new Set(['num', 'mc', 'expr', 'spot', 'graph', 'sim']);
+export const PLAYABLE = new Set(['num', 'mc', 'expr', 'spot', 'proof', 'graph', 'sim']);
 
 const renderAll = (arr, scope) => (arr ?? []).map((t) => (typeof t === 'string' ? render(t, scope) : t));
 
@@ -285,6 +285,19 @@ export function instantiate(p, seed, ctx = {}) {
       const shown = renderAll(steps, scope);
       shown[bad.i - 1] = render(bad.t, scope);
       return { ...inst, steps: shown, badIndex: bad.i, diagId: bad.e ?? null };
+    }
+    case 'proof': {
+      const mode = p.mode ?? 'ord';
+      if (mode === 'why') {
+        const stmts = p.steps.map((s) => render(s[0], scope));
+        const just = p.steps.map((s) => render(s[1], scope));
+        const pool = rng.shuffle([...new Set([...just, ...(p.x ?? []).map((t) => render(t, scope))])]);
+        return { ...inst, mode, steps: stmts, pool, key: just.map((t) => pool.indexOf(t)) };
+      }
+      const steps = renderAll(p.steps, scope);
+      let order = steps.map((_, i) => i + 1);
+      for (let t = 0; t < 20 && order.every((v, i) => v === i + 1); t++) order = rng.shuffle(order);
+      return { ...inst, mode, steps: order.map((i) => steps[i - 1]), order, grp: p.grp ?? [] };
     }
     case 'graph':
     case 'sim': {

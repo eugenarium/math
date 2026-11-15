@@ -26,9 +26,9 @@ c1.rules:
   goal: 'Умею дифференцировать суммы, произведения и частные элементарных функций'
   pre: [c1.der, c1.cont, c1.lim, c1.seq, lg.quant, pre.ineq, pre.graph, pre.func, pre.sets]
   g: [differentiation-rules, derivative-table]
-  k: [num, mc, expr, spot]
+  k: [num, mc, expr, spot, proof]
   e: [c1.rules.product, c1.rules.quotient-order]
-  n: 6
+  n: 7
   note: 'Сложную функцию не вводить: это следующий урок. Таблицу дать готовой.'
 
 c1.int:
@@ -106,9 +106,9 @@ c1.mvt:
   goal: 'Умею находить точку $c$ из теоремы Лагранжа и проверять условия теоремы Ролля'
   pre: [c1.rules, c1.cont, c1.der]
   g: [fermat-theorem, rolle-theorem, lagrange-theorem]
-  k: [num, mc, spot]
+  k: [num, mc, spot, proof]
   e: [c1.mvt.cond, c1.mvt.midpoint]
-  n: 6
+  n: 7
   note: 'Без доказательств. Теорему Коши не вводить.'
 
 c1.seq:
@@ -170,3 +170,33 @@ c1.impr:
   e: [c1.impr.decay, c1.impr.discontinuity]
   n: 6
   note: 'Только $\int_1^\infty x^{-p}$, $\int_0^\infty e^{-ax}$ и $\int_0^1 x^{-p}$. Признаки сравнения не вводить.'
+
+c1.taylor:
+  t: 'Формула Тейлора'
+  goal: 'Умею находить коэффициенты многочлена Тейлора в нуле и понимаю, что он приближает функцию только рядом с точкой'
+  pre: [c1.chain, c1.small, pre.explog, pre.trig]
+  g: [taylor-polynomial]
+  k: [num, mc, spot]
+  e: [c1.taylor.factorial, c1.taylor.local]
+  n: 6
+  note: 'Только разложение в нуле для $e^{ax}$, $\sin ax$, $\cos x$. Остаточный член в явном виде не вводить.'
+
+c1.rat:
+  t: 'Рациональные дроби, разложение на простейшие'
+  goal: 'Умею разлагать $\frac{1}{(x-a)(x-b)}$ на простейшие дроби и интегрировать результат'
+  pre: [c1.sub, c1.parts, c1.int]
+  g: [partial-fractions]
+  k: [num, mc, spot]
+  e: [c1.rat.coef, c1.rat.lin]
+  n: 6
+  note: 'Только простые вещественные корни знаменателя. Тригонометрические подстановки не вводить.'
+
+c1.app:
+  t: 'Приложения интеграла: площадь, объём, среднее'
+  goal: 'Умею находить площадь между кривыми, объём тела вращения и среднее значение функции'
+  pre: [c1.ftc, c1.sub]
+  g: [area-between, volume-revolution, mean-value-integral]
+  k: [num, mc, spot]
+  e: [c1.app.sign, c1.app.pi, c1.app.mean]
+  n: 6
+  note: 'Только многочлены. Длину кривой не вводить.'

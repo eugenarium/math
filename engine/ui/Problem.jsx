@@ -57,6 +57,9 @@ export function Problem({ inst, refs, onDone, exam = false }) {
   const [expr, setExpr] = useState('');
   const [picked, setPicked] = useState([]);
   const [line, setLine] = useState(0);
+  const [seq, setSeq] = useState([]); // proof/ord: индексы показанных шагов в выбранном порядке
+  const [picks, setPicks] = useState(() => (inst.k === 'proof' && inst.mode === 'why' ? inst.steps.map(() => null) : []));
+  const [activeStep, setActiveStep] = useState(0);
   const [attempts, setAttempts] = useState(0);
   const [hints, setHints] = useState(0);
   const [msg, setMsg] = useState(null); // {kind, text?, diag?}
@@ -72,6 +75,7 @@ export function Problem({ inst, refs, onDone, exam = false }) {
     if (inst.k === 'expr') return expr;
     if (inst.k === 'mc') return picked;
     if (inst.k === 'spot') return line;
+    if (inst.k === 'proof') return inst.mode === 'why' ? picks : seq;
     if (inst.k === 'graph') return wstate;
     if (inst.k === 'sim') return { runs: wstate?.runs ?? 0, state: wstate, answer: fields[0] };
     return null;
@@ -82,6 +86,7 @@ export function Problem({ inst, refs, onDone, exam = false }) {
     if (inst.k === 'expr') return expr.trim() !== '';
     if (inst.k === 'mc') return picked.length > 0;
     if (inst.k === 'spot') return line > 0;
+    if (inst.k === 'proof') return inst.mode === 'why' ? picks.every((x) => x !== null) : seq.length === inst.steps.length;
     if (inst.k === 'graph') return wstate !== null;
     if (inst.k === 'sim') return wstate !== null && (inst.a === undefined || fields[0].trim() !== '');
     return false;
@@ -197,6 +202,93 @@ export function Problem({ inst, refs, onDone, exam = false }) {
             </li>
           ))}
         </ol>
+      )}
+
+      {inst.k === 'proof' && inst.mode !== 'why' && (
+        <div class="proof">
+          <p class="muted">Коснись шагов по порядку. Коснись выбранного шага, чтобы убрать его.</p>
+          <ol class="steps proof-seq">
+            {seq.map((s, pos) => (
+              <li key={s}>
+                <button type="button" class="step picked" onClick={() => !locked && setSeq(seq.filter((x) => x !== s))}>
+                  <Rich text={inst.steps[s]} as="span" />
+                </button>
+              </li>
+            ))}
+          </ol>
+          <ul class="steps proof-rest">
+            {inst.steps.map((s, i) =>
+              seq.includes(i) ? null : (
+                <li key={i}>
+                  <button type="button" class="step" onClick={() => !locked && setSeq([...seq, i])}>
+                    <Rich text={s} as="span" />
+                  </button>
+                </li>
+              ),
+            )}
+          </ul>
+        </div>
+      )}
+
+      {inst.k === 'proof' && inst.mode === 'why' && (
+        <div class="proof">
+          <p class="muted">Выбери шаг, затем его обоснование.</p>
+          <ol class="steps">
+            {inst.steps.map((s, i) => (
+              <li key={i}>
+                <button
+                  type="button"
+                  class={'step' + (activeStep === i ? ' picked' : '') + (locked && picks[i] === inst.key[i] ? ' right' : '')}
+                  onClick={() => setActiveStep(i)}
+                >
+                  <Rich text={s} as="span" />
+                  <span class="because">{picks[i] === null ? 'обоснование не выбрано' : null}</span>
+                  {picks[i] !== null && <Rich text={'Обоснование: ' + inst.pool[picks[i]]} as="span" class="because" />}
+                </button>
+              </li>
+            ))}
+          </ol>
+          {!locked && (
+            <ul class="steps proof-rest">
+              {inst.pool.map((t, j) => (
+                <li key={j}>
+                  <button
+                    type="button"
+                    class="step"
+                    onClick={() => {
+                      setPicks(picks.map((x, i) => (i === activeStep ? j : x)));
+                      if (activeStep < inst.steps.length - 1) setActiveStep(activeStep + 1);
+                    }}
+                  >
+                    <Rich text={t} as="span" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+
+      {done && done !== 'ok' && inst.k === 'proof' && (
+        <div class="card sol">
+          <h4>Верный вариант</h4>
+          <ol>
+            {inst.mode === 'why'
+              ? inst.steps.map((s, i) => (
+                  <li key={i}>
+                    <Rich text={s + ' — ' + inst.pool[inst.key[i]]} as="span" />
+                  </li>
+                ))
+              : inst.steps
+                  .map((s, i) => ({ s, o: inst.order[i] }))
+                  .sort((a, b) => a.o - b.o)
+                  .map(({ s }, i) => (
+                    <li key={i}>
+                      <Rich text={s} as="span" />
+                    </li>
+                  ))}
+          </ol>
+        </div>
       )}
 
       {msg?.kind === 'ok' && <p class="feedback ok">Верно.</p>}

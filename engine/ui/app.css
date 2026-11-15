@@ -140,3 +140,5 @@ p { margin: 0 0 12px; }
 .mstep.last { border-color: var(--accent); }
 .mnum { flex: none; min-width: 22px; height: 22px; border-radius: 11px; background: var(--card); color: var(--muted); font-size: 0.75rem; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
 .mstep .katex-display, .mstep .katex { font-size: 0.95em; }
+.proof .because { display: block; margin-top: 4px; font-size: 0.9em; color: var(--muted, #666); }
+.proof-rest { margin-top: 16px; }

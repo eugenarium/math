@@ -107,6 +107,9 @@ test('все задачи уроков: числа вычисляются, ве�
           // ученик вводит выражение с числами, а не с именами переменных задачи
           const typed = inst.a.replace(/\b[A-Za-z]\w*\b/g, (n) => (n in inst.scope ? '(' + inst.scope[n] + ')' : n));
           assert.equal(checkAnswer(inst, typed).ok, true, where + ' ввод: ' + typed);
+        } else if (inst.k === 'proof') {
+          const right = inst.mode === 'why' ? inst.key : inst.steps.map((_, pos) => inst.order.indexOf(pos + 1));
+          assert.equal(checkAnswer(inst, right).ok, true, where);
         } else if (inst.k === 'spot') {
           assert.equal(checkAnswer(inst, inst.badIndex).ok, true, where);
           assert.equal(checkAnswer(inst, inst.badIndex === 1 ? 2 : 1).ok, false, where);
@@ -129,7 +132,7 @@ test('expr: эквивалентные выражения и константа 
 });
 
 test('mastery: критерий и уровни', () => {
-  const pr = { p1: { k: 'num' }, p2: { k: 'num', lv: 2 }, p3: { k: 'mc' }, p4: { k: 'proof', lv: 2 } };
+  const pr = { p1: { k: 'num' }, p2: { k: 'num', lv: 2 }, p3: { k: 'mc' }, p4: { k: 'unknown', lv: 2 } }; // неизвестный тип не играбелен
   const h = (...a) => a.map(([pid, ok]) => ({ pid, ok }));
   assert.equal(isMastered(h(['p1', true], ['p3', true], ['p1', true], ['p2', true]), pr), false);
   assert.equal(isMastered(h(['p1', true], ['p3', true], ['p1', true], ['p3', true], ['p2', true]), pr), true);
@@ -578,4 +581,28 @@ test('fplot: параметрическая кривая, подпись точ�
   assert.doesNotThrow(() => fplotW.initial({ xy: ['t', 't'], drag: { P: [0, 0] } }, {}));
   // цель по слайдеру достижима
   assert.ok(goalReachable(fplotW, params, {}, { th: [Math.PI / 3, 0.05] }));
+});
+
+test('proof ord: порядок, перестановки внутри grp, неполный ответ', () => {
+  const p = { k: 'proof', q: 'q', steps: ['a', 'b', 'c', 'd'], grp: [[2, 3]] };
+  for (let seed = 1; seed <= 50; seed++) {
+    const inst = instantiate(p, seed);
+    assert.notDeepEqual(inst.order, [1, 2, 3, 4], 'порядок должен быть перемешан');
+    const where = (orig) => inst.order.indexOf(orig);
+    assert.equal(checkAnswer(inst, [1, 2, 3, 4].map(where)).ok, true);
+    assert.equal(checkAnswer(inst, [1, 3, 2, 4].map(where)).ok, true, 'шаги 2 и 3 равноправны');
+    assert.equal(checkAnswer(inst, [2, 1, 3, 4].map(where)).ok, false);
+    assert.equal(checkAnswer(inst, [1, 2, 3, 4].map(where).slice(0, 3)).ok, false);
+  }
+});
+
+test('proof why: выбор обоснований', () => {
+  const p = { k: 'proof', mode: 'why', q: 'q', steps: [['s1', 'r1'], ['s2', 'r2'], ['s3', 'r1']], x: ['r9'] };
+  const inst = instantiate(p, 3);
+  assert.equal(inst.pool.length, 3, 'одинаковые обоснования объединены, добавлен отвлекающий вариант');
+  assert.equal(checkAnswer(inst, inst.key).ok, true);
+  const wrong = inst.key.slice();
+  wrong[1] = inst.pool.indexOf('r9');
+  assert.equal(checkAnswer(inst, wrong).ok, false);
+  assert.match(checkAnswer(inst, [0, null, 0]).error, /обоснование/);
 });

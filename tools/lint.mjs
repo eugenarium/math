@@ -22,7 +22,7 @@ const FIELDS = {
   expr: ['a', 'vars', 'dom', 'const'],
   graph: ['w', 'goal'],
   spot: ['steps', 'from', 'bad'],
-  proof: ['steps', 'mode', 'grp'],
+  proof: ['steps', 'mode', 'grp', 'x'],
   sim: ['w', 'goal', 'a', 'tol', 'min'],
 };
 
@@ -281,6 +281,21 @@ function checkInstance(inst, seed, p, report, onCollide, modules = {}) {
     for (const ex of Object.values(inst.diag)) {
       const t = ex.replace(/\b[A-Za-z]\w*\b/g, (n) => (n in inst.scope ? '(' + inst.scope[n] + ')' : n));
       if (checkAnswer(inst, t).ok) onCollide();
+    }
+  } else if (inst.k === 'proof') {
+    const n = inst.steps.length;
+    const pairs = Array.isArray(p.steps?.[0]);
+    if (inst.mode === 'why') {
+      if (!p.steps.every((s) => Array.isArray(s))) report('E303', 'в режиме why каждый шаг — пара [утверждение, обоснование]');
+      else if (!checkAnswer(inst, inst.key).ok) report('E303', `верный выбор обоснований не принят при seed=${seed}`);
+      else if (new Set(inst.pool).size !== inst.pool.length) report('E304', `одинаковые обоснования при seed=${seed}`);
+    } else {
+      if (pairs) report('E303', 'в режиме ord шаги — строки, пары допустимы только в why');
+      const bad = (inst.grp ?? []).flat().find((i) => i < 1 || i > n);
+      if (bad) report('E303', `в grp номер ${bad} вне диапазона 1..${n}`);
+      const right = inst.steps.map((_, pos) => inst.order.indexOf(pos + 1));
+      if (!checkAnswer(inst, right).ok) report('E303', `верный порядок не принят при seed=${seed}`);
+      if (new Set(inst.steps).size !== n) report('E304', `одинаковые шаги proof при seed=${seed}`);
     }
   } else if (inst.k === 'spot') {
     if (inst.badIndex < 1 || inst.badIndex > inst.steps.length) report('E303', `номер подменённого шага вне диапазона при seed=${seed}`);

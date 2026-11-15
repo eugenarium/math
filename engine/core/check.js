@@ -114,6 +114,27 @@ function checkExpr(inst, input) {
 }
 const close = (a, b) => Math.abs(a - b) <= 1e-6 * Math.max(1, Math.abs(a), Math.abs(b));
 
+/**
+ * proof/ord: input — индексы показанных шагов в порядке, выбранном учеником (с 0).
+ * proof/why: input — индексы обоснований из inst.pool по одному на шаг (null — не выбрано).
+ */
+function checkProof(inst, input) {
+  if (!Array.isArray(input)) return { ok: false, error: 'Нет ответа' };
+  if (inst.mode === 'why') {
+    if (input.length !== inst.key.length || input.some((x) => x === null || x === undefined)) {
+      return { ok: false, error: 'Выбери обоснование для каждого шага' };
+    }
+    return { ok: input.every((x, i) => x === inst.key[i]) };
+  }
+  const n = inst.steps.length;
+  if (input.length !== n) return { ok: false, error: 'Расставь все шаги' };
+  const canon = (i) => {
+    const g = (inst.grp ?? []).find((grp) => grp.includes(i));
+    return g ? Math.min(...g) : i;
+  };
+  return { ok: input.every((shown, pos) => canon(inst.order[shown]) === canon(pos + 1)) };
+}
+
 /** Цель graph/sim: |состояние − цель| ≤ допуск для каждой переменной. */
 export function checkGoal(inst, state) {
   return Object.entries(inst.goal).every(([name, [target, tol]]) => {
@@ -124,7 +145,7 @@ export function checkGoal(inst, state) {
 
 /**
  * Проверяет ответ.
- * num: строка или массив строк · mc: индексы · expr: строка · spot: номер строки (с 1)
+ * num: строка или массив строк · mc: индексы · expr: строка · spot: номер строки (с 1) · proof: см. checkProof
  * graph: состояние виджета · sim: {runs, state, answer}
  * @param {any} inst @param {any} input
  * @returns {{ok: boolean, diag?: string, error?: string}}
@@ -139,6 +160,8 @@ export function checkAnswer(inst, input) {
       return checkExpr(inst, input);
     case 'spot':
       return input === inst.badIndex ? { ok: true } : { ok: false };
+    case 'proof':
+      return checkProof(inst, input);
     case 'graph':
       return { ok: checkGoal(inst, input) };
     case 'sim': {
