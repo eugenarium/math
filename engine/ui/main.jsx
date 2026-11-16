@@ -9,6 +9,7 @@ import { Home } from './Home.jsx';
 import { Lesson } from './Lesson.jsx';
 import { Review } from './Review.jsx';
 import { Settings } from './Settings.jsx';
+import { Notes } from './Notes.jsx';
 
 /** Тема: 'auto' — по системе, иначе принудительно светлая или тёмная. */
 export function applyTheme(t) {
@@ -23,6 +24,7 @@ function App() {
   const [lessonId, setLessonId] = useState(null);
   const [review, setReview] = useState(false);
   const [settings, setSettings] = useState(false);
+  const [freeNotes, setFreeNotes] = useState(false);
   useEffect(() => applyTheme(state.set.theme), [state.set.theme]);
 
   /** Изменяет прогресс и сразу сохраняет его целиком. */
@@ -46,7 +48,12 @@ function App() {
   if (lessonId) {
     return <Lesson key={lessonId} id={lessonId} data={data} state={state} update={update} onExit={() => setLessonId(null)} />;
   }
-  return <Home data={data} state={state} update={update} onOpen={setLessonId} onReview={() => setReview(true)} onSettings={() => setSettings(true)} />;
+  return (
+    <>
+      <Home data={data} state={state} update={update} onOpen={setLessonId} onReview={() => setReview(true)} onSettings={() => setSettings(true)} onNotes={() => setFreeNotes(true)} />
+      {freeNotes && <Notes id="free" title="Свободная тетрадь" onClose={() => setFreeNotes(false)} />}
+    </>
+  );
 }
 
 // Офлайн-режим и защита от очистки хранилища

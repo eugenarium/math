@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'preact/hooks';
 import { Rich } from './Rich.jsx';
+import { Notes } from './Notes.jsx';
 import { Problem } from './Problem.jsx';
 import { Widget, SolStep } from './Widget.jsx';
 import { loaders } from '../widgets/index.js';
@@ -109,6 +110,7 @@ export function Lesson({ id, data, state, update, onExit }) {
   // линейный список экранов до практики
   const pre = useMemo(() => [...lesson.int.map((s) => ['int', s]), ...lesson.def.map((s) => ['def', s]), ...lesson.ex.map((s) => ['ex', s])], [id]);
   const [phase, setPhase] = useState('pre'); // pre | pr | err | sum
+  const [notes, setNotes] = useState(false);
   const [i, setI] = useState(0);
   const [hist, setHist] = useState([]);
   const [salt] = useState(() => 1 + Math.floor(Math.random() * 900));
@@ -198,7 +200,11 @@ export function Lesson({ id, data, state, update, onExit }) {
           <strong>{card.t}</strong>
           <span class="muted">{label}</span>
         </div>
+        <button type="button" class="note-btn" onClick={() => setNotes(true)} aria-label="Заметки">
+          ✎
+        </button>
       </header>
+      {notes && <Notes id={id} title={card.t} onClose={() => setNotes(false)} />}
       <div class="progress" role="progressbar" aria-valuenow={Math.round(progress * 100)}>
         <div style={{ width: `${progress * 100}%` }} />
       </div>

@@ -2,6 +2,7 @@ import { useState, useMemo } from 'preact/hooks';
 import { exportJson, importJson } from '../core/store.js';
 import { dayNumber } from '../core/srs.js';
 import { encodeQr, qrSvg } from '../core/qr.js';
+import { loadNotes, saveNotes, importNotes } from '../core/notes.js';
 
 /** Поделиться приложением: QR-код со ссылкой (рисуется на устройстве, работает офлайн), системное меню и копирование. */
 function ShareBlock() {
@@ -63,7 +64,7 @@ export function Settings({ state, update, replace, onExit }) {
 
   const doExport = () => {
     const today = dayNumber();
-    const blob = new Blob([exportJson({ ...state, set: { ...state.set, lastExport: today } })], { type: 'application/json' });
+    const blob = new Blob([exportJson({ ...state, N: loadNotes(), set: { ...state.set, lastExport: today } })], { type: 'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = `matbook-progress-${new Date().toISOString().slice(0, 10)}.json`;
@@ -81,8 +82,10 @@ export function Settings({ state, update, replace, onExit }) {
     if (!file) return;
     try {
       const next = importJson(await file.text());
-      replace(next);
-      setMsg({ ok: true, text: `Прогресс загружен: уроков в истории ${Object.keys(next.L).length}.` });
+      const { N, ...rest } = next;
+      if (N !== undefined) saveNotes(importNotes(N)); // копии без заметок не трогают текущие заметки
+      replace(rest);
+      setMsg({ ok: true, text: `Прогресс загружен: уроков в истории ${Object.keys(rest.L).length}.` + (N !== undefined ? ` Листов заметок: ${Object.keys(importNotes(N)).length}.` : '') });
     } catch (err) {
       setMsg({ ok: false, text: 'Не удалось прочитать файл: ' + err.message });
     }

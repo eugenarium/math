@@ -6,7 +6,7 @@ const plural = (n) => (n % 10 === 1 && n % 100 !== 11 ? 'урок' : [2, 3, 4].i
 
 const BADGE = { [LESSON_DONE]: '✓ пройден', [LESSON_STARTED]: '● начат', [LESSON_RETURN]: '↺ вернуться' };
 
-export function Home({ data, state, update, onOpen, onReview, onSettings }) {
+export function Home({ data, state, update, onOpen, onReview, onSettings, onNotes }) {
   const openAll = state.set.openAll !== false;
   const bySection = {};
   for (const l of data.index) (bySection[l.sec] ??= []).push(l);
@@ -34,9 +34,14 @@ export function Home({ data, state, update, onOpen, onReview, onSettings }) {
     <main class="home">
       <header class="home-head">
         <h1>Матбук</h1>
-        <button type="button" class="icon-btn" aria-label="Прогресс, копия, поделиться" onClick={onSettings}>
-          ⚙
-        </button>
+        <div class="head-btns">
+          <button type="button" class="icon-btn" aria-label="Тетрадь для заметок" onClick={onNotes}>
+            ✎
+          </button>
+          <button type="button" class="icon-btn" aria-label="Прогресс, копия, поделиться" onClick={onSettings}>
+            ⚙
+          </button>
+        </div>
       </header>
 
       <section class="overview">
