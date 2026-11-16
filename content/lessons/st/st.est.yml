@@ -67,7 +67,7 @@ pr:
       - 'Делим на $n-1=2$: $s^2=4$'
       - 'Ответ: $4$'
     bad:
-      - {i: 3, t: 'Делим на $n=3$: $s^2\approx2{,}67$', e: st.est.n-div}
+      - {i: 3, t: 'Делим на $n=3$: $s^2\approx2.67$', e: st.est.n-div}
       - {i: 2, t: 'Сумма квадратов отклонений: $2+0+2=4$'}
 err: [st.est.n-div, st.est.unbiased-good]
 sum:

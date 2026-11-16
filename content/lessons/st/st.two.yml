@@ -65,10 +65,10 @@ pr:
       - '$\mathrm{SE}_1=\frac{3}{\sqrt9}=1$'
       - '$\mathrm{SE}_2=\frac{4}{\sqrt{16}}=1$'
       - 'Складываем квадраты ошибок: $\sqrt{1^2+1^2}$'
-      - 'Ответ: $\sqrt2\approx1{,}41$'
+      - 'Ответ: $\sqrt2\approx1.41$'
     bad:
       - {i: 3, t: 'Складываем ошибки: $1+1=2$', e: st.two.se-diff}
-      - {i: 2, t: '$\mathrm{SE}_2=\frac{4}{16}=0{,}25$'}
+      - {i: 2, t: '$\mathrm{SE}_2=\frac{4}{16}=0.25$'}
 err: [st.two.paired-indep, st.two.se-diff]
 sum:
   - 'Умею находить стандартную ошибку разности независимых средних.'

@@ -68,7 +68,7 @@ pr:
       - '$\frac{10}{5}=2$'
       - 'Ответ: $2$'
     bad:
-      - {i: 3, t: '$\frac{10}{25}=0{,}4$', e: st.ci.linear-n}
+      - {i: 3, t: '$\frac{10}{25}=0.4$', e: st.ci.linear-n}
       - {i: 4, t: 'Ответ: $10$', e: st.samp.sd-se}
 err: [st.samp.sd-se, st.ci.linear-n, st.samp.pop-size]
 sum:
