@@ -1,0 +1,60 @@
+# Карточки раздела pr (теория вероятностей). Источник: docs/COURSE_MAP.md.
+pr.space:
+  t: 'Исходы, события, аксиомы вероятности'
+  goal: 'Умею находить вероятность дополнения и объединения событий по аксиомам вероятности'
+  pre: [pre.sets]
+  g: [probability-axioms]
+  k: [num, mc, spot]
+  e: [pr.space.union-sum, pr.space.complement]
+  n: 6
+  note: 'Только конечные пространства исходов. Несчётные пространства и σ-алгебры не вводить.'
+
+pr.classic:
+  t: 'Классическая вероятность и комбинаторика'
+  goal: 'Умею считать вероятность как долю благоприятных исходов и понимаю, что исходы не всегда равновероятны'
+  pre: [pr.space, dm.perm, dm.count, pre.sets]
+  g: [classical-probability]
+  k: [num, mc, spot]
+  e: [pr.classic.unequal, pr.classic.order]
+  n: 6
+  note: 'Числа благоприятных и всех исходов брать из dm.perm. Геометрическую вероятность не вводить.'
+
+pr.cond:
+  t: 'Условная вероятность'
+  goal: 'Умею находить $P(A\mid B)$ и отличаю её от $P(B\mid A)$'
+  pre: [pr.space, pre.sets]
+  g: [conditional-probability]
+  k: [num, mc, spot]
+  e: [pr.cond.reverse, pr.cond.shrink]
+  n: 6
+  note: 'Только дискретные примеры. Формулу Байеса не вводить: это pr.bayes.'
+
+pr.indep:
+  t: 'Независимость событий'
+  goal: 'Умею проверять независимость по $P(A\cap B)=P(A)P(B)$ и не путаю её с несовместностью'
+  pre: [pr.cond, pr.space, pre.sets]
+  g: [independence]
+  k: [num, mc, spot]
+  e: [pr.indep.incompat, pr.indep.add]
+  n: 6
+  note: 'Только пары событий и серии независимых испытаний. Независимость в совокупности не вводить.'
+
+pr.bayes:
+  t: 'Формулы полной вероятности и Байеса'
+  goal: 'Умею применять формулу полной вероятности и формулу Байеса с учётом базовой частоты'
+  pre: [pr.cond, pr.space, pre.sets]
+  g: [total-probability, bayes-formula]
+  k: [num, mc, spot]
+  e: [pr.bayes.base, pr.bayes.total]
+  n: 6
+  note: 'Не более двух гипотез. Задачи с тремя и более гипотезами не вводить.'
+
+pr.rv:
+  t: 'Дискретные случайные величины'
+  goal: 'Умею работать с таблицей распределения: находить недостающую вероятность и $P(X\le k)$'
+  pre: [pr.indep, pr.cond, pr.space, pre.func, pre.sets]
+  g: [discrete-random-variable]
+  k: [num, mc, spot]
+  e: [pr.rv.sum, pr.rv.cdf]
+  n: 6
+  note: 'Только конечные значения. Математическое ожидание и дисперсию не вводить.'
