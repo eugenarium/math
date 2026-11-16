@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import { load } from 'js-yaml';
-import { fmtNum, render, sampleOne, instantiate, matTex } from './gen.js';
+import { fmtNum, render, sampleOne, instantiate, matTex, pluralWord } from './gen.js';
 import { checkAnswer, parseNumber } from './check.js';
 import { evalExpr, quoteVarArgs } from './mathx.js';
 import { makeRng } from './rng.js';
@@ -605,4 +605,12 @@ test('proof why: выбор обоснований', () => {
   wrong[1] = inst.pool.indexOf('r9');
   assert.equal(checkAnswer(inst, wrong).ok, false);
   assert.match(checkAnswer(inst, [0, null, 0]).error, /обоснование/);
+});
+
+test('pluralWord и формат w= : слово по числу', () => {
+  const f = 'шар,шара,шаров';
+  const got = [1, 2, 4, 5, 11, 12, 14, 21, 22, 25, 101, 111].map((n) => pluralWord(n, f));
+  assert.deepEqual(got, ['шар', 'шара', 'шара', 'шаров', 'шаров', 'шаров', 'шаров', 'шар', 'шара', 'шаров', 'шар', 'шаров']);
+  assert.equal(render('$@n$ @{n:w=шар,шара,шаров}', { n: 3 }), '$3$ шара');
+  assert.equal(render('@{a+b:w=способ,способа,способов}', { a: 2, b: 2 }), 'способа');
 });

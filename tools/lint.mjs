@@ -140,6 +140,7 @@ export function lintLesson(L, card, ctx) {
     const low = t.toLowerCase();
     for (const w of STOP) if (new RegExp(`(^|[^а-яё])${w}([^а-яё]|$)`).test(low)) add('W507', '', `стоп-слово «${w}»: ${t.slice(0, 50)}`);
   }
+  for (const [i, line] of (L.sum ?? []).entries()) if (!/^(Умею|Отличаю)\s/.test(String(line))) add('W509', `sum[${i}]`, 'строка итога должна начинаться с «Умею» или «Отличаю»');
   if (!Object.values(L.pr).some((p) => p.fast)) add('W505', 'pr', 'нет ни одной задачи fast');
   if (!Object.values(L.pr).some((p) => (p.lv ?? 1) >= 2)) add('W506', 'pr', 'нет задачи уровня 2 или выше');
   return res;

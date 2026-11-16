@@ -43,6 +43,17 @@ function fracText(x) {
   return Number(f.d) === 1 ? fmtNum(n) : `${n < 0 ? MINUS : ''}${Math.abs(n)}/${Number(f.d)}`;
 }
 
+/** Слово в нужной форме после числа: pluralWord(3, 'шар,шара,шаров') → 'шара'. */
+export function pluralWord(n, forms) {
+  const [one, two, five] = forms.split(',').map((s) => s.trim());
+  const k = Math.abs(Math.round(Number(n)));
+  const m10 = k % 10;
+  const m100 = k % 100;
+  if (m10 === 1 && m100 !== 11) return one;
+  if (m10 >= 2 && m10 <= 4 && !(m100 >= 12 && m100 <= 14)) return two;
+  return five ?? two;
+}
+
 /** @param {any} val @param {string} [fmt] @param {boolean} [math] внутри $…$ ли стоит подстановка */
 export function formatValue(val, fmt, math = true) {
   if (Array.isArray(val)) return matTex(val);
@@ -64,6 +75,7 @@ export function formatValue(val, fmt, math = true) {
     case 'm':
       return fmtNum(val);
     default:
+      if (fmt && fmt.startsWith('w=')) return pluralWord(val, fmt.slice(2));
       if (fmt && /^f\d+$/.test(fmt)) {
         const s = val.toFixed(Number(fmt.slice(1)));
         return (Object.is(Number(s), -0) ? s.replace('-', '') : s).replace('-', MINUS);
@@ -75,7 +87,7 @@ export function formatValue(val, fmt, math = true) {
 // ───────── шаблоны ─────────
 
 const TPL = /@\{([^}]*)\}|@([A-Za-z][A-Za-z0-9]*)/g;
-const FMT = /^([\s\S]*):(s|c|sc|n|f\d+|fr|pc|m|tex)$/;
+const FMT = /^([\s\S]*):(s|c|sc|n|f\d+|fr|pc|m|tex|w=[^}]*)$/;
 
 /** Подставляет @a и @{выражение:формат}. @param {string} text @param {Record<string, any>} scope */
 export function render(text, scope) {
