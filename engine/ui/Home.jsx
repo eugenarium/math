@@ -84,7 +84,7 @@ export function Home({ data, state, update, onOpen, onReview, onSettings }) {
 
       <footer class="foot">
         <button type="button" class="btn ghost wide" onClick={onSettings}>
-          Прогресс и копия
+          Прогресс, копия, поделиться
         </button>
         <label class="toggle">
           <input type="checkbox" checked={openAll} onChange={(e) => update((s) => void (s.set.openAll = e.currentTarget.checked))} />
