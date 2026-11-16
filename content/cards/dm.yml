@@ -58,3 +58,84 @@ dm.rec:
   e: [dm.rec.init, dm.rec.index]
   n: 6
   note: 'Только вычисление членов и индексы. Характеристическое уравнение не вводить.'
+
+dm.pigeon:
+  t: 'Принцип Дирихле'
+  goal: 'Умею применять принцип Дирихле и считать гарантированное число предметов в одном ящике'
+  pre: [dm.count, lg.proof, lg.quant, lg.equiv, lg.impl, lg.prop, pre.sum, pre.sets]
+  g: [pigeonhole]
+  k: [num, mc, spot]
+  e: [dm.pigeon.k, dm.pigeon.floor, dm.pigeon.kr]
+  n: 6
+  note: 'Только обычная и обобщённая формулировки. Принцип с бесконечными множествами не вводить.'
+
+dm.rel:
+  t: 'Отношения: эквивалентность, порядок'
+  goal: 'Умею проверять свойства отношения и считать классы эквивалентности'
+  pre: [pre.sets, lg.quant, lg.equiv, lg.impl, lg.prop]
+  g: [equivalence-relation, partial-order]
+  k: [num, mc, spot]
+  e: [dm.rel.count, dm.rel.sym-trans, dm.rel.partial]
+  n: 6
+  note: 'Конечные множества и делимость на натуральных числах. Диаграммы Хассе не вводить.'
+
+dm.card:
+  t: 'Мощность множеств, счётность, диагональный аргумент'
+  goal: 'Умею сравнивать мощности бесконечных множеств по биекции и пересказывать диагональный аргумент'
+  pre: [dm.count, dm.pigeon, lg.proof, pre.func, pre.sets]
+  g: [cardinality]
+  k: [num, mc, spot]
+  e: [dm.card.all-equal, dm.card.more, dm.card.interval]
+  n: 7
+  note: 'Обзорный уровень: счётность $\mathbb N$, $\mathbb Z$, чётных; несчётность $[0,1]$. Кардинальную арифметику не вводить.'
+
+dm.gf:
+  t: 'Производящие функции'
+  goal: 'Умею находить коэффициенты базовых рядов и считать число решений с ограничениями свёрткой'
+  pre: [dm.rec, dm.binom, dm.perm, dm.count, lg.proof, pre.sum, pre.sets]
+  g: [generating-function]
+  k: [num, mc, spot]
+  e: [dm.gf.shift, dm.gf.bound, dm.gf.sum]
+  n: 6
+  note: 'Формальные ряды, без сходимости. Только ряды $(1+x)^n$, $1/(1-x)$, $1/(1-x)^2$ и конечные суммы степеней.'
+
+dm.div:
+  t: 'Делимость, НОД, алгоритм Евклида'
+  goal: 'Умею находить НОД и НОК алгоритмом Евклида и связывать их формулой $\gcd\cdot\mathrm{lcm}=ab$'
+  pre: [lg.proof, lg.quant, lg.equiv, lg.impl, lg.prop, pre.sum, pre.sets]
+  g: [gcd-euclid]
+  k: [num, mc, spot]
+  e: [dm.div.euclid-step, dm.div.lcm-prod, dm.div.coprime]
+  n: 6
+  note: 'Расширенный алгоритм Евклида не вводить: обратные — в следующем уроке.'
+
+dm.mod:
+  t: 'Сравнения по модулю, обратные элементы'
+  goal: 'Умею находить остатки, обратные по модулю и решать линейные сравнения'
+  pre: [dm.div, lg.proof, pre.sum, pre.sets]
+  g: [congruence]
+  k: [num, mc, spot]
+  e: [dm.mod.negative, dm.mod.inverse-neg, dm.mod.noncoprime]
+  n: 6
+  note: 'Малые простые модули. Китайскую теорему об остатках не вводить.'
+
+dm.rsa:
+  t: 'Теоремы Ферма и Эйлера, RSA'
+  goal: 'Умею считать $\varphi(n)$, шифровать и расшифровывать в игрушечном RSA'
+  pre: [dm.mod, dm.div, lg.proof, pre.sum, pre.sets]
+  g: [fermat-euler, rsa]
+  k: [num, mc, spot]
+  e: [dm.rsa.phi, dm.rsa.private, dm.rsa.mul]
+  n: 6
+  note: 'Только $n=15$ и подобные малые числа, чтобы вычисления делались вручную. Реальной безопасности не обещать.'
+
+dm.bigo:
+  t: 'Асимптотика: O, Ω, Θ, оценки сумм'
+  goal: 'Умею оценивать порядок роста суммы и отличаю верхнюю оценку от нижней'
+  pre: [c1.small, pre.sum, pre.func]
+  g: [big-o]
+  w: [fplot]
+  k: [num, mc, spot]
+  e: [dm.bigo.equal, dm.bigo.dom, dm.bigo.lower]
+  n: 6
+  note: 'Только полиномиальные, показательные и логарифмические примеры. Основную теорему о рекурренциях не вводить.'
