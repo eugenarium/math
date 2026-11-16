@@ -48,3 +48,53 @@ la.map:
   e: [la.map.columns, la.map.shift]
   n: 6
   note: 'Только отображения плоскости. Ядро, образ и смену базиса не вводить.'
+
+la.inv:
+  t: 'Обратная матрица'
+  goal: 'Умею находить обратную матрицу 2×2 и знаю, что $(AB)^{-1}=B^{-1}A^{-1}$'
+  pre: [la.mat, la.sys, la.vec, pre.func, pre.sum]
+  g: [inverse-matrix]
+  k: [num, mc, spot]
+  e: [la.inv.order, la.inv.formula]
+  n: 6
+  note: 'Только матрицы 2×2 с ненулевым определителем, формула через определитель дана готовой.'
+
+la.det:
+  t: 'Определитель: объём, свойства, вычисление'
+  goal: 'Умею вычислять определитель 2×2, площадь параллелограмма и использовать $\det(kA)=k^n\det A$'
+  pre: [la.inv, la.mat, la.sys, la.vec, pre.func, pre.sum]
+  g: [determinant]
+  k: [num, mc, spot]
+  e: [la.det.sum, la.det.scalar]
+  n: 6
+  note: 'Только 2×2 и общие свойства для 3×3. Разложение по строке не вводить.'
+
+la.space:
+  t: 'Линейные пространства и подпространства'
+  goal: 'Умею проверять, образует ли множество векторов подпространство'
+  pre: [la.sys, la.vec, pre.func, pre.sum]
+  g: [subspace]
+  k: [num, mc, spot]
+  e: [la.space.zero, la.space.union]
+  n: 6
+  note: 'Только подпространства в ℝⁿ. Абстрактные пространства упомянуть одной фразой.'
+
+la.basis:
+  t: 'Линейная независимость, базис, размерность'
+  goal: 'Умею проверять линейную независимость векторов и находить координаты вектора в базисе'
+  pre: [la.space, la.sys, la.vec, pre.func, pre.sum]
+  g: [linear-independence, basis-dimension]
+  k: [num, mc, spot]
+  e: [la.basis.pairwise, la.basis.size]
+  n: 6
+  note: 'Только ℝ² и ℝ³. Смену базиса не вводить: это la.cob.'
+
+la.rank:
+  t: 'Ранг, ядро, образ, теорема о ранге'
+  goal: 'Умею находить ранг матрицы и размерность ядра по теореме о ранге'
+  pre: [la.basis, la.map, la.space, la.mat, la.sys, la.vec, pre.func, pre.sum]
+  g: [matrix-rank, kernel-image]
+  k: [num, mc, spot]
+  e: [la.rank.rows, la.rank.nullity]
+  n: 6
+  note: 'Только небольшие матрицы. Ранг находить сравнением строк или методом Гаусса.'
