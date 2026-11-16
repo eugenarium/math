@@ -168,3 +168,83 @@ pr.clt:
   e: [pr.clt.data, pr.clt.sd]
   n: 6
   note: 'Только среднее и сумма. Поправка на непрерывность и условия Линдеберга не вводить.'
+
+pr.jointc:
+  t: 'Непрерывные совместные распределения'
+  goal: 'Умею находить вероятности для равномерного распределения на области и проверять независимость по носителю'
+  pre: [pr.joint, pr.cont, pr.var, pr.rv, pr.indep, pr.space, pre.sets]
+  g: [joint-density]
+  k: [num, mc, spot]
+  e: [pr.jointc.area, pr.jointc.dens-value, pr.jointc.support]
+  n: 6
+  note: 'Только равномерные распределения на прямоугольнике и треугольнике, площади без интегралов. Контурный график не нужен.'
+
+pr.trans:
+  t: 'Функции от случайных величин, свёртка'
+  goal: 'Умею находить распределение $Y=g(X)$ для дискретной $X$ и плотность $Y=aX+b$'
+  pre: [pr.jointc, pr.joint, pr.cont, pr.var, pr.rv, pr.indep, pr.space, pre.sets]
+  g: [rv-transform]
+  k: [num, mc, spot]
+  e: [pr.trans.merge, pr.trans.jac, pr.trans.sd-add]
+  n: 6
+  note: 'Без замены переменной в интегралах. Свёртка — только для двух кубиков и сумм нормальных.'
+
+pr.condexp:
+  t: 'Условное математическое ожидание, формулы полного ожидания и дисперсии'
+  goal: 'Умею применять закон полного ожидания и полной дисперсии к группам'
+  pre: [pr.joint, pr.var, pr.exp, pr.rv, pr.cond, pr.space, pre.sets]
+  g: [conditional-expectation]
+  k: [num, mc, spot]
+  e: [pr.condexp.norm, pr.condexp.avg, pr.condexp.var]
+  n: 6
+  note: 'Две группы, дискретный случай.'
+
+pr.mgf:
+  t: 'Производящие и характеристические функции'
+  goal: 'Умею находить среднее по производной MGF в нуле и использовать произведение MGF независимых величин'
+  pre: [pr.cdistr, pr.cont, pr.exp, pr.rv, pr.var, pr.indep, pr.space, pre.sets]
+  g: [mgf]
+  k: [num, mc, spot]
+  e: [pr.mgf.m0, pr.mgf.sum, pr.mgf.deriv]
+  n: 6
+  note: 'Только MGF, характеристические функции упомянуть одной фразой. Дискретные величины с тремя значениями.'
+
+pr.mvn:
+  t: 'Многомерное нормальное распределение'
+  goal: 'Умею считать корреляцию и дисперсию линейной комбинации двух совместно нормальных величин'
+  pre: [pr.jointc, pr.cov, pr.joint, pr.norm, pr.cdistr, pr.var, pr.space, la.sym, pre.sets]
+  g: [multivariate-normal]
+  k: [num, mc, spot]
+  e: [pr.mvn.uncorr, pr.mvn.cov-var, pr.mvn.rho]
+  n: 6
+  note: 'Только две переменные. Плотность в матричной форме не вводить.'
+
+pr.markov:
+  t: 'Цепи Маркова'
+  goal: 'Умею считать вероятности за два шага и стационарное распределение цепи с двумя состояниями'
+  pre: [pr.cond, pr.space, la.eig, la.diag, pre.sets]
+  g: [markov-chain]
+  k: [num, mc, spot]
+  e: [pr.markov.mult, pr.markov.stationary, pr.markov.time]
+  n: 6
+  note: 'Только два состояния. Классификацию состояний не вводить.'
+
+pr.pois:
+  t: 'Пуассоновский процесс'
+  goal: 'Умею считать среднее число событий и вероятность отсутствия событий в потоке Пуассона'
+  pre: [pr.cdistr, pr.discr, pr.cont, pr.var, pr.rv, pr.indep, pr.space, pre.sets]
+  g: [poisson-process]
+  k: [num, mc, spot]
+  e: [pr.pois.rate, pr.pois.mean, pr.pois.memory]
+  n: 6
+  note: 'Однородный процесс, без сложения и разрежения потоков.'
+
+pr.conv:
+  t: 'Виды сходимости случайных величин'
+  goal: 'Умею различать сходимость по вероятности и по распределению и приводить контрпример к обратному следствию'
+  pre: [pr.clt, pr.lln, pr.ineq, pr.cov, pr.norm, pr.var, pr.space, pre.sets]
+  g: [convergence-types]
+  k: [mc, spot]
+  e: [pr.conv.dist-prob, pr.conv.clt, pr.conv.exact]
+  n: 5
+  note: 'Обзор без доказательств. Почти наверное упомянуть одной фразой.'
