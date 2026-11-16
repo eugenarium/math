@@ -148,3 +148,63 @@ la.sym:
   e: [la.sym.nonorth, la.sym.complex]
   n: 6
   note: 'Только матрицы 2×2. Квадратичные формы не вводить.'
+
+la.quad:
+  t: 'Квадратичные формы, знакоопределённость'
+  goal: 'Умею записывать форму матрицей и определять её знакоопределённость по критерию Сильвестра'
+  pre: [la.sym, la.diag, la.orth, la.eig, la.cob]
+  g: [quadratic-form, definiteness]
+  k: [num, mc, spot]
+  e: [la.quad.offdiag, la.quad.det-only, la.quad.diag]
+  n: 6
+  note: 'Только две переменные. Поверхности и 3D не вводить: график на этом экране не нужен.'
+
+la.svd:
+  t: 'Сингулярное разложение'
+  goal: 'Умею находить сингулярные числа и связывать их с рангом и нормами матрицы'
+  pre: [la.quad, la.sym, la.diag, la.orth, la.rank, la.eig]
+  g: [svd]
+  k: [num, mc, spot]
+  e: [la.svd.eig, la.svd.square, la.svd.rank]
+  n: 6
+  note: 'Матрицы 2×2 с красивыми числами. Построение $U$ и $V$ не требовать: только сингулярные числа и их смысл.'
+
+la.norm:
+  t: 'Нормы векторов и матриц, число обусловленности'
+  goal: 'Умею считать нормы $1$, $2$, $\infty$ и число обусловленности диагональной матрицы'
+  pre: [la.svd, la.sym, la.eig, la.dot]
+  g: [vector-norm, condition-number]
+  k: [num, mc, spot]
+  e: [la.norm.l1, la.norm.inf, la.norm.cond-det]
+  n: 6
+  note: 'Обусловленность — через отношение сингулярных чисел. Нормы матриц, кроме спектральной, не вводить.'
+
+la.cross:
+  t: 'Векторное и смешанное произведение'
+  goal: 'Умею вычислять компоненты векторного произведения, площадь и объём через определитель'
+  pre: [la.det, la.dot, la.vec]
+  g: [cross-product]
+  k: [num, mc, spot]
+  e: [la.cross.order, la.cross.scalar, la.cross.dot]
+  n: 6
+  note: 'Без 3D-виджета: только формулы. Ориентацию тройки упомянуть одной фразой.'
+
+la.cplx:
+  t: 'Комплексные собственные значения, повороты'
+  goal: 'Умею находить комплексные собственные значения матрицы $2\times2$ и объяснять поворот с растяжением'
+  pre: [la.eig, la.diag, la.cob]
+  g: [complex-eigenvalues]
+  k: [num, mc, spot]
+  e: [la.cplx.real-part, la.cplx.disc, la.cplx.real-vec]
+  n: 6
+  note: 'Только матрицы $2\times2$. Комплексные векторы не вводить.'
+
+la.jord:
+  t: 'Жорданова форма (обзор)'
+  goal: 'Умею определять число клеток Жордана и отличаю диагонализуемую матрицу от недиагонализуемой'
+  pre: [la.eig, la.diag, la.rank]
+  g: [jordan-form]
+  k: [num, mc, spot]
+  e: [la.jord.diag, la.jord.size, la.jord.rank]
+  n: 6
+  note: 'Обзор для матриц до $3\times3$ с одним собственным значением. Доказательств нет.'

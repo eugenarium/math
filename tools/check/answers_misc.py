@@ -97,6 +97,44 @@ reg('la.basis.p3')(lambda s: s['m']*s['p'])
 reg('la.basis.p5')(lambda s: (s['m']+s['n'])/2)
 reg('la.diag.p1')(lambda s: s['l']**s['n'])
 reg('la.diag.p5')(lambda s: 1)
+
+def sv2(A):
+    # сингулярные числа матрицы 2x2: корни из собственных значений A^T A (формула для 2x2)
+    (a,b),(c,d)=A
+    m=[[a*a+c*c, a*b+c*d],[a*b+c*d, b*b+d*d]]
+    t=m[0][0]+m[1][1]; dt=m[0][0]*m[1][1]-m[0][1]**2
+    disc=math.sqrt(max(0,t*t/4-dt))
+    return [math.sqrt(max(0,t/2+disc)), math.sqrt(max(0,t/2-disc))]
+def cross(u,v): return [u[1]*v[2]-u[2]*v[1], u[2]*v[0]-u[0]*v[2], u[0]*v[1]-u[1]*v[0]]
+def det3(M):
+    return (M[0][0]*(M[1][1]*M[2][2]-M[1][2]*M[2][1])-M[0][1]*(M[1][0]*M[2][2]-M[1][2]*M[2][0])+M[0][2]*(M[1][0]*M[2][1]-M[1][1]*M[2][0]))
+import cmath
+def eig2(A):
+    (a,b),(c,d)=A
+    t=a+d; dt=a*d-b*c
+    r=cmath.sqrt(t*t/4-dt)
+    return [t/2+r, t/2-r]
+reg('la.quad.p1')(lambda s: s['k']/2)
+reg('la.quad.p2')(lambda s: s['x0']*(s['a']*s['x0']+s['b']*s['y0'])+s['y0']*(s['b']*s['x0']+s['c']*s['y0']))
+reg('la.quad.p4')(lambda s: sum(1 for t in range(-20,21) if 1>0 and 1*s['m']**2-t*t>0))
+reg('la.svd.p1')(lambda s: max(sv2([[-s['s'],0],[0,s['t']]])))
+reg('la.svd.p2')(lambda s: max(sv2([[3*s['t'],4*s['t']],[-4*s['t'],3*s['t']]])))
+reg('la.svd.p3')(lambda s: sum(1 for x in [1]*s['r']+[0]*(4-s['r']) if x>0))
+reg('la.svd.p4')(lambda s: s['p']**2+s['q']**2)
+reg('la.norm.p1')(lambda s: sum(abs(x) for x in (s['a'],s['b'])))
+reg('la.norm.p2')(lambda s: max(abs(s['a']),abs(s['b'])))
+reg('la.norm.p3')(lambda s: math.hypot(3*s['t'],4*s['t']))
+reg('la.norm.p4')(lambda s: (lambda sv: max(sv)/min(sv))(sv2([[s['k']*s['m'],0],[0,s['m']]])))
+reg('la.cross.p1')(lambda s: cross([s['a1'],s['a2'],0],[s['b1'],s['b2'],0])[2])
+reg('la.cross.p2')(lambda s: abs(cross([s['a1'],s['a2'],0],[s['b1'],s['b2'],0])[2]))
+reg('la.cross.p3')(lambda s: abs(det3([[s['a'],0,0],[s['b'],s['c'],0],[s['d'],s['e'],s['f']]])))
+reg('la.cplx.p1')(lambda s: abs(eig2([[3*s['t'],-4*s['t']],[4*s['t'],3*s['t']]])[0]))
+reg('la.cplx.p2')(lambda s: eig2([[s['a'],-s['b']],[s['b'],s['a']]])[0].real)
+reg('la.cplx.p3')(lambda s: eig2([[s['u'],-s['s']**2],[1,s['u']]])[0].imag)
+reg('la.jord.p1')(lambda s: 2-1)
+reg('la.jord.p2')(lambda s: s['n'])
+reg('la.jord.p3')(lambda s: 3-s['r'])
+
 bad=0; checked=0; per={}
 for r in data:
     key=f"{r['id']}.{r['pid']}"
