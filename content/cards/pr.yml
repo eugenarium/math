@@ -58,3 +58,63 @@ pr.rv:
   e: [pr.rv.sum, pr.rv.cdf]
   n: 6
   note: 'Только конечные значения. Математическое ожидание и дисперсию не вводить.'
+
+pr.exp:
+  t: 'Математическое ожидание, линейность'
+  goal: 'Умею находить $E[X]$ по таблице, использовать линейность и помню, что $E[X^2]\ne(E[X])^2$'
+  pre: [pr.rv, pr.indep, pr.cond, pr.space, pre.sum, pre.func, pre.sets]
+  g: [expectation]
+  k: [num, mc, spot]
+  e: [pr.exp.nonlin, pr.exp.avg]
+  n: 6
+  note: 'Только дискретные величины. Дисперсию не вводить.'
+
+pr.var:
+  t: 'Дисперсия и стандартное отклонение'
+  goal: 'Умею находить дисперсию по таблице и применять $\operatorname{Var}(aX)=a^2\operatorname{Var}X$ и сложение дисперсий независимых величин'
+  pre: [pr.exp, pr.rv, pr.indep, pr.space, pre.sum, pre.func, pre.sets]
+  g: [variance]
+  k: [num, mc, spot]
+  e: [pr.var.scale, pr.var.diff]
+  n: 6
+  note: 'Сложение дисперсий только для независимых величин. Ковариацию не вводить.'
+
+pr.discr:
+  t: 'Биномиальное, геометрическое, пуассоновское распределения'
+  goal: 'Умею применять формулы биномиального, геометрического и пуассоновского распределений'
+  pre: [pr.var, pr.exp, pr.rv, dm.binom, dm.perm, dm.count, pre.sum, pre.sets]
+  g: [binomial-distribution, geometric-distribution, poisson-distribution]
+  k: [num, mc, spot]
+  e: [pr.discr.coef, pr.discr.geom]
+  n: 6
+  note: 'Только вероятности отдельных значений и среднее. Приближение пуассоновским не вводить.'
+
+pr.cont:
+  t: 'Непрерывные величины: плотность и функция распределения'
+  goal: 'Умею находить вероятность попадания в интервал по плотности и помню, что плотность — не вероятность'
+  pre: [pr.var, pr.exp, pr.rv, c1.ftc, c1.int, pre.func, pre.sets]
+  g: [probability-density]
+  k: [num, mc, spot]
+  e: [pr.cont.density-prob, pr.cont.point]
+  n: 6
+  note: 'Только полиномиальные плотности на отрезке. Названные распределения — в pr.cdistr.'
+
+pr.cdistr:
+  t: 'Равномерное, показательное, нормальное распределения'
+  goal: 'Умею работать с равномерным и показательным распределениями и знаю свойство отсутствия памяти'
+  pre: [pr.cont, pr.var, pr.exp, c1.impr, c1.ftc, pre.explog, pre.func]
+  g: [uniform-distribution, exponential-distribution]
+  k: [num, mc, spot]
+  e: [pr.cdistr.rate, pr.cdistr.memory]
+  n: 6
+  note: 'Нормальное распределение — только упоминание, подробности в pr.norm.'
+
+pr.norm:
+  t: 'Нормальное распределение: стандартизация, квантили'
+  goal: 'Умею стандартизировать значение нормальной величины и пользоваться правилом $68$–$95$–$99{,}7$'
+  pre: [pr.cdistr, pr.cont, pr.var, pr.exp, pre.func]
+  g: [standard-normal]
+  k: [num, mc, spot]
+  e: [pr.norm.var, pr.norm.tail]
+  n: 6
+  note: 'Таблицу значений $\Phi$ не вводить: использовать симметрию и правило трёх сигм.'
