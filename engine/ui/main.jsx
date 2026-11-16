@@ -1,5 +1,5 @@
 import { render } from 'preact';
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import 'katex/dist/katex.min.css';
 import './app.css';
 import data from 'virtual:content';
@@ -10,11 +10,20 @@ import { Lesson } from './Lesson.jsx';
 import { Review } from './Review.jsx';
 import { Settings } from './Settings.jsx';
 
+/** Тема: 'auto' — по системе, иначе принудительно светлая или тёмная. */
+export function applyTheme(t) {
+  const root = document.documentElement;
+  if (t === 'light' || t === 'dark') root.dataset.theme = t;
+  else delete root.dataset.theme;
+  document.querySelector('meta[name=theme-color]')?.setAttribute('content', getComputedStyle(root).getPropertyValue('--bg').trim() || '#f7f6f2');
+}
+
 function App() {
   const [state, setState] = useState(load);
   const [lessonId, setLessonId] = useState(null);
   const [review, setReview] = useState(false);
   const [settings, setSettings] = useState(false);
+  useEffect(() => applyTheme(state.set.theme), [state.set.theme]);
 
   /** Изменяет прогресс и сразу сохраняет его целиком. */
   const update = (fn) =>

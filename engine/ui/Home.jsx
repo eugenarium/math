@@ -21,43 +21,76 @@ export function Home({ data, state, update, onOpen, onReview, onSettings }) {
   const backupDue = hasProgress && (lastExport === undefined ? Object.values(state.L).some((l) => l[0] === 1) : today - lastExport >= 30);
   const next = have.find((l) => state.L[l.id]?.[0] !== LESSON_DONE && l.id !== cur && (openAll || isUnlocked(state, l.pre)));
 
+  const pct = have.length ? Math.round((done / have.length) * 100) : 0;
+  const dotOf = (l, st, unlocked, can) => {
+    if (!l.has) return ['soon', ''];
+    if (st === LESSON_DONE) return ['done', '✓'];
+    if (st === LESSON_STARTED) return ['started', ''];
+    if (st === LESSON_RETURN) return ['back', '↺'];
+    return [can ? 'open' : 'off', can ? '' : '🔒'];
+  };
+
   return (
     <main class="home">
-      <h1>Матбук</h1>
-      <p class="muted">
-        Готово уроков: {have.length} из {data.index.length}. Пройдено: {done}.
-      </p>
+      <header class="home-head">
+        <h1>Матбук</h1>
+        <button type="button" class="icon-btn" aria-label="Прогресс, копия, поделиться" onClick={onSettings}>
+          ⚙
+        </button>
+      </header>
+
+      <section class="overview">
+        <div class="nums">
+          <span class="big">
+            {done} <span class="muted">из {have.length} пройдено</span>
+          </span>
+          <span class="muted">{pct}%</span>
+        </div>
+        <div class="meter" role="progressbar" aria-valuenow={pct} aria-valuemin="0" aria-valuemax="100">
+          <i style={{ width: pct + '%' }} />
+        </div>
+        <p class="muted" style="margin:8px 0 0">
+          Готово уроков: {have.length} из {data.index.length} по карте курса.
+        </p>
+      </section>
 
       {backupDue && (
         <button type="button" class="feedback warn backup" onClick={onSettings}>
           {lastExport === undefined ? 'Сохрани копию прогресса: хранилище браузера могут очистить.' : 'Прошёл месяц с последней копии прогресса. Сохранить сейчас?'}
         </button>
       )}
-      {due.length > 0 && (
-        <button type="button" class="btn primary wide" onClick={onReview}>
-          Повторить сегодня: {due.length} {plural(due.length)}
-        </button>
-      )}
       {due.length > DEBT_WARNING && <p class="feedback warn">Накопилось больше {DEBT_WARNING} повторений. Сессия берёт по 10 уроков за раз.</p>}
-      {cur && (
-        <button type="button" class={'btn wide' + (due.length ? '' : ' primary')} onClick={() => onOpen(cur)}>
-          Продолжить: {data.cards[cur].t}
-        </button>
-      )}
-      {next && !cur && (
-        <button type="button" class={'btn wide' + (due.length ? '' : ' primary')} onClick={() => onOpen(next.id)}>
-          Следующий урок: {next.t}
-        </button>
-      )}
+      <div class="actions">
+        {due.length > 0 && (
+          <button type="button" class="btn primary wide" onClick={onReview}>
+            Повторить сегодня: {due.length} {plural(due.length)}
+          </button>
+        )}
+        {cur && (
+          <button type="button" class={'btn wide' + (due.length ? '' : ' primary')} onClick={() => onOpen(cur)}>
+            Продолжить: {data.cards[cur].t}
+          </button>
+        )}
+        {next && !cur && (
+          <button type="button" class={'btn wide' + (due.length ? '' : ' primary')} onClick={() => onOpen(next.id)}>
+            Следующий урок: {next.t}
+          </button>
+        )}
+      </div>
 
       {Object.entries(bySection).map(([sec, items]) => {
         const n = items.filter((l) => l.has).length;
+        const d = items.filter((l) => state.L[l.id]?.[0] === LESSON_DONE).length;
         return (
-          <details key={sec} open={n > 0} class="section">
+          <details key={sec} open={n > 0 && d < n} class="section">
             <summary>
-              <span>{data.sections[sec]}</span>
-              <span class="muted">
-                {n}/{items.length}
+              <span class="name">{data.sections[sec]}</span>
+              <span class="muted count">
+                {d}/{n}
+                {n < items.length ? ` · всего ${items.length}` : ''}
+              </span>
+              <span class={'meter' + (n > 0 && d === n ? ' ok' : '')}>
+                <i style={{ width: (n ? (d / n) * 100 : 0) + '%' }} />
               </span>
             </summary>
             <ul class="lessons">
@@ -65,14 +98,18 @@ export function Home({ data, state, update, onOpen, onReview, onSettings }) {
                 const st = state.L[l.id]?.[0];
                 const unlocked = isUnlocked(state, l.pre);
                 const can = l.has && (unlocked || openAll);
+                const [cls, mark] = dotOf(l, st, unlocked, can);
                 return (
                   <li key={l.id}>
                     <button type="button" class={'lesson-row' + (can ? '' : ' off')} disabled={!can} onClick={() => onOpen(l.id)}>
-                      <span class="lt">{l.t}</span>
-                      <span class="meta muted">
-                        {!l.has ? 'скоро' : BADGE[st] ?? (unlocked ? l.min + ' мин' : 'закрыт')}
-                        {l.p !== 'core' && l.has ? ' · ' + (l.p === 'ext' ? 'расширение' : 'опция') : ''}
+                      <span class={'dot ' + cls} aria-hidden="true">
+                        {mark}
                       </span>
+                      <span class="lt">
+                        {l.t}
+                        {l.p !== 'core' && l.has && <span class="tag">{l.p === 'ext' ? 'расширение' : 'опция'}</span>}
+                      </span>
+                      <span class="meta muted">{!l.has ? 'скоро' : BADGE[st] ?? (unlocked ? l.min + ' мин' : 'закрыт')}</span>
                     </button>
                   </li>
                 );
