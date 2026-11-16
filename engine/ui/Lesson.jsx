@@ -1,5 +1,7 @@
 import { useState, useMemo, useEffect } from 'preact/hooks';
 import { Rich } from './Rich.jsx';
+import { Notes } from './Notes.jsx';
+import { discardNote } from '../core/notes.js';
 import { Problem } from './Problem.jsx';
 import { Widget, SolStep } from './Widget.jsx';
 import { loaders } from '../widgets/index.js';
@@ -109,6 +111,8 @@ export function Lesson({ id, data, state, update, onExit }) {
   // линейный список экранов до практики
   const pre = useMemo(() => [...lesson.int.map((s) => ['int', s]), ...lesson.def.map((s) => ['def', s]), ...lesson.ex.map((s) => ['ex', s])], [id]);
   const [phase, setPhase] = useState('pre'); // pre | pr | err | sum
+  const [notes, setNotes] = useState(false); // false | 'dock' | 'full'
+  const [dockSize, setDockSize] = useState('m');
   const [i, setI] = useState(0);
   const [hist, setHist] = useState([]);
   const [salt] = useState(() => 1 + Math.floor(Math.random() * 900));
@@ -147,7 +151,14 @@ export function Lesson({ id, data, state, update, onExit }) {
 
   const label = phase === 'exam' || phase === 'examfail' ? 'Экзамен экстерном' : phase === 'pre' ? PHASES.find((p) => p[0] === pre[i][0])[1] : PHASES.find((p) => p[0] === phase)[1];
 
+  // на экранах задач поле — черновик этой задачи (стирается по её окончании), на остальных — тетрадь урока
+  const scratch = phase === 'pr' ? `${id}#t${hist.length}` : phase === 'exam' ? `${id}#x${examI}` : null;
+  const noteId = scratch ?? id;
+  const noteTitle = scratch ? 'Черновик задачи' : 'Заметки к уроку';
+  const cycleSize = () => setDockSize((z) => (z === 'm' ? 'l' : z === 'l' ? 's' : 'm'));
+
   const onProblemDone = ({ ok, diags }) => {
+    discardNote(`${id}#t${hist.length}`);
     const h = [...hist, { pid: nextTask.pid, ok }];
     update((s) => {
       recordProblem(s, id, nextTask.pid, ok);
@@ -179,6 +190,7 @@ export function Lesson({ id, data, state, update, onExit }) {
   };
 
   const onExamDone = ({ ok }) => {
+    discardNote(`${id}#x${examI}`);
     if (!ok) return setPhase('examfail');
     if (examI + 1 < exam.length) return setExamI(examI + 1);
     update((s) => void (s.L[id] = onMastered(dayNumber(), true))); // экстерном: повторение через 7 дней
@@ -189,7 +201,7 @@ export function Lesson({ id, data, state, update, onExit }) {
   const errOrder = [...lesson.err].sort((a, b) => (diagSeen[b] ?? 0) - (diagSeen[a] ?? 0));
 
   return (
-    <div class="lesson">
+    <div class={'lesson' + (notes === 'dock' ? ' docked dock-' + dockSize : '')}>
       <header class="topbar">
         <button type="button" class="back" onClick={onExit} aria-label="К списку уроков">
           ←
@@ -198,7 +210,12 @@ export function Lesson({ id, data, state, update, onExit }) {
           <strong>{card.t}</strong>
           <span class="muted">{label}</span>
         </div>
+        <button type="button" class={'note-btn' + (notes ? ' on' : '')} onClick={() => setNotes(notes ? false : 'dock')} aria-label="Поле для заметок">
+          ✎
+        </button>
       </header>
+      {notes === 'full' && <Notes key={'f' + noteId} id={noteId} title={noteTitle} onClose={() => setNotes('dock')} />}
+      {notes === 'dock' && <Notes key={'d' + noteId} id={noteId} title={noteTitle} dock size={dockSize} onSize={cycleSize} onFull={() => setNotes('full')} onClose={() => setNotes(false)} />}
       <div class="progress" role="progressbar" aria-valuenow={Math.round(progress * 100)}>
         <div style={{ width: `${progress * 100}%` }} />
       </div>
