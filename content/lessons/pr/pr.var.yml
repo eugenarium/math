@@ -1,0 +1,82 @@
+id: pr.var
+int:
+  - 'Два стрелка в среднем попадают в центр, но один кучно, а другой разбросанно. Среднее одинаковое, а надёжность разная. Разброс измеряет дисперсия.'
+  - {ask: 'Если все результаты умножить на $3$, во сколько раз вырастет типичное отклонение? А квадрат отклонения?', ans: 'Отклонение вырастет в $3$ раза, а его квадрат — в $9$. Поэтому $\operatorname{Var}(3X)=9\operatorname{Var}(X)$.'}
+  - 'Для независимых величин разброс складывается: даже при вычитании $X-Y$ дисперсии нужно сложить.'
+def:
+  - {g: variance}
+ex:
+  - {x: p3, seed: 2}
+pr:
+  p1:
+    k: num
+    fast: 1
+    v: {a: 2..4, s: 1..5}
+    q: 'Известно, что $\operatorname{Var}(X)=@s$. Найди $\operatorname{Var}(@{a}X)$.'
+    a: a^2*s
+    tol: 0
+    e: {pr.var.scale: a*s}
+    h: ['$\operatorname{Var}(aX)=a^2\operatorname{Var}(X)$.']
+  p2:
+    k: num
+    lv: 2
+    v: {v1: 2..6, v2: 1..4}
+    q: 'Независимые величины $X$ и $Y$ имеют дисперсии $@v1$ и $@v2$. Найди $\operatorname{Var}(X-Y)$.'
+    a: v1+v2
+    tol: 0
+    e: {pr.var.diff: v1-v2}
+    h: ['Для независимых дисперсии складываются и при вычитании.']
+    sol:
+      - '$\operatorname{Var}(X-Y)=\operatorname{Var}(X)+\operatorname{Var}(-Y)$.'
+      - '$\operatorname{Var}(-Y)=(-1)^2\operatorname{Var}(Y)=@v2$.'
+      - 'Итог $@v1+@v2=@{v1+v2}$.'
+  p3:
+    k: num
+    lv: 2
+    v: {a: 2..3, b: 2..3, v1: 1..4, v2: 1..4}
+    c: ['a^2*v1-b^2*v2 != a*v1+b*v2', 'a^2*v1+b^2*v2 != a*v1+b*v2']
+    q: 'Независимые $X$ и $Y$ имеют дисперсии $@v1$ и $@v2$. Найди $\operatorname{Var}(@{a}X-@{b}Y)$.'
+    a: a^2*v1+b^2*v2
+    tol: 0
+    e: {pr.var.diff: 'a^2*v1-b^2*v2', pr.var.scale: 'a*v1+b*v2'}
+    h: ['Каждый коэффициент возводится в квадрат, знаки не важны.']
+    sol:
+      - 'Вклад первой: $@a^2\cdot@v1=@{a^2*v1}$.'
+      - 'Вклад второй: $@b^2\cdot@v2=@{b^2*v2}$.'
+      - 'Сумма $@{a^2*v1+b^2*v2}$.'
+  p4:
+    k: num
+    lv: 2
+    v: {a: [0.2, 0.3], b: [0.3, 0.4], m: '=b+2*(1-a-b)', m2: '=b+4*(1-a-b)'}
+    q: 'Величина принимает значения $0, 1, 2$ с вероятностями $@{a:f1}$, $@{b:f1}$ и $@{1-a-b:f1}$. Найди $\operatorname{Var}(X)$.'
+    a: m2-m^2
+    tol: 0.002
+    h: ['$\operatorname{Var}(X)=E[X^2]-(E[X])^2$.']
+    sol:
+      - '$E[X]=@{m:f2}$.'
+      - '$E[X^2]=@{m2:f2}$.'
+      - '$\operatorname{Var}(X)=@{m2:f2}-@{m^2:f4}=@{m2-m^2:f3}$.'
+  p5:
+    k: mc
+    q: 'Чему равна $\operatorname{Var}(aX)$?'
+    a: '$a^2\operatorname{Var}(X)$'
+    e: {pr.var.scale: '$a\operatorname{Var}(X)$'}
+    x: ['$|a|\operatorname{Var}(X)$']
+    h: ['Дисперсия измеряется в квадратах.']
+  p6:
+    k: spot
+    lv: 2
+    q: 'Найди ошибку: независимые $X$, $Y$ с $\operatorname{Var}(X)=4$, $\operatorname{Var}(Y)=1$. Найди $\operatorname{Var}(X-Y)$.'
+    steps:
+      - 'Для независимых дисперсии складываются'
+      - '$\operatorname{Var}(X-Y)=\operatorname{Var}(X)+\operatorname{Var}(-Y)$'
+      - '$\operatorname{Var}(-Y)=(-1)^2\operatorname{Var}(Y)=1$'
+      - 'Итог: $4+1=5$'
+    bad:
+      - {i: 4, t: 'Итог: $4-1=3$', e: pr.var.diff}
+      - {i: 3, t: '$\operatorname{Var}(-Y)=-1\cdot\operatorname{Var}(Y)=-1$', e: pr.var.scale}
+err: [pr.var.scale, pr.var.diff]
+sum:
+  - 'Умею находить дисперсию по таблице: $E[X^2]-(E[X])^2$.'
+  - 'Знаю, что $\operatorname{Var}(aX)=a^2\operatorname{Var}(X)$.'
+  - 'Знаю, что дисперсии независимых величин складываются даже при вычитании.'
