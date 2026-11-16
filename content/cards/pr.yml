@@ -118,3 +118,53 @@ pr.norm:
   e: [pr.norm.var, pr.norm.tail]
   n: 6
   note: 'Таблицу значений $\Phi$ не вводить: использовать симметрию и правило трёх сигм.'
+
+pr.joint:
+  t: 'Совместные распределения (дискретный случай), маргинальные, условные'
+  goal: 'Умею находить маргинальные и условные вероятности по таблице совместного распределения'
+  pre: [pr.var, pr.rv, pr.cond, pr.indep, pr.space, pre.sets]
+  g: [joint-distribution]
+  k: [num, mc, spot]
+  e: [pr.joint.marginal, pr.joint.cond]
+  n: 6
+  note: 'Только таблицы 2×2. Ковариацию не вводить.'
+
+pr.cov:
+  t: 'Ковариация и корреляция'
+  goal: 'Умею находить ковариацию и корреляцию и знаю, что некоррелированность не означает независимость'
+  pre: [pr.joint, pr.var, pr.exp, pr.rv, pr.indep]
+  g: [covariance-correlation]
+  k: [num, mc, spot]
+  e: [pr.cov.uncorr, pr.cov.cov-scale, pr.cov.var-sum]
+  n: 6
+  note: 'Только дискретные примеры и формулы. Регрессию не вводить.'
+
+pr.ineq:
+  t: 'Неравенства Маркова и Чебышёва'
+  goal: 'Умею применять неравенства Маркова и Чебышёва для оценки вероятностей'
+  pre: [pr.var, pr.exp, pr.rv]
+  g: [markov-chebyshev]
+  k: [num, mc, spot]
+  e: [pr.ineq.nonneg, pr.ineq.sigma]
+  n: 6
+  note: 'Только вычисление оценок. Доказательства не вводить.'
+
+pr.lln:
+  t: 'Закон больших чисел'
+  goal: 'Умею применять закон больших чисел и отличаю его от «ошибки игрока»'
+  pre: [pr.ineq, pr.cov, pr.var, pr.exp, pr.indep]
+  g: [law-of-large-numbers]
+  k: [num, mc, spot]
+  e: [pr.lln.gambler, pr.lln.abs]
+  n: 6
+  note: 'Только слабый закон в форме со средним. Сходимость почти наверное не вводить.'
+
+pr.clt:
+  t: 'Центральная предельная теорема'
+  goal: 'Умею находить стандартную ошибку среднего и понимаю, что нормальным становится распределение среднего, а не данных'
+  pre: [pr.lln, pr.norm, pr.cdistr, pr.var, pr.exp]
+  g: [central-limit-theorem]
+  k: [num, mc, spot]
+  e: [pr.clt.data, pr.clt.sd]
+  n: 6
+  note: 'Только среднее и сумма. Поправка на непрерывность и условия Линдеберга не вводить.'
