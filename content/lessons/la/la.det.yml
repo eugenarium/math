@@ -76,5 +76,5 @@ pr:
 err: [la.det.sum, la.det.scalar]
 sum:
   - 'Умею вычислять $\det A=ad-bc$ и площадь параллелограмма.'
-  - 'Помню, что $\det(kA)=k^n\det A$.'
-  - 'Знаю, что $\det(A+B)\ne\det A+\det B$.'
+  - 'Умею применять $\det(kA)=k^n\det A$.'
+  - 'Отличаю $\det(A+B)$ от $\det A+\det B$: они не равны.'
