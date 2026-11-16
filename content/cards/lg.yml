@@ -48,3 +48,43 @@ lg.proof:
   e: [lg.proof.base, lg.proof.example]
   n: 6
   note: 'Метод от противного дать в интуиции, без задач. Сильную индукцию не вводить.'
+
+lg.nf:
+  t: 'ДНФ, КНФ, булевы функции, полнота систем'
+  goal: 'Умею считать булевы функции и слагаемые СДНФ по таблице истинности и проверять полноту системы связок'
+  pre: [lg.equiv, lg.impl, lg.prop, pre.sets]
+  g: [boolean-function, dnf, cnf, complete-system]
+  k: [num, mc, spot]
+  e: [lg.nf.count, lg.nf.zeros, lg.nf.complete]
+  n: 6
+  note: 'Не более трёх переменных. Штрих Шеффера упомянуть одной фразой. Минимизацию не вводить.'
+
+lg.deduct:
+  t: 'Естественный вывод в логике высказываний'
+  goal: 'Умею применять правило отделения и теорему о дедукции и замечаю неверные шаги в выводе'
+  pre: [lg.equiv, lg.impl, lg.prop, pre.sets]
+  g: [modus-ponens, modus-tollens, deduction-theorem]
+  k: [mc, num, spot, proof]
+  e: [lg.deduct.affirm, lg.deduct.deny, lg.deduct.assumption]
+  n: 7
+  note: 'Только правила modus ponens, modus tollens, сопряжение и теорема о дедукции. Формальных исчислений с аксиомами не вводить.'
+
+lg.fol:
+  t: 'Логика предикатов: язык, интерпретации, модели'
+  goal: 'Умею проверять формулу с кванторами на конечной области и отличаю высказывание от предиката'
+  pre: [lg.quant, lg.equiv, lg.impl, lg.prop, pre.sets]
+  g: [predicate, interpretation, free-variable]
+  k: [num, mc, spot]
+  e: [lg.fol.domain, lg.fol.free, lg.fol.one]
+  n: 6
+  note: 'Предикаты на числах. Сигнатуры и функциональные символы не вводить. Общезначимость показать одним примером контрпримера.'
+
+lg.meta:
+  t: 'Корректность, полнота, теоремы Гёделя (обзор)'
+  goal: 'Умею различать корректность и полноту и верно пересказывать смысл теорем Гёделя о неполноте'
+  pre: [lg.deduct, lg.fol, lg.equiv, lg.quant, lg.impl, lg.prop, pre.sets]
+  g: [soundness-completeness, incompleteness]
+  k: [mc, spot]
+  e: [lg.meta.swap, lg.meta.godel]
+  n: 5
+  note: 'Обзор без доказательств. Не использовать слова «диагональная лемма» и «ω-непротиворечивость».'
