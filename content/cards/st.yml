@@ -1,0 +1,60 @@
+# Карточки раздела st (математическая статистика). Карточка st.ci лежит в samples.yml. Источник: docs/COURSE_MAP.md.
+st.descr:
+  t: 'Выборка, описательные статистики, графики'
+  goal: 'Умею находить среднее и медиану выборки и знаю, как на них влияют выбросы'
+  pre: [pr.var, pr.exp, pr.rv]
+  g: [descriptive-statistics]
+  k: [num, mc, spot]
+  e: [st.descr.outlier, st.descr.median-even]
+  n: 6
+  note: 'Только числовые выборки до десяти значений. Графики упомянуть без задач.'
+
+st.samp:
+  t: 'Выборочное распределение, стандартная ошибка'
+  goal: 'Умею находить стандартную ошибку среднего и отличаю её от стандартного отклонения данных'
+  pre: [st.descr, pr.clt, pr.lln, pr.norm, pr.var]
+  g: [standard-error]
+  k: [num, mc, spot]
+  e: [st.samp.sd-se, st.ci.linear-n, st.samp.pop-size]
+  n: 6
+  note: 'Поправку на конечную совокупность не вводить.'
+
+st.est:
+  t: 'Точечные оценки: смещение, состоятельность, MSE'
+  goal: 'Умею находить выборочную дисперсию с делением на $n-1$ и считать MSE оценки'
+  pre: [st.samp, st.descr, pr.var, pr.exp]
+  g: [point-estimate]
+  k: [num, mc, spot]
+  e: [st.est.n-div, st.est.unbiased-good]
+  n: 6
+  note: 'Только среднее и дисперсия. Доказательство несмещённости не вводить.'
+
+st.mle:
+  t: 'Метод максимального правдоподобия'
+  goal: 'Умею находить оценку максимального правдоподобия для доли и для параметра показательного распределения'
+  pre: [st.est, pr.cdistr, pr.discr, c1.opt]
+  g: [likelihood]
+  k: [num, mc, spot]
+  e: [st.mle.prob-param, st.mle.mean-rate]
+  n: 6
+  note: 'Только схема Бернулли и показательное распределение. Информацию Фишера не вводить.'
+
+st.t:
+  t: 'Распределение Стьюдента, интервал для среднего'
+  goal: 'Умею строить интервал для среднего с неизвестной $\sigma$ по распределению Стьюдента'
+  pre: [st.ci, st.samp, pr.norm]
+  g: [student-t]
+  k: [num, mc, spot]
+  e: [st.t.z-for-t, st.t.df]
+  n: 6
+  note: 'Значение $t^*$ давать в условии. Проверку нормальности не вводить.'
+
+st.test:
+  t: 'Проверка гипотез: логика, p-значение, ошибки I и II рода'
+  goal: 'Умею вычислять статистику критерия и верно толковать $p$-значение и вывод «не отвергли $H_0$»'
+  pre: [st.ci, st.samp, pr.norm]
+  g: [hypothesis-test, p-value]
+  k: [num, mc, spot]
+  e: [st.test.p-h0, st.test.accept, st.test.tails]
+  n: 6
+  note: 'Только z-критерий для среднего. Мощность в st.power.'
