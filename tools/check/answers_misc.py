@@ -135,6 +135,48 @@ reg('la.jord.p1')(lambda s: 2-1)
 reg('la.jord.p2')(lambda s: s['n'])
 reg('la.jord.p3')(lambda s: 3-s['r'])
 
+def poly_mul(p,q):
+    r=[0]*(len(p)+len(q)-1)
+    for i,a in enumerate(p):
+        for j,b in enumerate(q): r[i+j]+=a*b
+    return r
+def quad(f,a,b,n=20000):
+    h=(b-a)/n
+    return h*(f(a)/2+f(b)/2+sum(f(a+i*h) for i in range(1,n)))
+def pois_pmf(k,l): return math.exp(-l+k*math.log(l)-math.lgamma(k+1))
+def mat_pow2(P): return [[sum(P[i][k]*P[k][j] for k in range(2)) for j in range(2)] for i in range(2)]
+def stationary(P):
+    v=[0.5,0.5]
+    for _ in range(5000): v=[v[0]*P[0][0]+v[1]*P[1][0], v[0]*P[0][1]+v[1]*P[1][1]]
+    return v
+def mixture_var(groups):
+    # группы: (вес, [(значение, вероятность внутри группы)])
+    pts=[(w*pr, x) for w,vals in groups for x,pr in vals]
+    m=sum(p*x for p,x in pts)
+    return sum(p*(x-m)**2 for p,x in pts)
+reg('pr.jointc.p1')(lambda s: 1/(s['a']*s['b']))
+reg('pr.jointc.p2')(lambda s: (s['c']*s['d'])/(s['a']*s['b']))
+reg('pr.jointc.p3')(lambda s: quad(lambda x: s['a']-x, 0, s['c'])/(s['a']**2/2))
+reg('pr.trans.p1')(lambda s: sum(1 for x in range(-s['k'],s['k']+1) if x*x==1)/(2*s['k']+1))
+reg('pr.trans.p2')(lambda s: sum(1 for a in range(1,7) for b in range(1,7) if a+b==s['s'])/36)
+reg('pr.trans.p3')(lambda s: 1/(s['a']*s['c']))
+reg('pr.trans.p4')(lambda s: math.sqrt((3*s['t'])**2+(4*s['t'])**2))
+reg('pr.condexp.p1')(lambda s: sum(w*m for w,m in [(s['p'],s['m1']),(1-s['p'],s['m2'])]))
+reg('pr.condexp.p2')(lambda s: (1*s['a']+2*s['b'])/(s['a']+s['b']))
+reg('pr.condexp.p3')(lambda s: mixture_var([(0.5,[(s['m1']-math.sqrt(s['v1']),0.5),(s['m1']+math.sqrt(s['v1']),0.5)]),(0.5,[(s['m2']-math.sqrt(s['v2']),0.5),(s['m2']+math.sqrt(s['v2']),0.5)])]))
+reg('pr.mgf.p1')(lambda s: (1-s['p'])+s['p']*math.exp(0))
+reg('pr.mgf.p2')(lambda s: (lambda M: (M(1e-5)-M(-1e-5))/2e-5)(lambda t: s['a']+s['b']*math.exp(t)+(1-s['a']-s['b'])*math.exp(2*t)))
+reg('pr.mgf.p3')(lambda s: poly_mul([1-s['p'],s['p']],[1-s['p'],s['p']])[1])
+reg('pr.mvn.p1')(lambda s: s['c']/math.sqrt(4*16))
+reg('pr.mvn.p2')(lambda s: sum(u*v*S for (u,row) in zip([1,1],[[s['sx2'],s['c']],[s['c'],s['sy2']]]) for v,S in zip([1,1],row)))
+reg('pr.mvn.p3')(lambda s: sum(u*v*S for (u,row) in zip([s['k'],-1],[[s['sx2'],s['c']],[s['c'],s['sy2']]]) for v,S in zip([s['k'],-1],row)))
+reg('pr.markov.p1')(lambda s: mat_pow2([[1-s['a'],s['a']],[s['b'],1-s['b']]])[0][0])
+reg('pr.markov.p2')(lambda s: stationary([[1-s['a'],s['a']],[s['b'],1-s['b']]])[0])
+reg('pr.markov.p3')(lambda s: sum(n*(1-s['a'])**(n-1)*s['a'] for n in range(1,3000)))
+reg('pr.pois.p1')(lambda s: sum(k*pois_pmf(k,s['lam']*s['t']) for k in range(0,200)))
+reg('pr.pois.p2')(lambda s: quad(lambda t: math.exp(-s['lam']*t), 0, 40/s['lam']))
+reg('pr.pois.p3')(lambda s: 1-sum(pois_pmf(k,s['lam']*s['t']) for k in range(1,200)))
+
 bad=0; checked=0; per={}
 for r in data:
     key=f"{r['id']}.{r['pid']}"
