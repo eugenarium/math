@@ -1,6 +1,60 @@
-import { useState } from 'preact/hooks';
+import { useState, useMemo } from 'preact/hooks';
 import { exportJson, importJson } from '../core/store.js';
 import { dayNumber } from '../core/srs.js';
+import { encodeQr, qrSvg } from '../core/qr.js';
+
+/** Поделиться приложением: QR-код со ссылкой (рисуется на устройстве, работает офлайн), системное меню и копирование. */
+function ShareBlock() {
+  const url = useMemo(() => {
+    const u = new URL('./', location.href);
+    return u.origin + u.pathname;
+  }, []);
+  const svg = useMemo(() => {
+    try {
+      return qrSvg(encodeQr(url));
+    } catch {
+      return '';
+    }
+  }, [url]);
+  const [note, setNote] = useState(null);
+  const canShare = typeof navigator !== 'undefined' && typeof navigator.share === 'function';
+
+  const share = async () => {
+    try {
+      await navigator.share({ title: 'Матбук', text: 'Интерактивный учебник математики и статистики', url });
+    } catch (e) {
+      if (e?.name !== 'AbortError') setNote({ ok: false, text: 'Не удалось открыть меню «Поделиться». Скопируй ссылку.' });
+    }
+  };
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(url);
+      setNote({ ok: true, text: 'Ссылка скопирована.' });
+    } catch {
+      setNote({ ok: false, text: 'Не удалось скопировать. Выдели ссылку выше и скопируй вручную.' });
+    }
+  };
+
+  return (
+    <section class="share">
+      <h3>Поделиться приложением</h3>
+      <p class="muted">Покажи QR-код: у друга откроется то же приложение. Камера телефона распознаёт его без дополнительных программ.</p>
+      {svg && <div class="qr" dangerouslySetInnerHTML={{ __html: svg }} />}
+      <p class="share-link">{url}</p>
+      <div class="row">
+        {canShare && (
+          <button type="button" class="btn primary" onClick={share}>
+            Отправить ссылку
+          </button>
+        )}
+        <button type="button" class={'btn' + (canShare ? ' ghost' : ' primary')} onClick={copy}>
+          Скопировать ссылку
+        </button>
+      </div>
+      {note && <p class={'feedback ' + (note.ok ? 'ok' : 'warn')}>{note.text}</p>}
+    </section>
+  );
+}
 
 /** Копия прогресса: скачать файл, загрузить файл. Хранилище браузера могут очистить, копия — единственная страховка. */
 export function Settings({ state, update, replace, onExit }) {
@@ -43,7 +97,7 @@ export function Settings({ state, update, replace, onExit }) {
           ←
         </button>
         <div class="title">
-          <strong>Прогресс и копия</strong>
+          <strong>Прогресс, копия, поделиться</strong>
         </div>
       </header>
       <main class="screen">
@@ -63,6 +117,8 @@ export function Settings({ state, update, replace, onExit }) {
         <p class="muted">Загрузка заменяет текущий прогресс на устройстве.</p>
 
         {msg && <p class={'feedback ' + (msg.ok ? 'ok' : 'warn')}>{msg.text}</p>}
+
+        <ShareBlock />
 
         <h3>Сброс</h3>
         {!confirmReset ? (
