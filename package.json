@@ -9,7 +9,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "node tools/check.mjs && npm test && python3 tools/check/course.py && python3 tools/check/lessons.py",
-    "test": "node --test engine/core/core.test.js tools/lint.test.mjs"
+    "test": "node --test engine/core/core.test.js tools/lint.test.mjs",
+    "check:answers": "node tools/dump-answers.mjs /tmp/math-answers.json && python3 tools/check/answers_comb.py /tmp/math-answers.json && python3 tools/check/answers_calc.py /tmp/math-answers.json && python3 tools/check/answers_misc.py /tmp/math-answers.json"
   },
   "dependencies": {
     "jstat": "1.9.6",
