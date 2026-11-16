@@ -31,7 +31,7 @@ function drawStroke(ctx, st, ink) {
  * Тетрадь: рисование пальцем или стилусом. id — ключ листа (урок или 'free').
  * Инструменты: перо, ластик (стирает штрих целиком), рука (прокрутка листа пальцем).
  */
-export function Notes({ id, title, onClose }) {
+export function Notes({ id, title, onClose, dock, size, onSize, onFull }) {
   const canvas = useRef(null);
   const wrap = useRef(null);
   const [page, setPage] = useState(() => loadNotes()[id] ?? emptyPage());
@@ -181,17 +181,34 @@ export function Notes({ id, title, onClose }) {
     }, 'image/png');
   };
 
+  const head = dock ? (
+    <header class="dock-head">
+      <strong class="dock-title">{title}</strong>
+      <button type="button" class="tbtn" onClick={onSize} aria-label="Размер поля">
+        {size === 'l' ? '▾' : size === 'm' ? '▴' : '▴▴'}
+      </button>
+      <button type="button" class="tbtn" onClick={onFull} aria-label="На весь экран">
+        ⤢
+      </button>
+      <button type="button" class="tbtn" onClick={onClose} aria-label="Скрыть поле">
+        ✕
+      </button>
+    </header>
+  ) : (
+    <header class="topbar">
+      <button type="button" class="back" onClick={onClose} aria-label="Закрыть заметки">
+        ←
+      </button>
+      <div class="title">
+        <strong>Заметки</strong>
+        <span class="muted">{title}</span>
+      </div>
+    </header>
+  );
+
   return (
-    <div class="notes" role="dialog" aria-label="Заметки">
-      <header class="topbar">
-        <button type="button" class="back" onClick={onClose} aria-label="Закрыть заметки">
-          ←
-        </button>
-        <div class="title">
-          <strong>Заметки</strong>
-          <span class="muted">{title}</span>
-        </div>
-      </header>
+    <div class={'notes' + (dock ? ' dock dock-' + size : '')} role="dialog" aria-label="Заметки">
+      {head}
       <div class="tools">
         <div class="seg tool-seg" role="group" aria-label="Инструмент">
           {[['pen', '✎ Перо'], ['eraser', '⌫ Ластик'], ['hand', '✋ Лист']].map(([k, label]) => (

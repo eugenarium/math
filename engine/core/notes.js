@@ -88,3 +88,12 @@ export function contentBottom(pg) {
   for (const st of pg.s) for (let i = 1; i < st.p.length; i += 2) m = Math.max(m, st.p[i] + st.w);
   return m;
 }
+
+/** Удалить лист (черновик задачи после завершения задачи). @param {string} id */
+export function discardNote(id) {
+  const all = loadNotes();
+  if (id in all) {
+    delete all[id];
+    saveNotes(all);
+  }
+}
