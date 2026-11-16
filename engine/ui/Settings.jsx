@@ -108,7 +108,7 @@ export function Settings({ state, update, replace, onExit }) {
 
         <h3>Тема</h3>
         <div class="seg" role="group" aria-label="Тема оформления">
-          {[['auto', 'Как в системе'], ['light', 'Светлая'], ['dark', 'Тёмная']].map(([k, label]) => (
+          {[['auto', 'Авто'], ['light', 'Светлая'], ['dark', 'Тёмная']].map(([k, label]) => (
             <button key={k} type="button" class={(state.set.theme ?? 'auto') === k ? 'on' : ''} onClick={() => update((x) => void (x.set.theme = k))}>
               {label}
             </button>
