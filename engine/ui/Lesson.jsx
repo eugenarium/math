@@ -85,7 +85,17 @@ function WidgetScreen({ s }) {
 }
 
 function Screen({ s, lesson, refs }) {
-  if (typeof s === 'string') return <Rich text={s} class="text" />;
+  if (typeof s === 'string') {
+    const m = /^Как решать\.\s*/.exec(s);
+    if (m)
+      return (
+        <div class="card how">
+          <h3>Как решать</h3>
+          <Rich text={s.slice(m[0].length)} class="text" />
+        </div>
+      );
+    return <Rich text={s} class="text" />;
+  }
   if (s.g) return <Glossary g={s.g} refs={refs} />;
   // виджет проверяем раньше примера: у виджета тоже бывает параметр x (окно по оси)
   if (s.w) return <WidgetScreen s={s} />;
