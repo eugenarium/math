@@ -3,7 +3,7 @@
 Урок подключает виджет одной записью `{w: имя, параметр: значение}`. JS в уроках не пишется никогда.
 Этот файл — спецификация для реализации. После реализации источником истины становится `meta` в модуле виджета; таблицы параметров здесь пересобирает `npm run docs`.
 
-> Реализовано 9 из 34 виджетов; актуальный список — в [STATUS.md](STATUS.md).
+> Реализовано 17 из 34 виджетов; актуальный список — в [STATUS.md](STATUS.md).
 
 ## Соглашения
 
@@ -78,11 +78,13 @@
 - `ed`: `f: E`, `a: E`, `L: E` — ученик задаёт ε и подбирает δ; полоса зелёная, когда график внутри
 - `seq`: `an: E` (переменная `n`), `L: E` — ученик задаёт ε и находит номер N
 - **out:** `eps`, `delta`, `N`, `ok`
+- **Реализован** (`engine/widgets/limit.js`): режимы `seq` и `ed`, слайдеры `eps` и `N` или `delta`; `sl` переопределяет слайдеры.
 
 ### taylor · P0
 - `f: E` · `a: E` = 0 · `n: [min, max, начало]` = [0, 10, 1] · `x: [lo, hi]`
 - `show: [rem]` — график остатка
 - **out:** `n`, `a`, `err` (максимальная ошибка на видимом отрезке)
+- **Реализован** (`engine/widgets/taylor.js`): `f`, `a`, `n`, `x`, `show: [rem]`; производные берёт `math.derivative`.
 
 ### riemann · P0
 - `f: E` · `a: E` · `b: E` · `n: [min, max, начало]` = [1, 200, 4]
@@ -96,6 +98,7 @@
 - `show: [sum, diff, proj, angle, dot, span, det, comb]`
 - `comb` включает слайдеры `s`, `t` и строит s·a + t·b; `to: [x, y]` — цель, в которую нужно попасть
 - **out:** `a.x`, `a.y`, `b.x`, `b.y`, `dot`, `angle`, `det`, `s`, `t`
+- **Реализован частично** (`engine/widgets/vec2.js`): `v`, `lock`, `show: [sum, diff, proj, dot, angle, det]`, `win`; режим `comb` не сделан.
 
 ### lin2 · P0
 Сетка плоскости под действием матрицы.
@@ -134,17 +137,20 @@
 - `mode: clt | lln | boot | raw` — гистограмма статистики с нормальной кривой · траектория накопленного среднего · бутстреп из данных `data` · сырые данные
 - кнопки запуска: 1, 10, 1000 выборок
 - **out:** `runs`, `m` (среднее статистики), `s` (её стандартное отклонение), `last`, `n`
+- **Реализован частично** (`engine/widgets/sample.js`): `d: dice | coin | exp | unif | skew`, `stat: mean | sum | median | max | var | sd`, `mode: clt | lln`; режимы `boot`, `raw` и пресет `custom` не сделаны.
 
 ### chance · P0
 - `exp: coin | dice | urn | cards | spinner | monty | bday`
 - `cfg`: coin `{p: 0.5, n: 3}` · dice `{n: 2}` · urn `{r: 3, b: 2, draw: 2, repl: 0}` · cards `{draw: 5}` · spinner `{pr: [0.5, 0.3, 0.2]}` · monty `{sw: 1}` · bday `{n: 23}`
 - `ev: E` — событие над переменными опыта: coin `heads` · dice `d1, d2, sum, hi, lo` (наибольшее и наименьшее) · urn `red, blue` · cards `aces, hearts, pairs` · spinner `k` · monty `win` · bday `match`
 - **out:** `runs`, `freq`, `P` (точная вероятность, если вычислима)
+- **Реализован частично** (`engine/widgets/chance.js`): `exp: coin | dice | urn`; остальные опыты не сделаны.
 
 ### bayes · P0
 - `prior`, `sens`, `spec` — число или слайдер `[min, max, начало]`
 - `view: square | icons | tree` — единичный квадрат, 1000 фигурок, дерево
 - **out:** `prior`, `sens`, `spec`, `post`
+- **Реализован частично** (`engine/widgets/bayes.js`): вид «1000 фигурок»; `view: square | tree` не сделаны.
 
 ### scatter · P0
 - данные: `gen: {n: 30, r: 0.7}` · `pts: [[x, y], …]` · имя переменной задачи · пресет `anscombe1…4`
@@ -153,12 +159,14 @@
 - `show: [resid, r, r2, sse, mean]`
 - `one: hist | box` — одномерный режим для описательной статистики
 - **out:** `r`, `k`, `b`, `sse`, `mean`, `med`
+- **Реализован частично** (`engine/widgets/scatter.js`): `gen`, `pts`, `fit: line | hand`, `show: [r, r2, sse, mean, resid]`; `drag`, `poly`, `logit`, `one: hist | box` не сделаны.
 
 ### truth · P0
 - `f: 'p -> (q | !p)'` или список формул; связки `! & | ^ -> <->`
 - `fill: 1` — ученик заполняет итоговый столбец
 - `cmp: 1` — проверить равносильность формул списка
 - **out:** `ok`, `taut`, `eq`
+- **Реализован** (`engine/widgets/truth.js`): `f` (строка или список), `fill`, `cmp`.
 
 ### graph · P0
 - `g:` пресет `k5 | c6 | p5 | k33 | petersen | tree7 | grid3x3 | rand:n:m:seed` или список рёбер `'a-b:4 b-c:2 c>d'` (после двоеточия вес, `>` — дуга)

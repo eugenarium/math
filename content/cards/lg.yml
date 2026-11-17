@@ -4,6 +4,7 @@ lg.prop:
   goal: 'Умею вычислять значение составного высказывания и считать строки таблицы истинности'
   pre: [pre.sets]
   g: [proposition, connectives]
+  w: [truth]
   k: [num, mc, spot]
   e: [lg.prop.or-exclusive, lg.prop.rows]
   n: 6
@@ -24,6 +25,7 @@ lg.equiv:
   goal: 'Умею отрицать конъюнкцию, дизъюнкцию и импликацию по законам де Моргана'
   pre: [lg.impl, lg.prop, pre.sets]
   g: [equivalence, de-morgan]
+  w: [truth]
   k: [num, mc, spot]
   e: [lg.equiv.demorgan-keep, lg.equiv.neg-impl]
   n: 6

@@ -4,7 +4,7 @@ c1.lim:
   goal: 'Умею находить предел функции с устранимой неопределённостью и отличаю предел от значения в точке'
   pre: [c1.seq, lg.quant, pre.ineq, pre.graph, pre.func, pre.sets]
   g: [limit-of-function, one-sided-limit]
-  w: [fplot]
+  w: [fplot, limit]
   k: [num, mc, graph, spot]
   e: [c1.lim.value, c1.lim.onesided]
   n: 6
@@ -116,6 +116,7 @@ c1.seq:
   goal: 'Умею находить предел последовательности и отличаю сходящуюся последовательность от просто ограниченной'
   pre: [lg.quant, pre.ineq, pre.func]
   g: [sequence-limit]
+  w: [limit]
   k: [num, mc, spot]
   e: [c1.seq.never-reaches, c1.seq.bounded]
   n: 6
@@ -176,6 +177,7 @@ c1.taylor:
   goal: 'Умею находить коэффициенты многочлена Тейлора в нуле и понимаю, что он приближает функцию только рядом с точкой'
   pre: [c1.chain, c1.small, pre.explog, pre.trig]
   g: [taylor-polynomial]
+  w: [taylor]
   k: [num, mc, spot]
   e: [c1.taylor.factorial, c1.taylor.local]
   n: 6
