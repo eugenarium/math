@@ -181,6 +181,7 @@ pr.jointc:
   goal: 'Умею находить вероятности для равномерного распределения на области и проверять независимость по носителю'
   pre: [pr.joint, pr.cont, pr.var, pr.rv, pr.indep, pr.space, pre.sets]
   g: [joint-density]
+  w: [contour]
   k: [num, mc, spot]
   e: [pr.jointc.area, pr.jointc.dens-value, pr.jointc.support]
   n: 6
@@ -221,6 +222,7 @@ pr.mvn:
   goal: 'Умею считать корреляцию и дисперсию линейной комбинации двух совместно нормальных величин'
   pre: [pr.jointc, pr.cov, pr.joint, pr.norm, pr.cdistr, pr.var, pr.space, la.sym, pre.sets]
   g: [multivariate-normal]
+  w: [contour]
   k: [num, mc, spot]
   e: [pr.mvn.uncorr, pr.mvn.cov-var, pr.mvn.rho]
   n: 6
@@ -231,6 +233,7 @@ pr.markov:
   goal: 'Умею считать вероятности за два шага и стационарное распределение цепи с двумя состояниями'
   pre: [pr.cond, pr.space, la.eig, la.diag, pre.sets]
   g: [markov-chain]
+  w: [graph]
   k: [num, mc, spot]
   e: [pr.markov.mult, pr.markov.stationary, pr.markov.time]
   n: 6

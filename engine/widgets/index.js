@@ -17,4 +17,6 @@ export const loaders = {
   limit: () => import('./limit.js'),
   sample: () => import('./sample.js'),
   chance: () => import('./chance.js'),
+  contour: () => import('./contour.js'),
+  graph: () => import('./graph.js'),
 };

@@ -4,6 +4,7 @@ st.descr:
   goal: 'Умею находить среднее и медиану выборки и знаю, как на них влияют выбросы'
   pre: [pr.var, pr.exp, pr.rv]
   g: [descriptive-statistics]
+  w: [scatter]
   k: [num, mc, spot]
   e: [st.descr.outlier, st.descr.median-even]
   n: 6

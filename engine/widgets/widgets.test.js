@@ -8,6 +8,8 @@ import * as scatter from './scatter.js';
 import * as bayes from './bayes.js';
 import * as vec2 from './vec2.js';
 import * as sample from './sample.js';
+import * as contour from './contour.js';
+import * as graph from './graph.js';
 
 test('truth: де Морган — столбцы равны, импликация — три единицы', () => {
   assert.equal(truth.compute({ f: ['!(p & q)', '!p | !q'] }, {}, {}).eq, 1);
@@ -62,4 +64,16 @@ test('vec2: ортогональные векторы', () => {
 test('sample: статистики и моменты совокупности', () => {
   assert.equal(sample.statOf('median', [1, 5, 3]), 3);
   assert.equal(sample.population({ d: 'dice' }).mean, 3.5);
+});
+
+test('contour: вероятность в треугольнике и ковариация', () => {
+  assert.ok(Math.abs(contour.compute({ kind: 'unif', region: 'tri' }, {}, { c: 1.5 }).P - (1 - (2.5 / 4) ** 2)) < 1e-6);
+  assert.equal(contour.compute({}, {}, { rho: 0.5, sx: 2, sy: 3 }).cov, 3);
+});
+
+test('graph: шаг цепи по равномерной величине', () => {
+  const P = [[0.9, 0.1], [0.3, 0.7]];
+  assert.equal(graph.stepOf(P, 0, 0.5), 0);
+  assert.equal(graph.stepOf(P, 0, 0.95), 1);
+  assert.equal(graph.stepOf(P, 1, 0.2), 0);
 });
