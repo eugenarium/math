@@ -9,10 +9,10 @@
 | 0. Минимум | Готов: репозиторий, Vite + Preact, KaTeX, шесть фаз урока, офлайн-PWA, публикация на GitHub Pages |
 | 1. Ядро движка | Готово: `gen`, `check`, `mastery`, `srs`, `store`, `plot`, `qr`; линтер `tools/check.mjs`; тесты `npm test` |
 | 2. Виджеты P0 | Частично: из P0 есть `fplot`, `lin2`, `dist`, `matrix`, `riemann`, `ci`, `venn`, `numline`, `complex`; остальные P0 не сделаны (см. таблицу ниже) |
-| 3. Массовая генерация ядра | Идёт: готовы ядро разделов pre, lg, c1, dm, pr, st и 16 из 18 уроков ядра la |
+| 3. Массовая генерация ядра | Идёт: ядро разделов pre, lg, c1, la, dm, pr, st готово полностью; не начаты gr, sr, cm, op, de, nm |
 | 4. Игровой слой | Не начат |
 | 5. 3D | Не начат |
-| 6. Расширение | Начато только в c1 (2 урока), la.eig и st.ci |
+| 6. Расширение | Расширения и опции готовы целиком в разделах pre, lg, c1, la, dm, pr, st; в остальных разделах не начаты |
 
 ## Типы задач и возможности движка
 
@@ -66,14 +66,14 @@
 | `dm` | Дискретная математика и комбинаторика | 14 (6 / 7 / 1) | 14 (6 / 7 / 1) | 275 из 275 |
 | `gr` | Теория графов | 12 (6 / 4 / 2) | 0 (0 / 0 / 0) | 0 из 235 |
 | `pr` | Теория вероятностей | 25 (17 / 6 / 2) | 25 (17 / 6 / 2) | 525 из 525 |
-| `st` | Математическая статистика | 23 (12 / 10 / 1) | 12 (12 / 0 / 0) | 270 из 505 |
+| `st` | Математическая статистика | 23 (12 / 10 / 1) | 23 (12 / 10 / 1) | 505 из 505 |
 | `sr` | Ряды | 7 (5 / 2 / 0) | 0 (0 / 0 / 0) | 0 из 155 |
 | `cm` | Анализ: несколько переменных | 15 (10 / 4 / 1) | 0 (0 / 0 / 0) | 0 из 345 |
 | `op` | Оптимизация | 11 (6 / 4 / 1) | 0 (0 / 0 / 0) | 0 из 240 |
 | `de` | Дифференциальные уравнения | 13 (7 / 5 / 1) | 0 (0 / 0 / 0) | 0 из 290 |
 | `nm` | Численные методы | 14 (8 / 6 / 0) | 0 (0 / 0 / 0) | 0 из 290 |
 | `ml` | Математика для ML | 13 (0 / 10 / 3) | 0 (0 / 0 / 0) | 0 из 285 |
-| | **Итого** | **208** (128 / 66 / 14) | **112** (86 / 21 / 5) | **2345 из 4420** |
+| | **Итого** | **208** (128 / 66 / 14) | **123** (86 / 31 / 6) | **2580 из 4420** |
 
 ### Не сделано: уроки ядра
 
@@ -95,7 +95,6 @@
 ### Не сделано: расширения и опции, по разделам
 
 - `gr`: `gr.euler`, `gr.bip`, `gr.planar`, `gr.color`, `gr.flow` (опция), `gr.spec` (опция)
-- `st`: `st.mom`, `st.mreg`, `st.diag`, `st.anova`, `st.logit`, `st.boot`, `st.nonpar`, `st.mult`, `st.ab`, `st.bayes`, `st.theory` (опция)
 - `sr`: `sr.unif`, `sr.four`
 - `cm`: `cm.lim`, `cm.tint`, `cm.implf`, `cm.line`, `cm.vec` (опция)
 - `op`: `op.newton`, `op.kkt`, `op.dual`, `op.sgd`, `op.simplex` (опция)
@@ -109,6 +108,6 @@
 
 Не реализовано: P0 — `limit`, `taylor`, `vec2`, `sample`, `chance`, `bayes`, `scatter`, `truth`, `graph`, `contour`; P1 — `series`, `slope`, `phase`, `test`, `ctree`, `iter`, `interp`, `lp`; P2 — `pascal`, `pca`, `cgraph`; 3D — `surf3`, `vec3`, `lin3`, `vol3`.
 
-Готовые уроки, у которых карта предусматривает ★-виджет, но его ещё нет (урок написан без него): `lg.prop` → `truth`, `lg.equiv` → `truth`, `c1.seq` → `limit`, `c1.lim` → `limit`, `c1.taylor` → `taylor`, `la.vec` → `vec2`, `la.dot` → `vec2`, `la.orth` → `vec2`, `la.proj` → `scatter`, `dm.count` → `ctree`, `dm.perm` → `ctree`, `dm.binom` → `pascal`, `pr.space` → `chance`, `pr.classic` → `chance`, `pr.cond` → `ctree`, `pr.bayes` → `bayes`, `pr.exp` → `sample`, `pr.cov` → `scatter`, `pr.lln` → `sample`, `pr.clt` → `sample`, `pr.jointc` → `contour`, `pr.mvn` → `contour`, `pr.markov` → `graph`, `pr.pois` → `sample`, `st.descr` → `scatter`, `st.samp` → `sample`, `st.est` → `sample`, `st.test` → `test`, `st.power` → `test`, `st.reg` → `scatter`.
+Готовые уроки, у которых карта предусматривает ★-виджет, но его ещё нет (урок написан без него): `lg.prop` → `truth`, `lg.equiv` → `truth`, `c1.seq` → `limit`, `c1.lim` → `limit`, `c1.taylor` → `taylor`, `la.vec` → `vec2`, `la.dot` → `vec2`, `la.orth` → `vec2`, `la.proj` → `scatter`, `dm.count` → `ctree`, `dm.perm` → `ctree`, `dm.binom` → `pascal`, `pr.space` → `chance`, `pr.classic` → `chance`, `pr.cond` → `ctree`, `pr.bayes` → `bayes`, `pr.exp` → `sample`, `pr.cov` → `scatter`, `pr.lln` → `sample`, `pr.clt` → `sample`, `pr.jointc` → `contour`, `pr.mvn` → `contour`, `pr.markov` → `graph`, `pr.pois` → `sample`, `st.descr` → `scatter`, `st.samp` → `sample`, `st.est` → `sample`, `st.test` → `test`, `st.power` → `test`, `st.reg` → `scatter`, `st.diag` → `scatter`, `st.logit` → `scatter`, `st.boot` → `sample`.
 
 <!-- status:end -->

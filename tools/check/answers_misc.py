@@ -177,6 +177,55 @@ reg('pr.pois.p1')(lambda s: sum(k*pois_pmf(k,s['lam']*s['t']) for k in range(0,2
 reg('pr.pois.p2')(lambda s: quad(lambda t: math.exp(-s['lam']*t), 0, 40/s['lam']))
 reg('pr.pois.p3')(lambda s: 1-sum(pois_pmf(k,s['lam']*s['t']) for k in range(1,200)))
 
+def beta_mean(al,be,n=200000):
+    h=1/n
+    num=den=0.0
+    for i in range(1,n):
+        x=i*h
+        w=x**(al-1)*(1-x)**(be-1)
+        num+=x*w; den+=w
+    return num/den
+reg('st.mom.p1')(lambda s: 1/s['xb'])
+reg('st.mom.p2')(lambda s: 2*s['xb'])
+reg('st.mom.p3')(lambda s: s['xb']/s['n'])
+reg('st.mom.p4')(lambda s: (s['xb']**2+s['d'])-s['xb']**2)
+reg('st.mreg.p1')(lambda s: s['b0']+s['b1']*s['x1']+s['b2']*s['x2'])
+reg('st.mreg.p2')(lambda s: s['b1']*s['d1']+s['b2']*s['d2'])
+def ls_slope(xs,ys):
+    mx=sum(xs)/len(xs); my=sum(ys)/len(ys)
+    return sum((x-mx)*(y-my) for x,y in zip(xs,ys))/sum((x-mx)**2 for x in xs)
+reg('st.mreg.p3')(lambda s: ls_slope([-1,0,1],[s['y1'],s['y2'],s['y1']+2*s['k']]))
+reg('st.diag.p1')(lambda s: s['y0']-(s['a']+s['b']*s['x0']))
+reg('st.diag.p2')(lambda s: 1/(1-s['r2']))
+reg('st.diag.p3')(lambda s: s['e']/s['s'])
+reg('st.anova.p1')(lambda s: s['k']*s['n']-s['k'])
+def ssb(means,n):
+    g=sum(means)/len(means)
+    return sum(n*(m-g)**2 for m in means)
+reg('st.anova.p2')(lambda s: ssb([s['gm']-s['d'],s['gm'],s['gm']+s['d']],s['n']))
+reg('st.anova.p3')(lambda s: (s['ssb']/(3-1))/(s['ssw']/(18-3)))
+reg('st.logit.p1')(lambda s: s['p']/(1-s['p']))
+reg('st.logit.p2')(lambda s: 1/(1+math.exp(-math.log(s['o']))))
+reg('st.logit.p3')(lambda s: math.exp(s['dx']*math.log(s['r'])))
+reg('st.boot.p1')(lambda s: sum(1 for _ in itertools.product(range(s['n']),repeat=s['n'])))
+reg('st.boot.p2')(lambda s: sum(1 for _ in itertools.combinations(range(s['a']+s['b']),s['a'])))
+reg('st.boot.p3')(lambda s: s['r']/sum(1 for _ in itertools.combinations(range(6),3)))
+reg('st.nonpar.p1')(lambda s: sum(range(1,s['N']+1)))
+reg('st.nonpar.p2')(lambda s: (s['t']+(s['t']+1))/2)
+reg('st.nonpar.p3')(lambda s: (s['n1']*(s['n1']+1)//2+s['ex'])-sum(range(1,s['n1']+1)))
+reg('st.mult.p1')(lambda s: 1-(1-0.05)**s['m'])
+reg('st.mult.p2')(lambda s: 0.05/s['m'])
+reg('st.mult.p3')(lambda s: next(m for m in range(1,500) if 1-(1-s['al'])**m>0.5))
+reg('st.ab.p1')(lambda s: (s['a0']+s['d']-s['a0'])/s['a0']*100)
+reg('st.ab.p2')(lambda s: 16*s['s']**2/s['d']**2)
+reg('st.ab.p3')(lambda s: 1-math.prod(1-0.05 for _ in range(s['k'])))
+reg('st.bayes.p1')(lambda s: beta_mean(s['a']+s['k'], s['b']+10-s['k']))
+reg('st.bayes.p2')(lambda s: s['b']+(10-s['k']))
+reg('st.bayes.p3')(lambda s: ((s['a'])/(s['a']+s['b']+s['n']))*(s['a']+s['b'])/s['a'])
+reg('st.theory.p1')(lambda s: s['p']*(1/s['p'])**2+(1-s['p'])*(1/(1-s['p']))**2)
+reg('st.theory.p2')(lambda s: 1/(s['n']*(1/s['p']+1/(1-s['p']))))
+reg('st.theory.p3')(lambda s: (s['b'])/(s['b']*s['f']))
+
 bad=0; checked=0; per={}
 for r in data:
     key=f"{r['id']}.{r['pid']}"

@@ -108,3 +108,113 @@ st.reg:
   e: [st.reg.causation, st.reg.extrapolate]
   n: 6
   note: 'Только одна переменная. Проверку значимости наклона и диагностику не вводить.'
+
+st.mom:
+  t: 'Метод моментов'
+  goal: 'Умею оценивать параметры, приравнивая теоретические моменты к выборочным'
+  pre: [st.est, st.samp, st.descr, pr.cdistr, pr.cont, pr.var, pr.exp]
+  g: [method-of-moments]
+  k: [num, mc, spot]
+  e: [st.mom.invert, st.mom.half, st.mom.raw]
+  n: 6
+  note: 'Один-два параметра. Сравнение с максимальным правдоподобием не вводить.'
+
+st.mreg:
+  t: 'Множественная регрессия в матричной форме'
+  goal: 'Умею строить прогноз по модели с двумя предикторами и читать коэффициенты при неизменных остальных переменных'
+  pre: [st.reg, st.zt, st.descr, pr.cov, pr.var, la.proj, la.orth, la.dot]
+  g: [multiple-regression]
+  k: [num, mc, spot]
+  e: [st.mreg.ones, st.mreg.r2, st.mreg.ceteris]
+  n: 6
+  note: 'Не более двух предикторов. Обратную матрицу не вычислять, матрицы $X^TX$ диагональные.'
+
+st.diag:
+  t: 'Диагностика регрессии: остатки, выбросы, мультиколлинеарность'
+  goal: 'Умею считать остатки, стандартизованный остаток и VIF и читать график остатков'
+  pre: [st.mreg, st.reg, st.zt, pr.cov, pr.var]
+  g: [regression-diagnostics]
+  k: [num, mc, spot]
+  e: [st.diag.sign, st.diag.vif, st.diag.outlier]
+  n: 6
+  note: 'Без графиков: только числа и описание графика остатков словами.'
+
+st.anova:
+  t: 'Дисперсионный анализ'
+  goal: 'Умею находить степени свободы и $F$-статистику однофакторного ANOVA'
+  pre: [st.two, st.zt, st.t, st.test, st.ci, pr.var]
+  g: [anova]
+  k: [num, mc, spot]
+  e: [st.anova.df, st.anova.ss-ms, st.anova.which]
+  n: 6
+  note: 'Равные группы, $k\le5$. Критические значения $F$ не требовать.'
+
+st.logit:
+  t: 'Логистическая регрессия'
+  goal: 'Умею переводить шансы и вероятность друг в друга и читать отношение шансов'
+  pre: [st.mreg, st.mle, st.reg, st.zt, pr.bayes, pr.cond]
+  g: [logistic-regression]
+  k: [num, mc, spot]
+  e: [st.logit.odds, st.logit.or, st.logit.linear]
+  n: 6
+  note: 'Без вычисления оценок коэффициентов. Только интерпретация.'
+
+st.boot:
+  t: 'Бутстреп и перестановочные критерии'
+  goal: 'Умею считать число бутстреп-выборок и перестановок и описывать алгоритм бутстрепа'
+  pre: [st.ci, st.test, st.samp, st.descr, dm.binom]
+  g: [bootstrap]
+  k: [num, mc, spot]
+  e: [st.boot.without, st.boot.size, st.boot.perm]
+  n: 6
+  note: 'Малые выборки, подсчёт вручную. Программирование не нужно.'
+
+st.nonpar:
+  t: 'Ранговые критерии'
+  goal: 'Умею расставлять ранги, включая совпадения, и находить статистику $U$'
+  pre: [st.two, st.zt, st.t, st.test, st.ci]
+  g: [rank-tests]
+  k: [num, mc, spot]
+  e: [st.nonpar.rank-sum, st.nonpar.ties, st.nonpar.mean]
+  n: 6
+  note: 'Критические таблицы не использовать. Только Манн–Уитни.'
+
+st.mult:
+  t: 'Множественные сравнения'
+  goal: 'Умею считать вероятность ложной значимости при $m$ проверках и порог Бонферрони'
+  pre: [st.test, st.ci, st.samp]
+  g: [multiple-comparisons]
+  k: [num, mc, spot]
+  e: [st.mult.sum, st.mult.bonf, st.mult.found]
+  n: 6
+  note: 'Независимые проверки. Поправку Холма и FDR упомянуть одной фразой.'
+
+st.ab:
+  t: 'A/B-тесты на практике'
+  goal: 'Умею оценивать объём выборки для A/B-теста и объяснять вред подглядывания'
+  pre: [st.two, st.power, st.chi, st.zt, st.test, st.ci]
+  g: [ab-test]
+  k: [num, mc, spot]
+  e: [st.ab.peek, st.ab.size, st.ab.practical]
+  n: 6
+  note: 'Формула $16\sigma^2/\delta^2$ на группу для $\alpha=0.05$ и мощности $80\%$.'
+
+st.bayes:
+  t: 'Байесовский вывод: априорное, апостериорное, сопряжённые пары'
+  goal: 'Умею обновлять Beta-распределение данными и находить апостериорное среднее'
+  pre: [pr.bayes, st.mle, pr.cond, pr.cdistr, pr.cont]
+  g: [bayesian-inference]
+  k: [num, mc, spot]
+  e: [st.bayes.prior, st.bayes.mean, st.bayes.likelihood-prob]
+  n: 6
+  note: 'Только пара Beta–биномиальная модель. Интегралы не вычислять.'
+
+st.theory:
+  t: 'Достаточность, информация Фишера, неравенство Рао–Крамера'
+  goal: 'Умею находить информацию Фишера для Бернулли и границу Рао–Крамера для $n$ наблюдений'
+  pre: [st.mle, st.est, pr.discr, pr.var]
+  g: [fisher-information]
+  k: [num, mc, spot]
+  e: [st.theory.inverse, st.theory.n, st.theory.biased]
+  n: 6
+  note: 'Обзор. Достаточность упомянуть одной фразой, без факторизационной теоремы.'
