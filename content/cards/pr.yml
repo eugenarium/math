@@ -26,6 +26,7 @@ pr.cond:
   goal: 'Умею находить $P(A\mid B)$ и отличаю её от $P(B\mid A)$'
   pre: [pr.space, pre.sets]
   g: [conditional-probability]
+  w: [ctree]
   k: [num, mc, spot]
   e: [pr.cond.reverse, pr.cond.shrink]
   n: 6

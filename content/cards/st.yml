@@ -57,6 +57,7 @@ st.test:
   goal: 'Умею вычислять статистику критерия и верно толковать $p$-значение и вывод «не отвергли $H_0$»'
   pre: [st.ci, st.samp, pr.norm]
   g: [hypothesis-test, p-value]
+  w: [test]
   k: [num, mc, spot]
   e: [st.test.p-h0, st.test.accept, st.test.tails]
   n: 6
@@ -87,6 +88,7 @@ st.power:
   goal: 'Умею находить мощность как $1-\beta$, размер эффекта и объём выборки для заданной погрешности'
   pre: [st.zt, st.test, st.ci]
   g: [statistical-power]
+  w: [test]
   k: [num, mc, spot]
   e: [st.power.alpha-beta, st.ci.linear-n, st.test.accept]
   n: 6

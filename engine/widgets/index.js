@@ -19,4 +19,7 @@ export const loaders = {
   chance: () => import('./chance.js'),
   contour: () => import('./contour.js'),
   graph: () => import('./graph.js'),
+  ctree: () => import('./ctree.js'),
+  pascal: () => import('./pascal.js'),
+  test: () => import('./test.js'),
 };

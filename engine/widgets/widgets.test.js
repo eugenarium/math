@@ -10,6 +10,9 @@ import * as vec2 from './vec2.js';
 import * as sample from './sample.js';
 import * as contour from './contour.js';
 import * as graph from './graph.js';
+import * as ctree from './ctree.js';
+import * as pascal from './pascal.js';
+import * as ztest from './test.js';
 
 test('truth: де Морган — столбцы равны, импликация — три единицы', () => {
   assert.equal(truth.compute({ f: ['!(p & q)', '!p | !q'] }, {}, {}).eq, 1);
@@ -76,4 +79,20 @@ test('graph: шаг цепи по равномерной величине', () =
   assert.equal(graph.stepOf(P, 0, 0.5), 0);
   assert.equal(graph.stepOf(P, 0, 0.95), 1);
   assert.equal(graph.stepOf(P, 1, 0.2), 0);
+});
+
+test('ctree: число листьев и вероятность пути', () => {
+  assert.equal(ctree.leaves({ st: [3, 2, 4] }), 24);
+  assert.deepEqual(ctree.counts({ st: [3, 3, 3], dep: 1 }), [3, 2, 1]);
+  assert.ok(Math.abs(ctree.compute({ pr: [[0.3, 0.7], [0.9, 0.1, 0.2, 0.8]] }, {}, { sel: 0 }).P - 0.27) < 1e-9);
+});
+
+test('pascal: биномиальные коэффициенты', () => {
+  assert.equal(pascal.binom(5, 2), 10);
+  assert.equal(pascal.binom(7, 3), 35);
+});
+
+test('test: мощность z-критерия и p-значение', () => {
+  assert.ok(Math.abs(ztest.compute({ tail: 'two' }, {}, { alpha: 0.05, d: 0.5, n: 25 }).power - 0.7054) < 1e-3);
+  assert.ok(Math.abs(ztest.compute({ tail: 'two', obs: 2.1 }, {}, { alpha: 0.05, d: 0, n: 25 }).p - 0.0357) < 1e-3);
 });
