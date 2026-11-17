@@ -8,6 +8,7 @@ def:
   - {g: rsa}
 ex:
   - {x: p3, seed: 1}
+  - {x: p2, seed: 5}
 pr:
   p1:
     k: num
@@ -25,6 +26,10 @@ pr:
     a: (p-1)*(q-1)
     e: {dm.rsa.phi: p*q-1}
     h: ['$\varphi(pq)=(p-1)(q-1)$.']
+    sol:
+      - '$\varphi(pq)=(p-1)(q-1)$ для простых $p\ne q$.'
+      - 'Подставим: $(@p-1)(@q-1)=@{p-1}\cdot@{q-1}$.'
+      - 'Итог: $\varphi(@{p*q})=@{(p-1)*(q-1)}$.'
   p3:
     k: num
     lv: 2

@@ -8,6 +8,7 @@ def:
   - {g: de-morgan}
 ex:
   - {x: p4, seed: 2}
+  - {x: p1, seed: 6}
 pr:
   p1:
     k: num
@@ -17,6 +18,10 @@ pr:
     a: 3*2^(n-2)
     e: {lg.equiv.demorgan-keep: 2^(n-2)}
     h: ['$\neg(A_1\wedge A_2)\equiv\neg A_1\vee\neg A_2$.']
+    sol:
+      - 'По закону де Моргана $\neg(A_1\wedge A_2)\equiv\neg A_1\vee\neg A_2$.'
+      - 'Формула ложна только при $A_1=A_2=1$: это $2^{@{n-2}}$ наборов из $2^{@n}$.'
+      - 'Итог: $2^{@n}-2^{@{n-2}}=@{3*2^(n-2)}$.'
   p2:
     k: mc
     q: 'Чему равносильно $\neg(A\vee B)$?'

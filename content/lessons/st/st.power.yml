@@ -7,6 +7,7 @@ def:
   - {g: statistical-power}
 ex:
   - {x: p2, seed: 2}
+  - {x: p3, seed: 6}
 pr:
   p1:
     k: num

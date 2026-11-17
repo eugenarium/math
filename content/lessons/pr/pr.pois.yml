@@ -7,6 +7,7 @@ def:
   - {g: poisson-process}
 ex:
   - {x: p3, seed: 2}
+  - {x: p2, seed: 6}
 pr:
   p1:
     k: num
@@ -25,6 +26,10 @@ pr:
     a: 1/lam
     e: {pr.pois.mean: lam}
     h: ['Паузы показательны со средним $\frac1\lambda$.']
+    sol:
+      - 'Паузы между событиями показательны с параметром $\lambda=@lam$.'
+      - 'Среднее показательного равно $\frac1\lambda$.'
+      - 'Итог: $\frac1{@lam}=@{1/lam:f3}$ мин.'
   p3:
     k: num
     lv: 2

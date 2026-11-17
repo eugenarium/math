@@ -8,6 +8,7 @@ def:
   - {g: definiteness}
 ex:
   - {x: p2, seed: 3}
+  - {x: p4, seed: 7}
 pr:
   p1:
     k: num

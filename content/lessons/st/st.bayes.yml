@@ -7,6 +7,7 @@ def:
   - {g: bayesian-inference}
 ex:
   - {x: p3, seed: 2}
+  - {x: p2, seed: 6}
 pr:
   p1:
     k: num
@@ -26,6 +27,10 @@ pr:
     a: b+10-k
     e: {st.bayes.prior: b+k}
     h: ['Ко второму параметру прибавляют число неудач.']
+    sol:
+      - 'Апостериорное для $\mathrm{Beta}(@a,@b)$ — $\mathrm{Beta}(@a+k,\ @b+n-k)$.'
+      - 'Неудач $10-@k=@{10-k}$.'
+      - 'Итог: второй параметр $@b+@{10-k}=@{b+10-k}$.'
   p3:
     k: num
     lv: 2

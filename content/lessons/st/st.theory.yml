@@ -7,6 +7,7 @@ def:
   - {g: fisher-information}
 ex:
   - {x: p3, seed: 2}
+  - {x: p2, seed: 6}
 pr:
   p1:
     k: num
@@ -26,6 +27,10 @@ pr:
     a: p*(1-p)/n
     e: {st.theory.n: p*(1-p)}
     h: ['Граница равна $\frac1{nI(p)}$.']
+    sol:
+      - '$I(p)=\frac1{p(1-p)}$, для $n$ наблюдений граница $\frac1{nI(p)}=\frac{p(1-p)}{n}$.'
+      - 'Подставим: $\frac{@{p:f1}\cdot@{1-p:f1}}{@n}$.'
+      - 'Итог: $@{p*(1-p)/n:f4}$.'
   p3:
     k: num
     lv: 2
