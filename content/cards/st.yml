@@ -14,6 +14,7 @@ st.samp:
   goal: 'Умею находить стандартную ошибку среднего и отличаю её от стандартного отклонения данных'
   pre: [st.descr, pr.clt, pr.lln, pr.norm, pr.var]
   g: [standard-error]
+  w: [sample]
   k: [num, mc, spot]
   e: [st.samp.sd-se, st.ci.linear-n, st.samp.pop-size]
   n: 6
@@ -24,6 +25,7 @@ st.est:
   goal: 'Умею находить выборочную дисперсию с делением на $n-1$ и считать MSE оценки'
   pre: [st.samp, st.descr, pr.var, pr.exp]
   g: [point-estimate]
+  w: [sample]
   k: [num, mc, spot]
   e: [st.est.n-div, st.est.unbiased-good]
   n: 6
@@ -104,6 +106,7 @@ st.reg:
   goal: 'Умею находить наклон, свободный член и прогноз линейной регрессии и помню о причинности и экстраполяции'
   pre: [pr.cov, st.zt, st.descr, pr.var]
   g: [linear-regression]
+  w: [scatter]
   k: [num, mc, spot]
   e: [st.reg.causation, st.reg.extrapolate]
   n: 6

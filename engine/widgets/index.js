@@ -9,4 +9,12 @@ export const loaders = {
   venn: () => import('./venn.js'),
   numline: () => import('./numline.js'),
   complex: () => import('./complex.js'),
+  truth: () => import('./truth.js'),
+  vec2: () => import('./vec2.js'),
+  bayes: () => import('./bayes.js'),
+  scatter: () => import('./scatter.js'),
+  taylor: () => import('./taylor.js'),
+  limit: () => import('./limit.js'),
+  sample: () => import('./sample.js'),
+  chance: () => import('./chance.js'),
 };

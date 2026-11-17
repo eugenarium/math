@@ -4,6 +4,7 @@ pr.space:
   goal: 'Умею находить вероятность дополнения и объединения событий по аксиомам вероятности'
   pre: [pre.sets]
   g: [probability-axioms]
+  w: [chance]
   k: [num, mc, spot]
   e: [pr.space.union-sum, pr.space.complement]
   n: 6
@@ -14,6 +15,7 @@ pr.classic:
   goal: 'Умею считать вероятность как долю благоприятных исходов и понимаю, что исходы не всегда равновероятны'
   pre: [pr.space, dm.perm, dm.count, pre.sets]
   g: [classical-probability]
+  w: [chance]
   k: [num, mc, spot]
   e: [pr.classic.unequal, pr.classic.order]
   n: 6
@@ -44,6 +46,7 @@ pr.bayes:
   goal: 'Умею применять формулу полной вероятности и формулу Байеса с учётом базовой частоты'
   pre: [pr.cond, pr.space, pre.sets]
   g: [total-probability, bayes-formula]
+  w: [bayes]
   k: [num, mc, spot]
   e: [pr.bayes.base, pr.bayes.total]
   n: 6
@@ -64,6 +67,7 @@ pr.exp:
   goal: 'Умею находить $E[X]$ по таблице, использовать линейность и помню, что $E[X^2]\ne(E[X])^2$'
   pre: [pr.rv, pr.indep, pr.cond, pr.space, pre.sum, pre.func, pre.sets]
   g: [expectation]
+  w: [sample]
   k: [num, mc, spot]
   e: [pr.exp.nonlin, pr.exp.avg]
   n: 6
@@ -134,6 +138,7 @@ pr.cov:
   goal: 'Умею находить ковариацию и корреляцию и знаю, что некоррелированность не означает независимость'
   pre: [pr.joint, pr.var, pr.exp, pr.rv, pr.indep]
   g: [covariance-correlation]
+  w: [scatter]
   k: [num, mc, spot]
   e: [pr.cov.uncorr, pr.cov.cov-scale, pr.cov.var-sum]
   n: 6
@@ -154,6 +159,7 @@ pr.lln:
   goal: 'Умею применять закон больших чисел и отличаю его от «ошибки игрока»'
   pre: [pr.ineq, pr.cov, pr.var, pr.exp, pr.indep]
   g: [law-of-large-numbers]
+  w: [sample]
   k: [num, mc, spot]
   e: [pr.lln.gambler, pr.lln.abs]
   n: 6
@@ -164,6 +170,7 @@ pr.clt:
   goal: 'Умею находить стандартную ошибку среднего и понимаю, что нормальным становится распределение среднего, а не данных'
   pre: [pr.lln, pr.norm, pr.cdistr, pr.var, pr.exp]
   g: [central-limit-theorem]
+  w: [sample]
   k: [num, mc, spot]
   e: [pr.clt.data, pr.clt.sd]
   n: 6

@@ -12,7 +12,7 @@
 
 ## 2. Недостающие виджеты
 
-- **P0:** `limit`, `taylor`, `vec2`, `sample`, `chance`, `bayes`, `scatter`, `truth`, `graph`, `contour`.
+- **P0:** `graph`, `contour`; недостающие режимы реализованных P0 (см. WIDGETS).
 - **P1:** `series`, `slope`, `phase`, `test`, `ctree`, `iter`, `interp`, `lp`.
 - **P2:** `pascal`, `pca`, `cgraph`. **3D:** `surf3`, `vec3`, `lin3`, `vol3`.
 - После каждого виджета — точечный патч уроков, у которых карта предусматривает ★ (26 готовых уроков, список в STATUS).

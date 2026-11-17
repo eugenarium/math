@@ -4,6 +4,7 @@ la.vec:
   goal: 'Умею складывать векторы, умножать их на число и находить коэффициенты линейной комбинации'
   pre: [pre.func, pre.sum]
   g: [vector, linear-combination]
+  w: [vec2]
   k: [num, mc, spot]
   e: [la.vec.scalar-one, la.vec.span-all]
   n: 6
@@ -14,6 +15,7 @@ la.dot:
   goal: 'Умею находить скалярное произведение, косинус угла и проекцию одного вектора на другой'
   pre: [la.vec, pre.trig, pre.func, pre.sum]
   g: [dot-product, vector-projection]
+  w: [vec2]
   k: [num, mc, spot]
   e: [la.dot.no-norm, la.dot.proj-dir]
   n: 6
@@ -124,6 +126,7 @@ la.orth:
   goal: 'Умею проверять ортогональность, нормировать вектор и делать один шаг процесса Грама–Шмидта'
   pre: [la.dot, la.basis, la.vec, pre.trig]
   g: [orthogonal-system, gram-schmidt]
+  w: [vec2]
   k: [num, mc, spot]
   e: [la.orth.unit, la.orth.gs-coef]
   n: 6
@@ -134,6 +137,7 @@ la.proj:
   goal: 'Умею находить проекцию вектора на прямую и наклон прямой через начало координат по методу наименьших квадратов'
   pre: [la.orth, la.inv, la.dot, la.basis]
   g: [least-squares]
+  w: [scatter]
   k: [num, mc, spot]
   e: [la.proj.res, la.proj.ls-mean]
   n: 6
