@@ -20,6 +20,7 @@ def:
   - {g: eigenvalue}
   - {g: char-poly}
   - 'Как искать: $A\mathbf{v}=\lambda\mathbf{v}$ равносильно $(A-\lambda I)\mathbf{v}=\mathbf{0}$. Ненулевое решение есть только тогда, когда $\det(A-\lambda I)=0$.'
+  - 'Как решать. Реши $\det(A-\lambda I)=0$ — получатся собственные значения. Для каждого найди ненулевое решение $(A-\lambda I)\mathbf v=0$ и проверь $A\mathbf v=\lambda\mathbf v$.'
 ex:
   - {x: p3, seed: 3}
   - {x: p4, seed: 3}
