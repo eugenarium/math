@@ -11,6 +11,8 @@ export const meta = {
     pts: ['E[][]', null, 'точки [[x, y], …]'],
     fit: ['enum', null, 'line — показать МНК-прямую; hand — ученик подбирает прямую слайдерами k и b'],
     show: ['str[]', null, 'r, r2, sse, mean, resid'],
+    vals: ['E[]', null, 'одномерные данные для one: hist'],
+    one: ['enum', null, 'hist — гистограмма значений vals с средним и медианой'],
     x: ['range', null, 'окно по x'],
     y: ['range', null, 'окно по y'],
   },
@@ -31,6 +33,7 @@ function rng(seed) {
 const gauss = (r) => Math.sqrt(-2 * Math.log(1 - r())) * Math.cos(2 * Math.PI * r());
 
 export function points(params) {
+  if (params.vals) return params.vals.map((x) => [Number(x), 0]);
   if (params.pts) return params.pts.map((p) => [Number(p[0]), Number(p[1])]);
   const g = params.gen ?? { n: 30, r: 0.7, seed: 1 };
   const r = rng(g.seed ?? 1);
@@ -78,8 +81,52 @@ export function compute(params, scope, vars) {
   return { r: r6(s.r), k: r6(k), b: r6(b), sse: r6(sse), mean: r6(s.mx), med: r6(s.med), ky: r6(s.k), by: r6(s.b) };
 }
 
+function mountHist(el, params, th) {
+  const vals = points(params).map((p) => p[0]);
+  const n = vals.length;
+  const lo = Math.floor(Math.min(...vals)) - 1;
+  const hi = Math.ceil(Math.max(...vals)) + 1;
+  const mean = vals.reduce((a, b) => a + b, 0) / n;
+  const sorted = [...vals].sort((a, b) => a - b);
+  const med = n % 2 ? sorted[(n - 1) / 2] : (sorted[n / 2 - 1] + sorted[n / 2]) / 2;
+  const v = createView(el, { xr: [lo, hi], yr: [0, 1], aspect: 0.6, onResize: () => draw() });
+  const draw = () => {
+    const { ctx: c, w, h } = v;
+    c.clearRect(0, 0, w, h);
+    const bins = Math.max(4, Math.min(12, hi - lo));
+    const counts = new Array(bins).fill(0);
+    for (const x of vals) counts[Math.min(bins - 1, Math.floor(((x - lo) / (hi - lo)) * bins))]++;
+    const mx = Math.max(...counts);
+    const bottom = h - 24;
+    c.fillStyle = th.accent + 'aa';
+    counts.forEach((cn, k) => c.fillRect((k / bins) * w + 1, bottom - (cn / mx) * (bottom - 40), w / bins - 2, (cn / mx) * (bottom - 40)));
+    c.strokeStyle = th.fg;
+    c.beginPath();
+    c.moveTo(0, bottom);
+    c.lineTo(w, bottom);
+    c.stroke();
+    for (const [x, col, name] of [[mean, th.bad, 'среднее'], [med, th.ok, 'медиана']]) {
+      c.strokeStyle = col;
+      c.lineWidth = 2.5;
+      c.beginPath();
+      c.moveTo(v.X(x), 30);
+      c.lineTo(v.X(x), bottom);
+      c.stroke();
+      void name;
+    }
+    c.fillStyle = th.fg;
+    c.font = '12px system-ui, sans-serif';
+    c.textAlign = 'center';
+    for (let t = Math.ceil(lo); t <= hi; t += Math.max(1, Math.round((hi - lo) / 6))) c.fillText(fmtNum(t), v.X(t), h - 8);
+    label(v, `среднее ${fmtNum(Number(mean.toFixed(2)))} (красная), медиана ${fmtNum(med)} (зелёная)`, 8, 18, th.fg);
+  };
+  draw();
+  return { update: draw, destroy: () => v.destroy() };
+}
+
 export function mount(el, { params }, ctx = {}) {
   const th = theme();
+  if (params.one === 'hist') return mountHist(el, params, th);
   const pts = points(params);
   const s = stats(pts);
   const xs = pts.map((p) => p[0]);

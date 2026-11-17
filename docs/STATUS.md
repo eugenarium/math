@@ -60,14 +60,14 @@
 | Теории на урок (определения глоссария + вводные экраны) | в среднем около 650 знаков; минимум 425 (c1.chain) | около 850 знаков: добавлен экран «Как решать» в каждый урок |
 | Вопросов-предсказаний `ask` на урок | в среднем 1.06 | в среднем 2.04 (второй вопрос во всех уроках, кроме c1.lim и la.eig, где их уже было два) |
 | Разборов (`ex`) на урок | 1 | 2 в каждом из 123 уроков |
-| Уроков с виджетом | 13 из 123 | 31 из 123: виджеты truth, vec2, bayes, scatter, taylor, limit, sample, chance добавлены в 18 уроков |
+| Уроков с виджетом | 13 из 123 | 35 из 123: виджеты truth, vec2, bayes, scatter, taylor, limit, sample, chance, graph, contour добавлены в 22 урока |
 | Задач на урок | 5–7, обычно 3 типа | без изменений |
 
 Выводы:
 
 1. Интерактивности было недостаточно: у большинства уроков один вопрос-предсказание и один разбор. Добавлен второй разбор во все уроки (в 34 уроках для этого дописаны пошаговые решения задач).
 2. Теории было мало для самостоятельного изучения. Добавлены экран «Как решать» (метод в 3–4 шага, оформлен отдельной карточкой) и второй вопрос-предсказание во всех 123 уроках. Лимиты схемы: `int` до 5 экранов, `def` до 6.
-3. Реализованы восемь из десяти виджетов P0 (truth, vec2, bayes, scatter, taylor, limit, sample, chance) и подключены к 18 ★-урокам. Не сделаны `graph` и `contour`, а также режим `hist` у `scatter` для st.descr.
+3. Реализованы все десять виджетов P0 (truth, vec2, bayes, scatter, taylor, limit, sample, chance, graph, contour), часть — в сокращённом виде (см. WIDGETS), и подключены к 22 ★-урокам.
 
 ## Автоматически построенное состояние
 
@@ -122,10 +122,10 @@
 
 ### Виджеты
 
-Реализовано 17 из 34 виджетов каталога: `bayes`, `chance`, `ci`, `complex`, `dist`, `fplot`, `limit`, `lin2`, `matrix`, `numline`, `riemann`, `sample`, `scatter`, `taylor`, `truth`, `vec2`, `venn`.
+Реализовано 19 из 34 виджетов каталога: `bayes`, `chance`, `ci`, `complex`, `contour`, `dist`, `fplot`, `graph`, `limit`, `lin2`, `matrix`, `numline`, `riemann`, `sample`, `scatter`, `taylor`, `truth`, `vec2`, `venn`.
 
-Не реализовано: P0 — `graph`, `contour`; P1 — `series`, `slope`, `phase`, `test`, `ctree`, `iter`, `interp`, `lp`; P2 — `pascal`, `pca`, `cgraph`; 3D — `surf3`, `vec3`, `lin3`, `vol3`.
+Не реализовано: P0 — нет; P1 — `series`, `slope`, `phase`, `test`, `ctree`, `iter`, `interp`, `lp`; P2 — `pascal`, `pca`, `cgraph`; 3D — `surf3`, `vec3`, `lin3`, `vol3`.
 
-Готовые уроки, у которых карта предусматривает ★-виджет, но его ещё нет (урок написан без него): `dm.count` → `ctree`, `dm.perm` → `ctree`, `dm.binom` → `pascal`, `pr.cond` → `ctree`, `pr.jointc` → `contour`, `pr.mvn` → `contour`, `pr.markov` → `graph`, `st.test` → `test`, `st.power` → `test`.
+Готовые уроки, у которых карта предусматривает ★-виджет, но его ещё нет (урок написан без него): `dm.count` → `ctree`, `dm.perm` → `ctree`, `dm.binom` → `pascal`, `pr.cond` → `ctree`, `st.test` → `test`, `st.power` → `test`.
 
 <!-- status:end -->
