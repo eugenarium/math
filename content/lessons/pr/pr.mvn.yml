@@ -7,6 +7,7 @@ def:
   - {g: multivariate-normal}
 ex:
   - {x: p3, seed: 2}
+  - {x: p2, seed: 6}
 pr:
   p1:
     k: num
@@ -25,6 +26,10 @@ pr:
     a: sx2+sy2+2*c
     e: {pr.mvn.cov-var: sx2+sy2}
     h: ['Добавь удвоенную ковариацию.']
+    sol:
+      - '$\mathrm{Var}(X+Y)=\mathrm{Var}X+\mathrm{Var}Y+2\mathrm{Cov}(X,Y)$.'
+      - 'Подставим: $@sx2+@sy2+2\cdot(@c)$.'
+      - 'Итог: $@{sx2+sy2+2*c}$.'
   p3:
     k: num
     lv: 2

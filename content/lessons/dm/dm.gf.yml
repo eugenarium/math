@@ -7,6 +7,7 @@ def:
   - {g: generating-function}
 ex:
   - {x: p4, seed: 2}
+  - {x: p2, seed: 6}
 pr:
   p1:
     k: num
@@ -23,6 +24,10 @@ pr:
     a: k+1
     e: {dm.gf.shift: k}
     h: ['Ряд $\frac1{(1-x)^2}=1+2x+3x^2+\dots$.']
+    sol:
+      - 'Ряд $\frac1{1-x}=1+x+x^2+\dots$, а $\frac1{(1-x)^2}$ — его квадрат.'
+      - 'Коэффициент при $x^{@k}$ в квадрате — число пар $(a,b)$ с $a+b=@k$, то есть $@k+1$.'
+      - 'Итог: $@{k+1}$.'
   p3:
     k: num
     fast: 1

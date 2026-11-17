@@ -8,6 +8,7 @@ def:
   - {g: condition-number}
 ex:
   - {x: p4, seed: 2}
+  - {x: p2, seed: 6}
 pr:
   p1:
     k: num
@@ -25,6 +26,10 @@ pr:
     a: max(abs(a),abs(b))
     e: {la.norm.inf: abs(a)+abs(b)}
     h: ['Выбери наибольший модуль.']
+    sol:
+      - 'Норма $\infty$ — наибольший модуль координаты.'
+      - 'Модули: $|@a|=@{abs(a)}$ и $|@b|=@{abs(b)}$.'
+      - 'Итог: $@{max(abs(a),abs(b))}$.'
   p3:
     k: num
     fast: 1

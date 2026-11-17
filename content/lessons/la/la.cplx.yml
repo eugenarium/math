@@ -7,6 +7,7 @@ def:
   - {g: complex-eigenvalues}
 ex:
   - {x: p3, seed: 2}
+  - {x: p2, seed: 6}
 pr:
   p1:
     k: num
@@ -23,6 +24,10 @@ pr:
     q: 'Найди вещественную часть собственных значений матрицы $\begin{pmatrix}@a&@{-b}\\@b&@a\end{pmatrix}$.'
     a: a
     h: ['Собственные значения равны $a\pm bi$.']
+    sol:
+      - 'Собственные значения матрицы $\begin{pmatrix}a&-b\\b&a\end{pmatrix}$ равны $a\pm bi$.'
+      - 'Здесь $a=@a$, $b=@b$: значения $@a\pm@b i$.'
+      - 'Вещественная часть равна $@a$.'
   p3:
     k: num
     lv: 2

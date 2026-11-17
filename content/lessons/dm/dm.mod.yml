@@ -7,6 +7,7 @@ def:
   - {g: congruence}
 ex:
   - {x: p3, seed: 2}
+  - {x: p2, seed: 6}
 pr:
   p1:
     k: num
@@ -24,6 +25,10 @@ pr:
     a: mod(a^(p-2),p)
     e: {dm.mod.inverse-neg: p-a}
     h: ['Перебери $b$: произведение $@a b$ должно давать остаток $1$.']
+    sol:
+      - 'Нужно $@a\cdot b\equiv1\pmod{@p}$: перебираем $b=1,2,\dots$'
+      - 'Подходит $b=@{mod(a^(p-2),p)}$: $@a\cdot@{mod(a^(p-2),p)}=@{a*mod(a^(p-2),p)}$.'
+      - 'Остаток от деления $@{a*mod(a^(p-2),p)}$ на $@p$ равен $1$, итог $b=@{mod(a^(p-2),p)}$.'
   p3:
     k: num
     lv: 2

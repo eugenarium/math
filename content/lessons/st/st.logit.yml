@@ -7,6 +7,7 @@ def:
   - {g: logistic-regression}
 ex:
   - {x: p3, seed: 2}
+  - {x: p2, seed: 6}
 pr:
   p1:
     k: num
@@ -26,6 +27,10 @@ pr:
     a: o/(1+o)
     e: {st.logit.odds: o}
     h: ['$p=\frac{\text{шансы}}{1+\text{шансы}}$.']
+    sol:
+      - 'Шансы $@o:1$ означают $\frac{p}{1-p}=@o$.'
+      - 'Решим: $p=\frac{@o}{1+@o}$.'
+      - 'Итог: $p=@{o/(1+o):f3}$.'
   p3:
     k: num
     lv: 2
