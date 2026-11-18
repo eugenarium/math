@@ -1,0 +1,73 @@
+# Карточки раздела sr (ряды). Источник: docs/COURSE_MAP.md.
+sr.num:
+  t: 'Числовой ряд, частичные суммы, необходимый признак'
+  goal: 'Умею считать частичные суммы и сумму геометрического ряда и знаю, что $a_n\to0$ не гарантирует сходимости'
+  pre: [c1.seq, c1.lim, pre.sum, pre.func, lg.quant, pre.ineq]
+  g: [numerical-series]
+  w: [series]
+  k: [num, mc, spot]
+  e: [sr.num.necessary, sr.num.start, sr.num.partial]
+  n: 6
+  note: 'Только геометрический ряд, гармонический и телескопические суммы. Признаки сходимости — в следующем уроке.'
+
+sr.tests:
+  t: 'Признаки сравнения, Даламбера, Коши, интегральный'
+  goal: 'Умею применять признак Даламбера, интегральный признак и сравнение и знаю, что делать при $L=1$'
+  pre: [sr.num, c1.impr, c1.seq, pre.sum]
+  g: [convergence-tests]
+  k: [num, mc, spot]
+  e: [sr.tests.ratio-one, sr.tests.p, sr.tests.compare]
+  n: 6
+  note: 'Положительные ряды. Признак Коши упомянуть одной фразой.'
+
+sr.alt:
+  t: 'Знакочередующиеся ряды, абсолютная и условная сходимость'
+  goal: 'Умею применять признак Лейбница, оценивать ошибку и отличать абсолютную сходимость от условной'
+  pre: [sr.num, c1.seq, pre.sum]
+  g: [alternating-series]
+  w: [series]
+  k: [num, mc, spot]
+  e: [sr.alt.leibniz, sr.alt.abs, sr.alt.perm]
+  n: 6
+  note: 'Теорему Римана о перестановке упомянуть без доказательства.'
+
+sr.pow:
+  t: 'Степенные ряды, радиус сходимости'
+  goal: 'Умею находить радиус и интервал сходимости степенного ряда и проверять концы'
+  pre: [sr.alt, sr.tests, sr.num, c1.seq]
+  g: [power-series]
+  k: [num, mc, spot]
+  e: [sr.pow.radius, sr.pow.ends, sr.pow.center]
+  n: 6
+  note: 'Только признак Даламбера для радиуса. Почленное дифференцирование упомянуть одной фразой.'
+
+sr.tay:
+  t: 'Ряды Тейлора и стандартные разложения'
+  goal: 'Умею раскладывать функции подстановкой в стандартные ряды и помню, что вне радиуса ряд не равен функции'
+  pre: [sr.pow, c1.taylor, sr.alt, sr.num]
+  g: [taylor-series]
+  w: [taylor]
+  k: [num, mc, spot]
+  e: [sr.tay.coef, sr.tay.radius, sr.tay.subst]
+  n: 6
+  note: 'Разложения $e^x$, $\sin x$, $\cos x$, $\frac1{1-x}$, $\ln(1+x)$ и подстановки.'
+
+sr.unif:
+  t: 'Функциональные ряды, равномерная сходимость'
+  goal: 'Умею отличать поточечную сходимость от равномерной и применять признак Вейерштрасса'
+  pre: [sr.pow, sr.tests, c1.cont]
+  g: [uniform-convergence]
+  k: [num, mc, spot]
+  e: [sr.unif.point, sr.unif.mtest, sr.unif.continuity]
+  n: 6
+  note: 'Примеры $x^n$ и $\frac{\sin nx}{n^2}$. Определение через $\varepsilon$–$N$ не вводить.'
+
+sr.four:
+  t: 'Ряды Фурье'
+  goal: 'Умею находить коэффициенты Фурье простых функций и использовать чётность и значение в точке разрыва'
+  pre: [sr.num, pre.trig, c1.parts, c1.ftc]
+  g: [fourier-series]
+  k: [num, mc, spot]
+  e: [sr.four.parity, sr.four.jump, sr.four.a0]
+  n: 6
+  note: 'Период $2\pi$, функции $x$, $x^2$, постоянная и прямоугольная волна.'
