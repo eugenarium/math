@@ -10,7 +10,7 @@ export const meta = {
     P: ['E[][]', [[0.9, 0.1], [0.3, 0.7]], 'матрица переходов, строки дают 1'],
     start: ['N', 0, 'номер начального состояния (с нуля)'],
   },
-  out: ['steps', 'f0', 'state'],
+  out: ['steps', 'f0', 'state', 'runs'],
 };
 
 export function controls() {
@@ -22,7 +22,7 @@ export function initial(params) {
 }
 
 export function compute(params, scope, vars) {
-  return { steps: vars.steps ?? 0, f0: Number((vars.f0 ?? 0).toFixed(6)), state: vars.state ?? 0 };
+  return { steps: vars.steps ?? 0, runs: vars.steps ?? 0, f0: Number((vars.f0 ?? 0).toFixed(6)), state: vars.state ?? 0 };
 }
 
 /** Один шаг цепи из состояния s по матрице P с равномерным u. */
@@ -107,7 +107,7 @@ export function mount(el, { params }, ctx = {}) {
       const tot = visits.reduce((x, y) => x + y, 0);
       vars = { ...vars, state: s, steps: (vars.steps ?? 0) + a.k, f0: visits[0] / tot };
       draw();
-      ctx.onChange?.({ state: s, steps: vars.steps, f0: vars.f0 });
+      ctx.onChange?.({ state: s, steps: vars.steps, runs: vars.steps, f0: vars.f0 });
     },
     destroy() {
       v.destroy();

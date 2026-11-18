@@ -75,6 +75,13 @@ pr:
     bad:
       - {i: 2, t: 'Коэффициент $t=\mathbf{u}\cdot\mathbf{v}=2$', e: la.orth.gs-coef}
       - {i: 3, t: '$\mathbf{w}=\mathbf{v}-t\mathbf{u}=(2, 0)-(1, 1)=(1, 1)$'}
+  p7:
+    k: graph
+    lv: 2
+    v: {ax: 1..3, ay: 1..3}
+    q: 'При $\mathbf a=(@ax,@ay)$ подбери ненулевой $\mathbf b$, перпендикулярный $\mathbf a$.'
+    w: {w: vec2, v: {a: [ax, ay], b: [1, 1]}, lock: [a], show: [dot, angle]}
+    goal: {dot: [0, 0.01], angle: [90, 0.01]}
 err: [la.orth.unit, la.orth.gs-coef]
 sum:
   - 'Умею проверять ортогональность по скалярному произведению.'

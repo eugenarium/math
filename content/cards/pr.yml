@@ -5,9 +5,9 @@ pr.space:
   pre: [pre.sets]
   g: [probability-axioms]
   w: [chance]
-  k: [num, mc, spot]
+  k: [num, mc, spot, sim]
   e: [pr.space.union-sum, pr.space.complement]
-  n: 6
+  n: 7
   note: 'Только конечные пространства исходов. Несчётные пространства и σ-алгебры не вводить.'
 
 pr.classic:
@@ -16,9 +16,9 @@ pr.classic:
   pre: [pr.space, dm.perm, dm.count, pre.sets]
   g: [classical-probability]
   w: [chance]
-  k: [num, mc, spot]
+  k: [num, mc, spot, sim]
   e: [pr.classic.unequal, pr.classic.order]
-  n: 6
+  n: 7
   note: 'Числа благоприятных и всех исходов брать из dm.perm. Геометрическую вероятность не вводить.'
 
 pr.cond:
@@ -172,9 +172,9 @@ pr.clt:
   pre: [pr.lln, pr.norm, pr.cdistr, pr.var, pr.exp]
   g: [central-limit-theorem]
   w: [sample]
-  k: [num, mc, spot]
+  k: [num, mc, spot, sim]
   e: [pr.clt.data, pr.clt.sd]
-  n: 6
+  n: 7
   note: 'Только среднее и сумма. Поправка на непрерывность и условия Линдеберга не вводить.'
 
 pr.jointc:
@@ -235,9 +235,9 @@ pr.markov:
   pre: [pr.cond, pr.space, la.eig, la.diag, pre.sets]
   g: [markov-chain]
   w: [graph]
-  k: [num, mc, spot]
+  k: [num, mc, spot, sim]
   e: [pr.markov.mult, pr.markov.stationary, pr.markov.time]
-  n: 6
+  n: 7
   note: 'Только два состояния. Классификацию состояний не вводить.'
 
 pr.pois:

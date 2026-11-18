@@ -5,9 +5,9 @@ lg.prop:
   pre: [pre.sets]
   g: [proposition, connectives]
   w: [truth]
-  k: [num, mc, spot]
+  k: [num, mc, spot, graph]
   e: [lg.prop.or-exclusive, lg.prop.rows]
-  n: 6
+  n: 7
   note: 'Только $\neg$, $\wedge$, $\vee$. Импликацию не вводить: это следующий урок.'
 
 lg.impl:
@@ -26,9 +26,9 @@ lg.equiv:
   pre: [lg.impl, lg.prop, pre.sets]
   g: [equivalence, de-morgan]
   w: [truth]
-  k: [num, mc, spot]
+  k: [num, mc, spot, graph]
   e: [lg.equiv.demorgan-keep, lg.equiv.neg-impl]
-  n: 6
+  n: 7
   note: 'Только три переменные в задачах на подсчёт. Булевы функции и нормальные формы не вводить.'
 
 lg.quant:

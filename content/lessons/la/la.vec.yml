@@ -76,6 +76,12 @@ pr:
     bad:
       - {i: 1, t: 'Умножим $\mathbf{u}$ на $2$: $2\mathbf{u}=(2, 3)$', e: la.vec.scalar-one}
       - {i: 3, t: 'Получим $(-2, 5)$'}
+  p7:
+    k: graph
+    v: {ax: 1..3, ay: 1..3, tx: 4..6, ty: 4..6}
+    q: 'Подбери вектор $\mathbf b$ так, чтобы $\mathbf a+\mathbf b=(@tx,@ty)$ при $\mathbf a=(@ax,@ay)$.'
+    w: {w: vec2, v: {a: [ax, ay], b: [0, 0]}, lock: [a], show: [sum]}
+    goal: {'b.x': [tx-ax, 0.01], 'b.y': [ty-ay, 0.01]}
 err: [la.vec.scalar-one, la.vec.span-all]
 sum:
   - 'Умею складывать векторы и умножать их на число покоординатно.'

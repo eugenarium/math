@@ -117,9 +117,9 @@ c1.seq:
   pre: [lg.quant, pre.ineq, pre.func]
   g: [sequence-limit]
   w: [limit]
-  k: [num, mc, spot]
+  k: [num, mc, spot, graph]
   e: [c1.seq.never-reaches, c1.seq.bounded]
-  n: 6
+  n: 7
   note: 'Определение ε–N дать готовым из глоссария. Монотонные последовательности и число $e$ не вводить.'
 
 c1.small:
@@ -178,9 +178,9 @@ c1.taylor:
   pre: [c1.chain, c1.small, pre.explog, pre.trig]
   g: [taylor-polynomial]
   w: [taylor]
-  k: [num, mc, spot]
+  k: [num, mc, spot, graph]
   e: [c1.taylor.factorial, c1.taylor.local]
-  n: 6
+  n: 7
   note: 'Только разложение в нуле для $e^{ax}$, $\sin ax$, $\cos x$. Остаточный член в явном виде не вводить.'
 
 c1.rat:

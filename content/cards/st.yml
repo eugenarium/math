@@ -16,9 +16,9 @@ st.samp:
   pre: [st.descr, pr.clt, pr.lln, pr.norm, pr.var]
   g: [standard-error]
   w: [sample]
-  k: [num, mc, spot]
+  k: [num, mc, spot, sim]
   e: [st.samp.sd-se, st.ci.linear-n, st.samp.pop-size]
-  n: 6
+  n: 7
   note: 'Поправку на конечную совокупность не вводить.'
 
 st.est:
@@ -89,9 +89,9 @@ st.power:
   pre: [st.zt, st.test, st.ci]
   g: [statistical-power]
   w: [test]
-  k: [num, mc, spot]
+  k: [num, mc, spot, graph]
   e: [st.power.alpha-beta, st.ci.linear-n, st.test.accept]
-  n: 6
+  n: 7
   note: 'Приближение $z\approx2$ для $95\,\%$. Кривые мощности не вводить.'
 
 st.chi:

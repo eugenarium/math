@@ -27,9 +27,9 @@ dm.binom:
   pre: [dm.perm, dm.count, pre.sum, pre.func, pre.sets]
   g: [binomial-theorem]
   w: [pascal]
-  k: [num, mc, spot]
+  k: [num, mc, spot, graph]
   e: [dm.binom.freshman, dm.binom.index]
-  n: 6
+  n: 7
   note: 'Только натуральные степени. Обобщённый бином и производящие функции не вводить.'
 
 dm.stars:
