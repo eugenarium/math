@@ -22,4 +22,10 @@ export const loaders = {
   ctree: () => import('./ctree.js'),
   pascal: () => import('./pascal.js'),
   test: () => import('./test.js'),
+  series: () => import('./series.js'),
+  slope: () => import('./slope.js'),
+  phase: () => import('./phase.js'),
+  iter: () => import('./iter.js'),
+  interp: () => import('./interp.js'),
+  lp: () => import('./lp.js'),
 };

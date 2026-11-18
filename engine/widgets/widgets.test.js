@@ -13,6 +13,12 @@ import * as graph from './graph.js';
 import * as ctree from './ctree.js';
 import * as pascal from './pascal.js';
 import * as ztest from './test.js';
+import * as series from './series.js';
+import * as slope from './slope.js';
+import * as phase from './phase.js';
+import * as iter from './iter.js';
+import * as interp from './interp.js';
+import * as lp from './lp.js';
 
 test('truth: де Морган — столбцы равны, импликация — три единицы', () => {
   assert.equal(truth.compute({ f: ['!(p & q)', '!p | !q'] }, {}, {}).eq, 1);
@@ -95,4 +101,40 @@ test('pascal: биномиальные коэффициенты', () => {
 test('test: мощность z-критерия и p-значение', () => {
   assert.ok(Math.abs(ztest.compute({ tail: 'two' }, {}, { alpha: 0.05, d: 0.5, n: 25 }).power - 0.7054) < 1e-3);
   assert.ok(Math.abs(ztest.compute({ tail: 'two', obs: 2.1 }, {}, { alpha: 0.05, d: 0, n: 25 }).p - 0.0357) < 1e-3);
+});
+
+test('series: сумма 1/n^2 приближается к pi^2/6', () => {
+  assert.ok(Math.abs(series.partial('1/n^2', 1, 20000) - Math.PI ** 2 / 6) < 1e-4);
+});
+
+test('slope: Эйлер и РК4 для y\'=y', () => {
+  const f = (x, y) => y;
+  assert.ok(Math.abs(slope.integrate(f, 0, 1, 1, 0.1, 'euler').pop()[1] - 2.5937) < 1e-3);
+  assert.ok(Math.abs(slope.integrate(f, 0, 1, 1, 0.1, 'rk4').pop()[1] - Math.E) < 1e-5);
+});
+
+test('phase: тип особой точки', () => {
+  assert.equal(phase.classify([[0, 1], [-1, 0]]).type, 4);
+  assert.equal(phase.classify([[1, 0], [0, -1]]).type, 2);
+  assert.equal(phase.classify([[1, 0], [0, 2]]).type, 1);
+  assert.equal(phase.classify([[-1, 1], [-1, -1]]).type, 3);
+});
+
+test('iter: Ньютон для корня из 2 и бисекция', () => {
+  assert.ok(iter.compute({ m: 'newton', f: 'x^2-2', x0: 1 }, {}, { n: 6 }).err < 1e-10);
+  assert.ok(iter.compute({ m: 'bisect', f: 'x^2-2', ab: [0, 2] }, {}, { n: 10 }).err < 2e-3);
+});
+
+test('interp: феномен Рунге — чебышёвские узлы точнее равномерных', () => {
+  const p = { f: '1/(1+25*x^2)', x: [-1, 1] };
+  const e = interp.compute({ ...p, kind: 'equi' }, {}, { nodes: 11 }).maxerr;
+  const c = interp.compute({ ...p, kind: 'cheb' }, {}, { nodes: 11 }).maxerr;
+  assert.ok(c < e / 5);
+});
+
+test('lp: допустимая область и оптимум', () => {
+  const poly = lp.polygon(['x+2*y<=8', 'x>=0', 'y>=0', '3*x+y<=9'].map(lp.parseCons), [0, 8]);
+  assert.equal(poly.length, 4);
+  const b = lp.best(poly, lp.objective('max 3*x+2*y'));
+  assert.deepEqual(b.map((x) => Math.round(x * 1e6) / 1e6), [2, 3]);
 });
