@@ -61,7 +61,7 @@ export function mount(el, { params, scope }, ctx = {}) {
     }
     if (mode !== 'sums') for (let i = 0; i < N; i++) dot(v, n0 + i, terms[i], th.accent, 4);
     if (mode !== 'terms') for (let i = 0; i < N; i++) dot(v, n0 + i, sums[i], th.bad, 4);
-    label(v, `N = ${vars.N}, S_N = ${fmtNum(Number(o.S.toPrecision(6)))} (красные — суммы, синие — члены)`, 8, 18, th.fg);
+    label(v, `N = ${vars.N}, S = ${fmtNum(Number(o.S.toPrecision(6)))}`, 8, 18, th.fg);
   };
   draw();
   return {

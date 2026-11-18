@@ -226,6 +226,40 @@ reg('st.theory.p1')(lambda s: s['p']*(1/s['p'])**2+(1-s['p'])*(1/(1-s['p']))**2)
 reg('st.theory.p2')(lambda s: 1/(s['n']*(1/s['p']+1/(1-s['p']))))
 reg('st.theory.p3')(lambda s: (s['b'])/(s['b']*s['f']))
 
+import cmath
+def taylor_coef(f,n,r=0.5,M=4096):
+    # коэффициент Тейлора в нуле: интеграл Коши по окружности радиуса r
+    tot=0
+    for j in range(M):
+        th=2*math.pi*j/M
+        z=r*cmath.exp(1j*th)
+        tot+=f(z)*cmath.exp(-1j*n*th)
+    return (tot/M/(r**n)).real
+def fint(f,a,b,n=20000):
+    h=(b-a)/n
+    return h*(f(a)/2+f(b)/2+sum(f(a+i*h) for i in range(1,n)))
+reg('sr.num.p1')(lambda s: sum((1/s['k'])**n for n in range(0,200)))
+reg('sr.num.p2')(lambda s: sum(1/(n*(n+1)) for n in range(1,s['N']+1)))
+reg('sr.num.p3')(lambda s: sum(s['a']*(1/s['k'])**(n-1) for n in range(1,300)))
+reg('sr.tests.p1')(lambda s: ((51*(s['p']/s['q'])**51)/(50*(s['p']/s['q'])**50))*(50/51))
+reg('sr.tests.p2')(lambda s: next(p for p in range(1,10) if sum(1/n**p for n in range(1,20000))-sum(1/n**p for n in range(1,10000))<0.01 and p>1))
+reg('sr.tests.p3')(lambda s: s['k']/(10**9+1))
+reg('sr.alt.p1')(lambda s: 1/(s['N']+1))
+reg('sr.alt.p2')(lambda s: next(N for N in range(1,500) if 1/(N+1)<s['eps']))
+reg('sr.alt.p3')(lambda s: sum(abs((-1/s['k'])**n) for n in range(0,300)))
+reg('sr.pow.p1')(lambda s: (lambda a: a(200)/a(201))(lambda n: 1/s['k']**n))
+reg('sr.pow.p2')(lambda s: s['c']+((lambda a: a(200)/a(201))(lambda n: 1/s['k']**n)))
+reg('sr.pow.p3')(lambda s: 1/math.sqrt(s['k']))
+reg('sr.tay.p1')(lambda s: taylor_coef(lambda z: cmath.sin(s['k']*z),3))
+reg('sr.tay.p2')(lambda s: taylor_coef(lambda z: cmath.exp(s['k']*z),4))
+reg('sr.tay.p3')(lambda s: sum((-1)**(n+1)*s['t']**n/n for n in range(1,4)))
+reg('sr.unif.p1')(lambda s: max((i/1000*s['a'])**s['n'] for i in range(0,1001)))
+reg('sr.unif.p2')(lambda s: 1/s['k']**2)
+reg('sr.unif.p3')(lambda s: s['L']/s['eps'])
+reg('sr.four.p1')(lambda s: fint(lambda x: x*math.sin(s['n']*x),-math.pi,math.pi)/math.pi)
+reg('sr.four.p2')(lambda s: fint(lambda x: s['c'],-math.pi,math.pi)/math.pi)
+reg('sr.four.p3')(lambda s: (fint(lambda x: -math.sin(s['n']*x),-math.pi,0)+fint(lambda x: math.sin(s['n']*x),0,math.pi))/math.pi)
+
 bad=0; checked=0; per={}
 for r in data:
     key=f"{r['id']}.{r['pid']}"
