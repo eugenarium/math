@@ -67,7 +67,7 @@
 
 1. Интерактивности было недостаточно: у большинства уроков один вопрос-предсказание и один разбор. Добавлен второй разбор во все уроки (в 34 уроках для этого дописаны пошаговые решения задач).
 2. Теории было мало для самостоятельного изучения. Добавлены экран «Как решать» (метод в 3–4 шага, оформлен отдельной карточкой) и второй вопрос-предсказание во всех 123 уроках. Лимиты схемы: `int` до 5 экранов, `def` до 6.
-3. Реализованы все десять виджетов P0 (truth, vec2, bayes, scatter, taylor, limit, sample, chance, graph, contour), часть — в сокращённом виде (см. WIDGETS), и подключены к 22 ★-урокам. Из P1/P2 сделаны ctree, pascal, test (6 уроков). В 14 уроков добавлены задачи `graph` и `sim` с виджетами (truth, pascal, test, vec2, taylor, limit, chance, sample, graph).
+3. Реализованы все десять виджетов P0 (truth, vec2, bayes, scatter, taylor, limit, sample, chance, graph, contour), часть — в сокращённом виде (см. WIDGETS), и подключены к 22 ★-урокам. Из P1/P2 сделаны ctree, pascal, test (6 уроков), а также series, slope, phase, iter, interp, lp — они ждут уроков разделов sr, de, nm, op. В 14 уроков добавлены задачи `graph` и `sim` с виджетами (truth, pascal, test, vec2, taylor, limit, chance, sample, graph).
 
 ## Автоматически построенное состояние
 
@@ -122,9 +122,9 @@
 
 ### Виджеты
 
-Реализовано 22 из 34 виджетов каталога: `bayes`, `chance`, `ci`, `complex`, `contour`, `ctree`, `dist`, `fplot`, `graph`, `limit`, `lin2`, `matrix`, `numline`, `pascal`, `riemann`, `sample`, `scatter`, `taylor`, `test`, `truth`, `vec2`, `venn`.
+Реализовано 28 из 34 виджетов каталога: `bayes`, `chance`, `ci`, `complex`, `contour`, `ctree`, `dist`, `fplot`, `graph`, `interp`, `iter`, `limit`, `lin2`, `lp`, `matrix`, `numline`, `pascal`, `phase`, `riemann`, `sample`, `scatter`, `series`, `slope`, `taylor`, `test`, `truth`, `vec2`, `venn`.
 
-Не реализовано: P0 — нет; P1 — `series`, `slope`, `phase`, `iter`, `interp`, `lp`; P2 — `pca`, `cgraph`; 3D — `surf3`, `vec3`, `lin3`, `vol3`.
+Не реализовано: P0 — нет; P1 — нет; P2 — `pca`, `cgraph`; 3D — `surf3`, `vec3`, `lin3`, `vol3`.
 
 Готовые уроки, у которых карта предусматривает ★-виджет, но его ещё нет (урок написан без него): нет.
 
