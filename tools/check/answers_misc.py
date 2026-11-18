@@ -260,6 +260,55 @@ reg('sr.four.p1')(lambda s: fint(lambda x: x*math.sin(s['n']*x),-math.pi,math.pi
 reg('sr.four.p2')(lambda s: fint(lambda x: s['c'],-math.pi,math.pi)/math.pi)
 reg('sr.four.p3')(lambda s: (fint(lambda x: -math.sin(s['n']*x),-math.pi,0)+fint(lambda x: math.sin(s['n']*x),0,math.pi))/math.pi)
 
+def d1(f,x,h=1e-5): return (f(x+h)-f(x-h))/(2*h)
+def px(f,x,y,h=1e-4): return (f(x+h,y)-f(x-h,y))/(2*h)
+def py(f,x,y,h=1e-4): return (f(x,y+h)-f(x,y-h))/(2*h)
+def pxy(f,x,y,h=1e-3): return (f(x+h,y+h)-f(x+h,y-h)-f(x-h,y+h)+f(x-h,y-h))/(4*h*h)
+def pxx(f,x,y,h=1e-3): return (f(x+h,y)-2*f(x,y)+f(x-h,y))/(h*h)
+def pyy(f,x,y,h=1e-3): return (f(x,y+h)-2*f(x,y)+f(x,y-h))/(h*h)
+def dbl(f,xa,xb,ya,yb,n=600):
+    hx=(xb-xa)/n; hy=(yb-ya)/n
+    return sum(f(xa+(i+.5)*hx, ya+(j+.5)*hy) for i in range(n) for j in range(n))*hx*hy
+def det2n(M): return M[0][0]*M[1][1]-M[0][1]*M[1][0]
+def jac(F,u,v,h=1e-6):
+    a=F(u+h,v); b=F(u-h,v); c=F(u,v+h); d=F(u,v-h)
+    return [[(a[0]-b[0])/(2*h),(c[0]-d[0])/(2*h)],[(a[1]-b[1])/(2*h),(c[1]-d[1])/(2*h)]]
+reg('cm.fn.p1')(lambda s: s['a']*s['x0']**2+s['b']*s['y0'])
+reg('cm.fn.p2')(lambda s: math.sqrt(s['c']))
+reg('cm.fn.p3')(lambda s: sum(1 for x in range(-5,6) for y in range(-5,6) if x*x+y*y<=s['R']**2))
+reg('cm.part.p1')(lambda s: px(lambda x,y: s['a']*x*x*y, s['x0'], s['y0']))
+reg('cm.part.p2')(lambda s: py(lambda x,y: x**3+s['b']*x*y*y, s['x0'], s['y0']))
+reg('cm.part.p3')(lambda s: pxy(lambda x,y: x*x*y**3, s['x0'], s['y0']))
+reg('cm.diff.p1')(lambda s: (lambda f: f(s['a'],s['b'])+px(f,s['a'],s['b'])*s['h']+py(f,s['a'],s['b'])*s['k'])(lambda x,y: x*x*y))
+reg('cm.diff.p2')(lambda s: (lambda f: px(f,s['a'],s['b'])*s['h']+py(f,s['a'],s['b'])*s['k'])(lambda x,y: x*y))
+reg('cm.diff.p3')(lambda s: (lambda f: f(1,1)+px(f,1,1)*s['dx']+py(f,1,1)*s['dy'])(lambda x,y: x*x*y))
+reg('cm.grad.p1')(lambda s: (lambda f: math.hypot(px(f,3*s['t'],4*s['t']),py(f,3*s['t'],4*s['t'])))(lambda x,y: x*x+y*y))
+reg('cm.grad.p2')(lambda s: (lambda f: (px(f,s['x0'],s['y0'])*3+py(f,s['x0'],s['y0'])*4)/5)(lambda x,y: x*x*y))
+reg('cm.grad.p3')(lambda s: (lambda f: math.hypot(px(f,1,1),py(f,1,1)))(lambda x,y: x*x+s['k']*y*y))
+reg('cm.chain.p1')(lambda s: d1(lambda t: (t**2)*(t**2), s['t0']))
+reg('cm.chain.p2')(lambda s: d1(lambda t: (s['a']*t)*(t**2), s['t0']))
+reg('cm.chain.p3')(lambda s: det2n(jac(lambda u,w: (lambda x,y:(x+y,x-y))(u*w,u+w), s['u'], s['w'])))
+reg('cm.hess.p1')(lambda s: pxx(lambda x,y: x**3*y**2, s['x0'], s['y0']))
+reg('cm.hess.p2')(lambda s: pxy(lambda x,y: x*x*y*y, s['a'], s['b']))
+reg('cm.hess.p3')(lambda s: 1+(s['dx']+s['dy'])+(s['dx']+s['dy'])**2/2)
+reg('cm.extr.p1')(lambda s: (lambda f: f(s['a'],s['b']))(lambda x,y: x*x+y*y-2*s['a']*x-2*s['b']*y))
+reg('cm.extr.p2')(lambda s: (lambda f: pxx(f,0,0)*pyy(f,0,0)-pxy(f,0,0)**2)(lambda x,y: x*x+s['k']*x*y+y*y))
+def saddle_x(a):
+    f=lambda x,y: x**3-3*a*a*x+y*y
+    return [x for x in (-a,a) if pxx(f,x,0)*pyy(f,x,0)-pxy(f,x,0)**2<0][0]
+reg('cm.extr.p3')(lambda s: saddle_x(s['a']))
+def best_on_line(f,sv,sign=1):
+    return max(sign*f(x,sv-x) for x in [i/1000 for i in range(-5000,5001)])*sign
+reg('cm.lagr.p1')(lambda s: max(x*(s['s']-x) for x in [i/1000 for i in range(-10000,10001)]))
+reg('cm.lagr.p2')(lambda s: min(x*x+(s['s']-x)**2 for x in [i/1000 for i in range(-10000,10001)]))
+reg('cm.lagr.p3')(lambda s: max(s['r']*(math.cos(t)+math.sin(t)) for t in [2*math.pi*i/20000 for i in range(20000)]))
+reg('cm.dint.p1')(lambda s: dbl(lambda x,y: x*y,0,s['a'],0,s['b'],400))
+reg('cm.dint.p2')(lambda s: dbl(lambda x,y: 1 if y<=x else 0,0,s['a'],0,s['a'],800))
+reg('cm.dint.p3')(lambda s: dbl(lambda x,y: x if y<=x else 0,0,s['a'],0,s['a'],800))
+reg('cm.chg.p1')(lambda s: dbl(lambda x,y: 1 if x*x+y*y<=s['R']**2 else 0,-s['R'],s['R'],-s['R'],s['R'],1200))
+reg('cm.chg.p2')(lambda s: dbl(lambda x,y: (x*x+y*y) if x*x+y*y<=s['R']**2 else 0,-s['R'],s['R'],-s['R'],s['R'],1200))
+reg('cm.chg.p3')(lambda s: abs(det2n(jac(lambda u,v:(s['a']*u+v,u-s['b']*v),1,1))))
+
 bad=0; checked=0; per={}
 for r in data:
     key=f"{r['id']}.{r['pid']}"

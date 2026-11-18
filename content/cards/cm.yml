@@ -1,0 +1,100 @@
+# Карточки раздела cm (анализ нескольких переменных). Источник: docs/COURSE_MAP.md.
+cm.fn:
+  t: 'Функции нескольких переменных, линии уровня'
+  goal: 'Умею находить область определения и линии уровня функции двух переменных'
+  pre: [c1.study, c1.rules, c1.der, la.vec]
+  g: [multivariable-function]
+  k: [num, mc, spot]
+  e: [cm.fn.domain, cm.fn.level, cm.fn.shape]
+  n: 6
+  note: 'Только две переменные. Без 3D-виджета: поверхность описать словами.'
+
+cm.part:
+  t: 'Частные производные'
+  goal: 'Умею вычислять частные и смешанные производные многочленов'
+  pre: [cm.fn, c1.rules, c1.study]
+  g: [partial-derivative]
+  k: [num, mc, spot]
+  e: [cm.part.mix, cm.part.const, cm.part.mixed]
+  n: 6
+  note: 'Многочлены двух переменных. Теорему о смешанных производных упомянуть одной фразой.'
+
+cm.diff:
+  t: 'Дифференцируемость, касательная плоскость, дифференциал'
+  goal: 'Умею записывать касательную плоскость и приближать значения дифференциалом'
+  pre: [cm.part, cm.fn, c1.rules]
+  g: [tangent-plane]
+  k: [num, mc, spot]
+  e: [cm.diff.plane, cm.diff.partial-only, cm.diff.dx]
+  n: 6
+  note: 'Функции $x^2y$, $xy$. Строгое определение дифференцируемости не вводить.'
+
+cm.grad:
+  t: 'Градиент, производная по направлению'
+  goal: 'Умею находить градиент и производную по направлению и знаю, что градиент перпендикулярен линии уровня'
+  pre: [cm.diff, cm.part, la.dot, la.vec]
+  g: [gradient]
+  k: [num, mc, spot]
+  e: [cm.grad.unit, cm.grad.perp, cm.grad.max]
+  n: 6
+  note: 'Две переменные. Контурный виджет не нужен: описать картину словами.'
+
+cm.chain:
+  t: 'Цепное правило, матрица Якоби'
+  goal: 'Умею применять цепное правило к $z(x(t),y(t))$ и считать якобиан композиции'
+  pre: [cm.diff, la.mat, c1.chain, cm.part]
+  g: [multivariable-chain-rule]
+  k: [num, mc, spot]
+  e: [cm.chain.miss, cm.chain.order]
+  n: 6
+  note: 'Многочленные зависимости. Неявные функции не вводить.'
+
+cm.hess:
+  t: 'Вторые производные, гессиан, формула Тейлора второго порядка'
+  goal: 'Умею находить вторые производные и приближать функцию многочленом второго порядка'
+  pre: [cm.grad, cm.part, c1.taylor]
+  g: [hessian]
+  k: [num, mc, spot]
+  e: [cm.hess.xy, cm.hess.half]
+  n: 6
+  note: 'Две переменные. Классификацию критических точек — в следующем уроке.'
+
+cm.extr:
+  t: 'Локальные экстремумы, седловые точки'
+  goal: 'Умею находить критические точки и классифицировать их по определителю гессиана'
+  pre: [cm.hess, cm.grad, la.det]
+  g: [extremum-test]
+  k: [num, mc, spot]
+  e: [cm.extr.grad, cm.extr.det, cm.extr.zero]
+  n: 6
+  note: 'Многочлены двух переменных. 3D-виджета нет: словами описать седло.'
+
+cm.lagr:
+  t: 'Условный экстремум, множители Лагранжа'
+  goal: 'Умею находить условный экстремум методом Лагранжа и сравнивать найденные точки'
+  pre: [cm.extr, cm.grad, cm.hess]
+  g: [lagrange-multipliers]
+  k: [num, mc, spot]
+  e: [cm.lagr.constraint, cm.lagr.lambda, cm.lagr.compare]
+  n: 6
+  note: 'Одно ограничение, две переменные. Достаточные условия не вводить.'
+
+cm.dint:
+  t: 'Двойной интеграл, повторное интегрирование'
+  goal: 'Умею сводить двойной интеграл к повторному и менять порядок интегрирования'
+  pre: [cm.fn, c1.ftc, cm.part]
+  g: [double-integral]
+  k: [num, mc, spot]
+  e: [cm.dint.iter, cm.dint.limits, cm.dint.area]
+  n: 6
+  note: 'Прямоугольник и треугольник. 3D-виджет не нужен.'
+
+cm.chg:
+  t: 'Замена переменных, якобиан, полярные координаты'
+  goal: 'Умею вычислять интеграл по кругу в полярных координатах и находить якобиан замены'
+  pre: [cm.dint, cm.chain, la.det, c1.sub]
+  g: [change-of-variables]
+  k: [num, mc, spot]
+  e: [cm.chg.jac, cm.chg.range, cm.chg.sq]
+  n: 6
+  note: 'Круг и полукруг; линейные замены. Сферические координаты — в cm.tint.'
