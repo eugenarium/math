@@ -72,6 +72,12 @@ pr:
     bad:
       - {i: 2, t: 'По де Моргану: $\neg A\vee\neg\neg B$', e: lg.equiv.demorgan-keep}
       - {i: 4, t: 'Итог: истинно ровно при $A=1$, $B=0$'}
+  p7:
+    k: graph
+    lv: 2
+    q: 'Заполни столбец значений для $\neg(p\to q)$, касаясь ячеек.'
+    w: {w: truth, f: '!(p -> q)', fill: 1}
+    goal: {ok: [1, 0.01]}
 err: [lg.equiv.demorgan-keep, lg.equiv.neg-impl]
 sum:
   - 'Умею отрицать конъюнкцию и дизъюнкцию по законам де Моргана.'

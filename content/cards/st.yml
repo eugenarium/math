@@ -16,9 +16,9 @@ st.samp:
   pre: [st.descr, pr.clt, pr.lln, pr.norm, pr.var]
   g: [standard-error]
   w: [sample]
-  k: [num, mc, spot]
+  k: [num, mc, spot, sim]
   e: [st.samp.sd-se, st.ci.linear-n, st.samp.pop-size]
-  n: 6
+  n: 7
   note: 'Поправку на конечную совокупность не вводить.'
 
 st.est:
@@ -57,6 +57,7 @@ st.test:
   goal: 'Умею вычислять статистику критерия и верно толковать $p$-значение и вывод «не отвергли $H_0$»'
   pre: [st.ci, st.samp, pr.norm]
   g: [hypothesis-test, p-value]
+  w: [test]
   k: [num, mc, spot]
   e: [st.test.p-h0, st.test.accept, st.test.tails]
   n: 6
@@ -87,9 +88,10 @@ st.power:
   goal: 'Умею находить мощность как $1-\beta$, размер эффекта и объём выборки для заданной погрешности'
   pre: [st.zt, st.test, st.ci]
   g: [statistical-power]
-  k: [num, mc, spot]
+  w: [test]
+  k: [num, mc, spot, graph]
   e: [st.power.alpha-beta, st.ci.linear-n, st.test.accept]
-  n: 6
+  n: 7
   note: 'Приближение $z\approx2$ для $95\,\%$. Кривые мощности не вводить.'
 
 st.chi:

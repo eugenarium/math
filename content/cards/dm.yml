@@ -4,6 +4,7 @@ dm.count:
   goal: 'Умею выбирать между правилом суммы («или») и правилом произведения («и затем»)'
   pre: [pre.sets]
   g: [sum-rule, product-rule]
+  w: [ctree]
   k: [num, mc, spot]
   e: [dm.count.add-for-mul, dm.count.mul-for-add]
   n: 6
@@ -14,6 +15,7 @@ dm.perm:
   goal: 'Умею отличать размещения от сочетаний и считать перестановки с одинаковыми элементами'
   pre: [dm.count, pre.sets]
   g: [permutations, combinations]
+  w: [ctree]
   k: [num, mc, spot]
   e: [dm.perm.order, dm.perm.repeat]
   n: 6
@@ -24,9 +26,10 @@ dm.binom:
   goal: 'Умею находить коэффициент в разложении $(1+ax)^n$ и пользоваться тождеством Паскаля'
   pre: [dm.perm, dm.count, pre.sum, pre.func, pre.sets]
   g: [binomial-theorem]
-  k: [num, mc, spot]
+  w: [pascal]
+  k: [num, mc, spot, graph]
   e: [dm.binom.freshman, dm.binom.index]
-  n: 6
+  n: 7
   note: 'Только натуральные степени. Обобщённый бином и производящие функции не вводить.'
 
 dm.stars:

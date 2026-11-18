@@ -5,9 +5,9 @@ la.vec:
   pre: [pre.func, pre.sum]
   g: [vector, linear-combination]
   w: [vec2]
-  k: [num, mc, spot]
+  k: [num, mc, spot, graph]
   e: [la.vec.scalar-one, la.vec.span-all]
-  n: 6
+  n: 7
   note: 'Только векторы в ℝ² и ℝ³. Линейную независимость и базис не вводить: это la.basis.'
 
 la.dot:
@@ -16,9 +16,9 @@ la.dot:
   pre: [la.vec, pre.trig, pre.func, pre.sum]
   g: [dot-product, vector-projection]
   w: [vec2]
-  k: [num, mc, spot]
+  k: [num, mc, spot, graph]
   e: [la.dot.no-norm, la.dot.proj-dir]
-  n: 6
+  n: 7
   note: 'Только векторы в ℝ². Ортогональные базисы и Грама–Шмидта не вводить.'
 
 la.sys:
@@ -127,9 +127,9 @@ la.orth:
   pre: [la.dot, la.basis, la.vec, pre.trig]
   g: [orthogonal-system, gram-schmidt]
   w: [vec2]
-  k: [num, mc, spot]
+  k: [num, mc, spot, graph]
   e: [la.orth.unit, la.orth.gs-coef]
-  n: 6
+  n: 7
   note: 'Только ℝ². QR-разложение упомянуть одной фразой.'
 
 la.proj:

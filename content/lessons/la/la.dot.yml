@@ -75,6 +75,12 @@ pr:
     bad:
       - {i: 3, t: '$\cos\theta=1$', e: la.dot.no-norm}
       - {i: 4, t: 'Угол $\theta=60^\circ$'}
+  p7:
+    k: graph
+    v: {ax: [1, 2], t: 5..9}
+    q: 'При $\mathbf a=(@ax,3)$ подбери $\mathbf b$ так, чтобы $\mathbf a\cdot\mathbf b=@t$.'
+    w: {w: vec2, v: {a: [ax, 3], b: [0, 0]}, lock: [a], show: [dot]}
+    goal: {dot: [t, 0.01]}
 err: [la.dot.no-norm, la.dot.proj-dir]
 sum:
   - 'Умею находить скалярное произведение и длину вектора.'
