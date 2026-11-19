@@ -326,6 +326,45 @@ reg('cm.vec.p1')(lambda s: fint(lambda t: (-s['R']*math.sin(t))*(-s['R']*math.si
 reg('cm.vec.p2')(lambda s: sum(px(lambda x,y:x*x,v,0)*0+2*v for v in (s['a'],s['b'],s['c'])))
 reg('cm.vec.p3')(lambda s: 3*(4/3)*math.pi*s['R']**3)
 
+def argmin_grid(f,lo,hi,n=200000):
+    best=None
+    for i in range(n+1):
+        x=lo+(hi-lo)*i/n
+        v=f(x)
+        if best is None or v<best[1]: best=(x,v)
+    return best
+reg('op.conv.p1')(lambda s: argmin_grid(lambda x: s['a']*x*x+s['b']*x,-10,10)[1])
+reg('op.conv.p2')(lambda s: ((s['x1']**2+s['x2']**2)/2)-((s['x1']+s['x2'])/2)**2)
+reg('op.conv.p3')(lambda s: argmin_grid(lambda x: x**4-2*s['a']**2*x*x,-5,5)[1])
+reg('op.uncon.p1')(lambda s: argmin_grid(lambda x: .5*s['a']*x*x-s['b']*x,-10,10)[0])
+reg('op.uncon.p2')(lambda s: min(x*x+y*y-2*s['p']*x-2*s['q']*y for x in [i/10 for i in range(-50,51)] for y in [j/10 for j in range(-50,51)]))
+reg('op.uncon.p3')(lambda s: 1/s['a']+1/s['b'])
+reg('op.gd.p1')(lambda s: s['x0']-s['al']*2*s['x0'])
+def gd_ratio(a,al):
+    x=1.0; y=x-al*a*x; return y/x
+reg('op.gd.p2')(lambda s: gd_ratio(s['a'],s['al']))
+def max_step(a):
+    lo,hi=0.0,10.0
+    for _ in range(60):
+        mid=(lo+hi)/2
+        if abs(1-mid*a)<1: lo=mid
+        else: hi=mid
+    return lo
+reg('op.gd.p3')(lambda s: max_step(s['a']))
+reg('op.lagr.p1')(lambda s: min(x*x+(s['c']-x)**2 for x in [i/1000 for i in range(-10000,10001)]))
+reg('op.lagr.p2')(lambda s: ((lambda F: (F(s['c0']+1e-4)-F(s['c0']-1e-4))/2e-4)(lambda c: min(x*x+(c-x)**2 for x in [i/200 for i in range(-4000,4001)]))))
+reg('op.lagr.p3')(lambda s: s['c']/4)
+def lp_best(obj,cons,pts):
+    cand=[(x,y) for x,y in pts if all(c(x,y) for c in cons)]
+    return max(obj(x,y) for x,y in cand)
+def grid(n): return [(i/10,j/10) for i in range(0,n) for j in range(0,n)]
+reg('op.lp.p1')(lambda s: lp_best(lambda x,y:2*x+3*y,[lambda x,y: x+y<=s['k']+1e-9],grid(100)))
+reg('op.lp.p2')(lambda s: (lambda x,y: x+2*y)((s['a']+s['b'])/2,(s['a']-s['b'])/2))
+reg('op.lp.p3')(lambda s: min(x+y for x,y in grid(200) if x+2*y>=s['k']-1e-9 and 2*x+y>=s['k']-1e-9))
+reg('op.ls.p1')(lambda s: argmin_grid(lambda b: sum((y-b*x)**2 for x,y in ((1,s['y1']),(2,s['y2']),(3,s['y3']))),-10,10)[0])
+reg('op.ls.p2')(lambda s: argmin_grid(lambda b: 14*b*b-2*s['sxy']*b+s['lam']*b*b,0,10)[0])
+reg('op.ls.p3')(lambda s: argmin_grid(lambda b: .5*(b-s['z'])**2+s['lam']*abs(b),-10,10)[0])
+
 bad=0; checked=0; per={}
 for r in data:
     key=f"{r['id']}.{r['pid']}"
