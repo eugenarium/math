@@ -309,6 +309,23 @@ reg('cm.chg.p1')(lambda s: dbl(lambda x,y: 1 if x*x+y*y<=s['R']**2 else 0,-s['R'
 reg('cm.chg.p2')(lambda s: dbl(lambda x,y: (x*x+y*y) if x*x+y*y<=s['R']**2 else 0,-s['R'],s['R'],-s['R'],s['R'],1200))
 reg('cm.chg.p3')(lambda s: abs(det2n(jac(lambda u,v:(s['a']*u+v,u-s['b']*v),1,1))))
 
+def lim_line(m): return (lambda f: f(1e-6,m*1e-6))(lambda x,y: x*y/(x*x+y*y))
+reg('cm.lim.p1')(lambda s: s['a']**2+s['b'])
+reg('cm.lim.p2')(lambda s: lim_line(s['m']))
+reg('cm.lim.p3')(lambda s: (lambda f: f(1e-6*math.cos(0.7),1e-6*math.sin(0.7)))(lambda x,y: s['a']*x*x*y/(x*x+y*y)))
+reg('cm.tint.p1')(lambda s: s['a']**2*s['b']*s['c']/2)
+reg('cm.tint.p2')(lambda s: dbl(lambda x,y: s['H'] if x*x+y*y<=s['R']**2 else 0,-s['R'],s['R'],-s['R'],s['R'],1200))
+reg('cm.tint.p3')(lambda s: sum((4/3)*math.pi*s['R']**3 for _ in [0]))
+reg('cm.implf.p1')(lambda s: (lambda F: -px(F,s['x0'],s['y0'])/py(F,s['x0'],s['y0']))(lambda x,y: x*x+s['a']*y*y))
+reg('cm.implf.p2')(lambda s: (lambda F: -px(F,s['x0'],s['y0'])/py(F,s['x0'],s['y0']))(lambda x,y: x*x*y+y**3))
+reg('cm.implf.p3')(lambda s: 1/det2n(jac(lambda u,v:(s['a']*u,s['b']*v),1,1)))
+reg('cm.line.p1')(lambda s: fint(lambda t: math.hypot(3,4),0,s['k']))
+reg('cm.line.p2')(lambda s: fint(lambda t: (s['b']*t)*s['a']+(s['a']*t)*s['b'],0,1))
+reg('cm.line.p3')(lambda s: fint(lambda t: s['R']**2*s['R'],0,2*math.pi))
+reg('cm.vec.p1')(lambda s: fint(lambda t: (-s['R']*math.sin(t))*(-s['R']*math.sin(t))+(s['R']*math.cos(t))*(s['R']*math.cos(t)),0,2*math.pi))
+reg('cm.vec.p2')(lambda s: sum(px(lambda x,y:x*x,v,0)*0+2*v for v in (s['a'],s['b'],s['c'])))
+reg('cm.vec.p3')(lambda s: 3*(4/3)*math.pi*s['R']**3)
+
 bad=0; checked=0; per={}
 for r in data:
     key=f"{r['id']}.{r['pid']}"

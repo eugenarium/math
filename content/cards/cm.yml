@@ -98,3 +98,53 @@ cm.chg:
   e: [cm.chg.jac, cm.chg.range, cm.chg.sq]
   n: 6
   note: 'Круг и полукруг; линейные замены. Сферические координаты — в cm.tint.'
+
+cm.lim:
+  t: 'Предел и непрерывность в ℝⁿ'
+  goal: 'Умею показывать отсутствие предела по разным путям и находить предел в полярных координатах'
+  pre: [cm.fn, c1.lim, c1.cont]
+  g: [multivariable-limit]
+  k: [num, mc, spot]
+  e: [cm.lim.lines, cm.lim.polar, cm.lim.value]
+  n: 6
+  note: 'Две переменные, точка $(0,0)$. Эпсилон–дельта не вводить.'
+
+cm.tint:
+  t: 'Тройные интегралы, цилиндрические и сферические координаты'
+  goal: 'Умею считать объёмы цилиндра и шара и применять якобианы цилиндрических и сферических координат'
+  pre: [cm.chg, cm.dint, cm.chain]
+  g: [triple-integral]
+  k: [num, mc, spot]
+  e: [cm.tint.jac, cm.tint.sph, cm.tint.iter]
+  n: 6
+  note: 'Простые тела: параллелепипед, цилиндр, шар. 3D-виджета нет.'
+
+cm.implf:
+  t: 'Теоремы о неявной и обратной функции'
+  goal: 'Умею находить производную неявной функции и якобиан обратного отображения'
+  pre: [cm.chain, la.inv, cm.part]
+  g: [implicit-function]
+  k: [num, mc, spot]
+  e: [cm.implf.sign, cm.implf.zero, cm.implf.inv]
+  n: 6
+  note: 'Две переменные. Доказательства не приводить.'
+
+cm.line:
+  t: 'Криволинейные интегралы, потенциальные поля'
+  goal: 'Умею считать интегралы по длине и работу поля и применять потенциал'
+  pre: [cm.grad, cm.dint, cm.part]
+  g: [line-integral]
+  k: [num, mc, spot]
+  e: [cm.line.speed, cm.line.potential, cm.line.dir]
+  n: 6
+  note: 'Отрезок и окружность. Контурный виджет не обязателен.'
+
+cm.vec:
+  t: 'Формулы Грина, Стокса, Гаусса–Остроградского'
+  goal: 'Умею применять формулы Грина и Гаусса–Остроградского к простым областям'
+  pre: [cm.tint, cm.line, cm.dint, la.cross]
+  g: [integral-theorems]
+  k: [num, mc, spot]
+  e: [cm.vec.green-sign, cm.vec.div, cm.vec.flux]
+  n: 6
+  note: 'Обзор: круг, квадрат, шар. Формулу Стокса упомянуть без вычислений.'
