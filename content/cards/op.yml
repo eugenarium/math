@@ -1,0 +1,62 @@
+# Карточки раздела op (оптимизация). Источник: docs/COURSE_MAP.md.
+op.conv:
+  t: 'Выпуклые множества и функции'
+  goal: 'Умею проверять выпуклость по второй производной и знаю, когда локальный минимум глобален'
+  pre: [cm.hess, cm.grad, la.quad, c1.study]
+  g: [convexity]
+  w: [fplot]
+  k: [num, mc, spot]
+  e: [op.conv.local, op.conv.sum, op.conv.second]
+  n: 6
+  note: 'Одна переменная и квадратичные функции двух переменных.'
+
+op.uncon:
+  t: 'Условия оптимальности первого и второго порядка'
+  goal: 'Умею находить минимум квадратичной функции и применять условия первого и второго порядка'
+  pre: [op.conv, cm.extr, cm.hess, la.inv]
+  g: [optimality-conditions]
+  k: [num, mc, spot]
+  e: [op.uncon.necessary, op.uncon.hess, op.uncon.quad]
+  n: 6
+  note: 'Диагональные квадратичные функции двух переменных.'
+
+op.gd:
+  t: 'Градиентный спуск, выбор шага'
+  goal: 'Умею делать шаги градиентного спуска и находить допустимый шаг для квадратичной функции'
+  pre: [op.uncon, op.conv, cm.grad]
+  g: [gradient-descent]
+  k: [num, mc, spot]
+  e: [op.gd.step, op.gd.sign, op.gd.rate]
+  n: 6
+  note: 'Функции $\frac a2x^2$. Контурный виджет не нужен.'
+
+op.lagr:
+  t: 'Ограничения-равенства, смысл множителей Лагранжа'
+  goal: 'Умею находить условный оптимум и объяснять множитель Лагранжа как цену ограничения'
+  pre: [op.uncon, cm.lagr, cm.grad]
+  g: [constrained-optimum]
+  k: [num, mc, spot]
+  e: [op.lagr.sens, op.lagr.grad, op.lagr.feasible]
+  n: 6
+  note: 'Линейное ограничение, две переменные.'
+
+op.lp:
+  t: 'Линейное программирование: геометрия'
+  goal: 'Умею находить оптимум линейной цели в вершине допустимого многоугольника'
+  pre: [la.sys, pre.ineq, op.conv]
+  g: [linear-programming]
+  w: [lp]
+  k: [num, mc, spot]
+  e: [op.lp.vertex, op.lp.constraint, op.lp.unbounded]
+  n: 6
+  note: 'Две переменные. Симплекс-метод — в расширении.'
+
+op.ls:
+  t: 'Наименьшие квадраты, ridge и lasso'
+  goal: 'Умею считать МНК-наклон, ridge и lasso для одного признака'
+  pre: [la.proj, op.gd, op.uncon]
+  g: [least-squares-reg]
+  k: [num, mc, spot]
+  e: [op.ls.ridge, op.ls.lasso, op.ls.sumsq]
+  n: 6
+  note: 'Один признак без свободного члена. Контурный виджет не нужен.'
