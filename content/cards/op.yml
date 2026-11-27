@@ -60,3 +60,53 @@ op.ls:
   e: [op.ls.ridge, op.ls.lasso, op.ls.sumsq]
   n: 6
   note: 'Один признак без свободного члена. Контурный виджет не нужен.'
+
+op.newton:
+  t: 'Метод Ньютона и квазиньютоновские методы'
+  goal: 'Умею делать шаги метода Ньютона для минимизации и знаю, что для квадратичной функции хватает одного шага'
+  pre: [op.gd, op.uncon, la.inv]
+  g: [newton-method-opt]
+  k: [num, mc, spot]
+  e: [op.newton.quad, op.newton.root, op.newton.hess]
+  n: 6
+  note: 'Одна переменная. Квазиньютоновские методы упомянуть одной фразой.'
+
+op.kkt:
+  t: 'Ограничения-неравенства, условия Каруша–Куна–Таккера'
+  goal: 'Умею применять условия ККТ и дополняющую нежёсткость в задачах с одним ограничением'
+  pre: [op.lagr, op.uncon]
+  g: [kkt]
+  k: [num, mc, spot]
+  e: [op.kkt.active, op.kkt.compl, op.kkt.sign]
+  n: 6
+  note: 'Одно ограничение-неравенство, одна-две переменные.'
+
+op.dual:
+  t: 'Двойственность'
+  goal: 'Умею строить двойственную задачу простой ЛП и применять слабую двойственность'
+  pre: [op.lp, op.kkt, la.sys]
+  g: [duality]
+  k: [num, mc, spot]
+  e: [op.dual.weak, op.dual.vars, op.dual.gap]
+  n: 6
+  note: 'Задачи с ограничениями вида $x_i\le b_i$.'
+
+op.sgd:
+  t: 'Стохастический спуск, momentum, Adam'
+  goal: 'Умею оценивать шум мини-батча и считать шаги momentum'
+  pre: [op.gd, pr.exp, pr.var]
+  g: [sgd]
+  k: [num, mc, spot]
+  e: [op.sgd.var, op.sgd.mom, op.sgd.bias]
+  n: 6
+  note: 'Adam упомянуть без формул.'
+
+op.simplex:
+  t: 'Симплекс-метод'
+  goal: 'Умею применять правило минимальных отношений и знаю число базисных переменных'
+  pre: [op.lp, la.sys]
+  g: [simplex]
+  k: [num, mc, spot]
+  e: [op.simplex.ratio, op.simplex.reduced, op.simplex.basis]
+  n: 6
+  note: 'Один шаг метода на малой задаче; симплекс-таблицы не строить целиком.'

@@ -365,6 +365,23 @@ reg('op.ls.p1')(lambda s: argmin_grid(lambda b: sum((y-b*x)**2 for x,y in ((1,s[
 reg('op.ls.p2')(lambda s: argmin_grid(lambda b: 14*b*b-2*s['sxy']*b+s['lam']*b*b,0,10)[0])
 reg('op.ls.p3')(lambda s: argmin_grid(lambda b: .5*(b-s['z'])**2+s['lam']*abs(b),-10,10)[0])
 
+import math as _m
+reg('op.newton.p1')(lambda s: s['x0']-(s['a']*s['x0']-s['b'])/s['a'])
+reg('op.newton.p2')(lambda s: s['x0']-(4*s['x0']**3)/(12*s['x0']**2))
+reg('op.newton.p3')(lambda s: s['x0']-(_m.exp(s['x0'])-2)/_m.exp(s['x0']))
+reg('op.kkt.p1')(lambda s: min((x/1000 for x in range(0,5001) if x/1000>=s['a']-1e-9), key=lambda x:x*x))
+reg('op.kkt.p2')(lambda s: -(2*(s['b']-s['c'])))
+reg('op.kkt.p3')(lambda s: 2*(s['k']/2))
+reg('op.dual.p1')(lambda s: max(s['c1']*x+s['c2']*y for x in (0,s['b1']) for y in (0,s['b2'])))
+reg('op.dual.p2')(lambda s: s['m'])
+reg('op.dual.p3')(lambda s: s['dv']-s['pv'])
+reg('op.sgd.p1')(lambda s: _m.sqrt(s['sg']**2/s['b']))
+reg('op.sgd.p2')(lambda s: sum(s['gm']*s['be']**k for k in range(400)))
+reg('op.sgd.p3')(lambda s: 10-0.1*(0.9*s['v0']+s['gm']))
+reg('op.simplex.p1')(lambda s: s['m'])
+reg('op.simplex.p2')(lambda s: min(s['b1']/s['a1'],s['b2']/s['a2']))
+reg('op.simplex.p3')(lambda s: s['c']*(s['b']/s['a']))
+
 bad=0; checked=0; per={}
 for r in data:
     key=f"{r['id']}.{r['pid']}"
